@@ -1,0 +1,9 @@
+# ================== Help Info ==================
+# The following is a list of essential items.
+# DIRECTORS:
+# @o = As full permissions.
+# @c = As console.
+# @n:"<name>" = As <name>.
+# @u:"<uuid>" = As <uuid>.
+# Example:
+server test
