@@ -5,6 +5,7 @@ import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.modules.SimpleModule;
 import net.streamline.api.modules.dependencies.Dependency;
+import tv.quaint.commands.FunctionCommand;
 import tv.quaint.configs.Configs;
 import tv.quaint.configs.CustomPlaceholdersConfig;
 import tv.quaint.executables.functions.FunctionHandler;
@@ -50,7 +51,7 @@ public class StreamlineUtilities extends SimpleModule {
     @Override
     public List<ModuleCommand> commands() {
         return List.of(
-
+                new FunctionCommand()
         );
     }
 
