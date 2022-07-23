@@ -15,9 +15,15 @@ public class Configs extends ModularizedConfig {
         super(StreamlineUtilities.getInstance(), "config.yml", true);
     }
 
-    public boolean chatModify() {
+    public boolean chatModifyEnabled() {
         reloadResource();
 
-        return resource.getBoolean("chat.modify");
+        return resource.getBoolean("chat.modify.modify");
+    }
+
+    public String chatModifyPermission() {
+        reloadResource();
+
+        return resource.getString("chat.modify.permission");
     }
 }

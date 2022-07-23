@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix : Command actually created now.">
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix : Chat works now.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/StreamlineUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/StreamlineUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/FunctionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/FunctionCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/CustomPlaceholdersConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/CustomPlaceholdersConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/Configs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/Configs.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/listeners/MainListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/listeners/MainListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/custom-placeholders.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/custom-placeholders.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +128,14 @@
       <option name="project" value="LOCAL" />
       <updated>1658440774298</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Fix : Chat works now.">
+      <created>1658537607940</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1658537607940</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -150,6 +157,7 @@
     <MESSAGE value="Init." />
     <MESSAGE value="Fixed gradle depends." />
     <MESSAGE value="Fix : Command actually created now." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix : Command actually created now." />
+    <MESSAGE value="Fix : Chat works now." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix : Chat works now." />
   </component>
 </project>

@@ -1,2 +1,4 @@
 chat:
-  modify: true
+  modify:
+    enabled: true
+    permission: "streamline.utils.chat.modify"

@@ -12,7 +12,9 @@ import tv.quaint.StreamlineUtilities;
 public class MainListener implements StreamlineListener {
     @EventProcessor
     public void onChat(StreamlineChatEvent chatEvent) {
-        if (StreamlineUtilities.getConfigs().chatModify()) {
+        if (StreamlineUtilities.getConfigs().chatModifyEnabled()) {
+            if (! ModuleUtils.hasPermission(chatEvent.getSender(), StreamlineUtilities.getConfigs().chatModifyPermission())) return;
+
             String message = ModuleUtils.replaceAllPlayerBungee(chatEvent.getSender(), chatEvent.getMessage());
             chatEvent.setMessage(message);
         }
