@@ -8,6 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/FunctionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/FunctionCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/FunctionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/FunctionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/StreamlineFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/StreamlineFunction.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +140,14 @@
       <option name="project" value="LOCAL" />
       <updated>1658561865610</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Fix : Touch ups.">
+      <created>1658562513439</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1658562513439</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="UnknownFeatures">

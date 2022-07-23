@@ -73,7 +73,9 @@ public class FunctionCommand extends ModuleCommand {
     @Override
     public List<String> doTabComplete(SavableUser savableUser, String[] strings) {
         if (strings.length <= 1) {
-            return ModuleUtils.getOnlinePlayerNames();
+            List<String> r = ModuleUtils.getOnlinePlayerNames();
+            r.add("reload");
+            return r;
         }
 
         return FunctionHandler.getEnabledFunctionIdentifiers();

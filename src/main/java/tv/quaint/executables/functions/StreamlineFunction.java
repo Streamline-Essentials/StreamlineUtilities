@@ -72,7 +72,7 @@ public class StreamlineFunction extends File {
             while (toAdd.startsWith(" ")) {
                 toAdd = toAdd.substring(1);
             }
-            if (! toAdd.startsWith("#")) return;
+            if (toAdd.startsWith("#")) return;
             r.put(integer, s);
         });
 
@@ -84,20 +84,19 @@ public class StreamlineFunction extends File {
 
         uncommentedLines().forEach((integer, s) -> {
             if (s.startsWith("@o")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), s));
-            }
-            if (s.startsWith("@c")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getConsole()), s));
-            }
-            if (s.startsWith("@n:")) {
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), s.split(" ", 2)[1]));
+            } else if (s.startsWith("@c")) {
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getConsole()), s.split(" ", 2)[1]));
+            } else if (s.startsWith("@n:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) return;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), s));
-            }
-            if (s.startsWith("@u:")) {
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), s.split(" ", 2)[1]));
+            } else if (s.startsWith("@u:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) return;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), s));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), s.split(" ", 2)[1]));
+            } else {
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(as), s));
             }
         });
 
