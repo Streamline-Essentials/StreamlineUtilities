@@ -76,13 +76,12 @@ public class StreamlineUtilities extends SimpleModule {
         configs = new Configs();
 
         mainListener = new MainListener();
+        ModuleUtils.listen(mainListener, this);
     }
 
     @Override
     public void onDisable() {
         FunctionHandler.disableAll();
         FunctionHandler.unloadAll();
-
-        mainListener.disable();
     }
 }
