@@ -73,6 +73,12 @@ public class FunctionHandler {
         return r;
     }
 
+    public static int reload() {
+        unloadThese(getLoadedFunctions().values());
+        loadFunctions(StreamlineUtilities.getFunctionsFolder());
+        return getLoadedFunctions().size();
+    }
+
     public static void enableAll() {
         enableThese(getLoadedFunctions().values());
     }
