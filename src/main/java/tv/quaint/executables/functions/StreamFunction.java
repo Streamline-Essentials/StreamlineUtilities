@@ -10,7 +10,9 @@ import net.streamline.utils.UUIDUtils;
 import net.streamline.utils.objects.SingleSet;
 import org.jetbrains.annotations.NotNull;
 import tv.quaint.StreamlineUtilities;
+import tv.quaint.executables.ExecutableHandler;
 import tv.quaint.executables.ExecutableUser;
+import tv.quaint.executables.MultipleUser;
 
 import java.io.File;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class StreamlineFunction extends File {
+public class StreamFunction extends File {
     @Getter @Setter
     private boolean enabled;
     @Getter
@@ -26,7 +28,7 @@ public class StreamlineFunction extends File {
     @Getter
     private final String identifier;
 
-    public StreamlineFunction(File parent, @NotNull String child) {
+    public StreamFunction(File parent, @NotNull String child) {
         super(parent, child);
         this.valid = child.endsWith(".sf");
         this.identifier = this.valid ? child.substring(0, child.lastIndexOf(".")) : child;
@@ -42,7 +44,8 @@ public class StreamlineFunction extends File {
         for (int i : map.keySet()) {
             SingleSet<ExecutableUser<?>, String> set = map.get(i);
             if (set == null) continue;
-            if (set.key.runCommand(set.value)) count.getAndIncrement();
+            int result = set.key.runCommand(set.value);
+            if (result > 0) count.getAndAdd(result);
         }
 
         return count.get();
@@ -87,6 +90,8 @@ public class StreamlineFunction extends File {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), s.split(" ", 2)[1]));
             } else if (s.startsWith("@c")) {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getConsole()), s.split(" ", 2)[1]));
+            } else if (s.startsWith("@a")) {
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedUsers())), s.split(" ", 2)[1]));
             } else if (s.startsWith("@n:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) return;
@@ -104,19 +109,19 @@ public class StreamlineFunction extends File {
     }
 
     public boolean isLoaded() {
-        return FunctionHandler.isLoaded(this);
+        return ExecutableHandler.isFunctionLoaded(this);
     }
 
     public boolean load() {
         if (! isValid()) return false;
         if (isLoaded()) return false;
-        FunctionHandler.loadFunction(this);
+        ExecutableHandler.loadFunction(this);
         return true;
     }
 
     public boolean unload() {
         if (! isLoaded()) return false;
-        FunctionHandler.unloadFunction(this);
+        ExecutableHandler.unloadFunction(this);
         return true;
     }
 
@@ -134,7 +139,7 @@ public class StreamlineFunction extends File {
     public boolean disable() {
         if (! isEnabled()) return false;
         setEnabled(false);
-        StreamlineUtilities.getInstance().logInfo("Enabled function with identifier of '" + getIdentifier() + "'!");
+        StreamlineUtilities.getInstance().logInfo("Disabled function with identifier of '" + getIdentifier() + "'!");
         return true;
     }
 }

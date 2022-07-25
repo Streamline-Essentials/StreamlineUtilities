@@ -3,7 +3,8 @@
 # DIRECTORS:
 # @o = As full permissions.
 # @c = As console.
+# @a = As all users.
 # @n:"<name>" = As <name>.
 # @u:"<uuid>" = As <uuid>.
 # Example:
-server test
+server lobby

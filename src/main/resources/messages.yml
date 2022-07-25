@@ -1,0 +1,5 @@
+errors:
+  functions:
+    not:
+      loaded: "&cThat function is not loaded!"
+      enabled: "&cThat function is not enabled!"

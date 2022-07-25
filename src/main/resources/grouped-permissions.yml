@@ -1,0 +1,12 @@
+staff:
+  name: "&c&lStaff"
+  permission: "streamline.utils.group.staff"
+builder:
+  name: "&2&lBuilder"
+  permission: "streamline.utils.group.builder"
+mod:
+  name: "&b&lMod"
+  permission: "streamline.utils.group.mod"
+admin:
+  name: "&c&lAdmin"
+  permission: "streamline.utils.group.admin"

@@ -5,8 +5,8 @@ import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.savables.users.SavableUser;
 import net.streamline.base.configs.MainMessagesHandler;
 import tv.quaint.StreamlineUtilities;
-import tv.quaint.executables.functions.FunctionHandler;
-import tv.quaint.executables.functions.StreamlineFunction;
+import tv.quaint.executables.ExecutableHandler;
+import tv.quaint.executables.functions.StreamFunction;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class FunctionCommand extends ModuleCommand {
         if (strings.length == 1) {
             String arg = strings[0];
             if (arg.equals("reload")) {
-                int reloaded = FunctionHandler.reload();
+                int reloaded = ExecutableHandler.reloadFunctions();
                 ModuleUtils.sendMessage(savableUser, messageResultReload.replace("%this_amount%", String.valueOf(reloaded)));
                 return;
             }
@@ -52,7 +52,7 @@ public class FunctionCommand extends ModuleCommand {
         }
 
         for (String identifier : ModuleUtils.argsMinus(strings, 0)) {
-            StreamlineFunction function = FunctionHandler.getEnabledFunction(identifier);
+            StreamFunction function = ExecutableHandler.getEnabledFunction(identifier);
             if (function == null) {
                 ModuleUtils.sendMessage(savableUser, messageFunctionNotFound
                         .replace("%this_identifier%", identifier)
@@ -78,6 +78,6 @@ public class FunctionCommand extends ModuleCommand {
             return r;
         }
 
-        return FunctionHandler.getEnabledFunctionIdentifiers();
+        return ExecutableHandler.getEnabledFunctionIdentifiers();
     }
 }

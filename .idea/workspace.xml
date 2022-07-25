@@ -4,11 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix : Touch ups.">
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix : More touch ups.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/BroadcastCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/OnlineCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TextCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TitleCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/GroupedPermissionConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/Messages.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/PermissionGroup.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/MultipleUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/aliases/AliasCompletions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/aliases/AliasExecution.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/aliases/AliasGetter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/aliases/StreamAlias.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/ratapi/UtilitiesExpansion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/grouped-permissions.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/hub-alias.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/lobby-alias.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/messages.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/StreamlineUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/StreamlineUtilities.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/FunctionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/FunctionCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/FunctionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/FunctionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/StreamlineFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/StreamlineFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/ExecutableUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/ExecutableUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/FunctionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/ExecutableHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/StreamlineFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/functions/StreamFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/default-function.sf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/default-function.sf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +43,9 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -40,6 +63,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -70,6 +94,7 @@
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="tv.quaint.configs" />
+      <recent name="tv.quaint.commands" />
     </key>
   </component>
   <component name="RunManager">
@@ -147,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1658562513439</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Fix : More touch ups.">
+      <created>1658563867788</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1658563867788</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -171,6 +203,7 @@
     <MESSAGE value="Fix : Command actually created now." />
     <MESSAGE value="Fix : Chat works now." />
     <MESSAGE value="Fix : Touch ups." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix : Touch ups." />
+    <MESSAGE value="Fix : More touch ups." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix : More touch ups." />
   </component>
 </project>
