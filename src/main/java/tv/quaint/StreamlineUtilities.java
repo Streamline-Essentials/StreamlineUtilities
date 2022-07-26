@@ -76,7 +76,8 @@ public class StreamlineUtilities extends SimpleModule {
                 new BroadcastCommand(),
                 new TextCommand(),
                 new TitleCommand(),
-                new OnlineCommand()
+                new OnlineCommand(),
+                new TeleportCommand()
         ));
     }
 

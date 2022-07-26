@@ -3,7 +3,6 @@ package tv.quaint.commands;
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.modules.StreamlineModule;
 import net.streamline.api.savables.users.SavableUser;
 import tv.quaint.StreamlineUtilities;
 

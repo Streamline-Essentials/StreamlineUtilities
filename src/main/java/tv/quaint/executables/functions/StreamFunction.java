@@ -87,19 +87,19 @@ public class StreamFunction extends File {
 
         uncommentedLines().forEach((integer, s) -> {
             if (s.startsWith("@o")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), s.split(" ", 2)[1]));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@c")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getConsole()), s.split(" ", 2)[1]));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getConsole()), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@a")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedUsers())), s.split(" ", 2)[1]));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedUsers())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@n:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) return;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), s.split(" ", 2)[1]));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@u:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) return;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), s.split(" ", 2)[1]));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(as), s));
             }
