@@ -35,7 +35,7 @@ public class TeleportCommand extends ModuleCommand {
         }
 
         String username = strings[0];
-        SavableUser other = ModuleUtils.getOrGetUser(username);
+        SavableUser other = ModuleUtils.getOrGetUserByName(username);
         if (other == null) {
             ModuleUtils.sendMessage(savableUser, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
