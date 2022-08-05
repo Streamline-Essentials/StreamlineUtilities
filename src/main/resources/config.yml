@@ -1,4 +1,8 @@
+# Configurations for chat.
 chat:
+  # Configurations for chat modifying.
   modify:
+    # Enable modifying chat? --> formatting (color codes, placeholders, etc.)
     enabled: true
+    # The permission the sender needs in order for their messages to be modified.
     permission: "streamline.utils.chat.modify"

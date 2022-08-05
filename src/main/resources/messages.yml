@@ -1,5 +1,10 @@
+# Messages for errors.
 errors:
+  # Messages for errors with functions.
   functions:
+    # If the function is not ___...
     not:
+      # Error message for when a function is not loaded.
       loaded: "&cThat function is not loaded!"
+      # Error message for when a function is not enabled.
       enabled: "&cThat function is not enabled!"

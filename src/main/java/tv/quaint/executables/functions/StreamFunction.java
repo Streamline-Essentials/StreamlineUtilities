@@ -85,7 +85,8 @@ public class StreamFunction extends File {
     public TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> getCommandsWithAs(SavableUser as) {
         TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> r = new TreeMap<>();
 
-        uncommentedLines().forEach((integer, s) -> {
+        for (int integer : uncommentedLines().keySet()) {
+            String s = uncommentedLines().get(integer);
             if (s.startsWith("@o")) {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@c")) {
@@ -94,16 +95,16 @@ public class StreamFunction extends File {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedUsers())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@n:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
-                if (groups.size() <= 0) return;
+                if (groups.size() <= 0) continue;
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@u:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
-                if (groups.size() <= 0) return;
+                if (groups.size() <= 0) continue;
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(as), s));
             }
-        });
+        }
 
         return r;
     }
