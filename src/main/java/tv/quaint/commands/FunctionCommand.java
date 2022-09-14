@@ -1,9 +1,9 @@
 package tv.quaint.commands;
 
 import net.streamline.api.command.ModuleCommand;
+import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.SavableUser;
-import net.streamline.base.configs.MainMessagesHandler;
+import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.executables.ExecutableHandler;
 import tv.quaint.executables.functions.StreamFunction;
@@ -28,33 +28,33 @@ public class FunctionCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(SavableUser savableUser, String[] strings) {
+    public void run(StreamlineUser StreamlineUser, String[] strings) {
         if (strings.length == 1) {
             String arg = strings[0];
             if (arg.equals("reload")) {
                 int reloaded = ExecutableHandler.reloadFunctions();
-                ModuleUtils.sendMessage(savableUser, messageResultReload.replace("%this_amount%", String.valueOf(reloaded)));
+                ModuleUtils.sendMessage(StreamlineUser, messageResultReload.replace("%this_amount%", String.valueOf(reloaded)));
                 return;
             }
         }
 
         if (strings.length < 2) {
-            ModuleUtils.sendMessage(savableUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
 
         String username = strings[0];
 
-        SavableUser other = ModuleUtils.getOrGetUserByName(username);
+        StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
         if (other == null) {
-            ModuleUtils.sendMessage(savableUser, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
+            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
         }
 
         for (String identifier : ModuleUtils.argsMinus(strings, 0)) {
             StreamFunction function = ExecutableHandler.getEnabledFunction(identifier);
             if (function == null) {
-                ModuleUtils.sendMessage(savableUser, messageFunctionNotFound
+                ModuleUtils.sendMessage(StreamlineUser, messageFunctionNotFound
                         .replace("%this_identifier%", identifier)
                         .replace("%this_other%", other.getName())
                 );
@@ -63,7 +63,7 @@ public class FunctionCommand extends ModuleCommand {
 
             function.runAs(other);
 
-            ModuleUtils.sendMessage(savableUser, messageResultSuccess
+            ModuleUtils.sendMessage(StreamlineUser, messageResultSuccess
                     .replace("%this_identifier%", identifier)
                     .replace("%this_other%", other.getName())
             );
@@ -71,7 +71,7 @@ public class FunctionCommand extends ModuleCommand {
     }
 
     @Override
-    public List<String> doTabComplete(SavableUser savableUser, String[] strings) {
+    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         if (strings.length <= 1) {
             List<String> r = ModuleUtils.getOnlinePlayerNames();
             r.add("reload");

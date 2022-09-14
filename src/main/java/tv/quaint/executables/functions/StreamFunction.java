@@ -2,12 +2,12 @@ package tv.quaint.executables.functions;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.streamline.api.configs.given.CachedUUIDsHandler;
 import net.streamline.api.modules.ModuleUtils;
+import net.streamline.api.objects.SingleSet;
 import net.streamline.api.savables.users.OperatorUser;
-import net.streamline.api.savables.users.SavableUser;
-import net.streamline.utils.MatcherUtils;
-import net.streamline.utils.UUIDUtils;
-import net.streamline.utils.objects.SingleSet;
+import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.utils.MatcherUtils;
 import org.jetbrains.annotations.NotNull;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.executables.ExecutableHandler;
@@ -38,7 +38,7 @@ public class StreamFunction extends File {
         return runAs(ModuleUtils.getConsole());
     }
 
-    public int runAs(SavableUser user) {
+    public int runAs(StreamlineUser user) {
         AtomicInteger count = new AtomicInteger();
         TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> map = getCommandsWithAs(user);
         for (int i : map.keySet()) {
@@ -82,7 +82,7 @@ public class StreamFunction extends File {
         return r;
     }
 
-    public TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> getCommandsWithAs(SavableUser as) {
+    public TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> getCommandsWithAs(StreamlineUser as) {
         TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> r = new TreeMap<>();
 
         for (int integer : uncommentedLines().keySet()) {
@@ -92,15 +92,15 @@ public class StreamFunction extends File {
             } else if (s.startsWith("@c")) {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getConsole()), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@a")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedUsers())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedUsersSet())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@n:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) continue;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(CachedUUIDsHandler.getCachedUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@u:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) continue;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(UUIDUtils.swapToUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(CachedUUIDsHandler.getCachedUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(as), s));
             }

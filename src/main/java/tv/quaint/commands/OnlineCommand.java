@@ -2,9 +2,9 @@ package tv.quaint.commands;
 
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
+import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.SavableUser;
-import net.streamline.base.configs.MainMessagesHandler;
+import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.configs.obj.PermissionGroup;
 
@@ -68,24 +68,24 @@ public class OnlineCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(SavableUser savableUser, String[] strings) {
+    public void run(StreamlineUser StreamlineUser, String[] strings) {
         if (strings.length <= 0) {
-            ModuleUtils.sendMessage(savableUser, getWithOther(savableUser,
+            ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser,
                     messageResultGlobalBase
                             .replace("%this_online_global%", getOnlineGlobal())
-                            .replace("%this_online_exact%", getOnlineExact(savableUser.latestServer))
-                            .replace("%this_online_permission%", getOnlineExact(savableUser.latestServer))
+                            .replace("%this_online_exact%", getOnlineExact(StreamlineUser.getLatestServer()))
+                            .replace("%this_online_permission%", getOnlineByPermission(StreamlineUser.getLatestServer()))
                     ,
-                    savableUser
+                    StreamlineUser
             ));
             return;
         }
         if (strings.length > 2) {
-            ModuleUtils.sendMessage(savableUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
+            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
             return;
         }
         if (strings.length <= 1) {
-            ModuleUtils.sendMessage(savableUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
 
@@ -94,35 +94,35 @@ public class OnlineCommand extends ModuleCommand {
             case "server" -> {
                 String serverName = strings[1];
                 if (! ModuleUtils.equalsAnyServer(serverName)) {
-                    ModuleUtils.sendMessage(savableUser, messageErrorInvalidServer.replace("%this_identifier%", serverName));
+                    ModuleUtils.sendMessage(StreamlineUser, messageErrorInvalidServer.replace("%this_identifier%", serverName));
                     return;
                 }
 
-                ModuleUtils.sendMessage(savableUser, getWithOther(savableUser,
+                ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser,
                         messageResultExactBase
                                 .replace("%this_identifier%", serverName)
                                 .replace("%this_online_global%", getOnlineGlobal())
                                 .replace("%this_online_exact%", getOnlineExact(serverName))
                                 .replace("%this_online_permission%", getOnlineByPermission(serverName))
                         ,
-                        savableUser
+                        StreamlineUser
                 ));
             }
             case "group" -> {
                 String group = strings[1];
                 if (! StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().containsKey(group)) {
-                    ModuleUtils.sendMessage(savableUser, messageErrorInvalidGroup.replace("%this_identifier%", group));
+                    ModuleUtils.sendMessage(StreamlineUser, messageErrorInvalidGroup.replace("%this_identifier%", group));
                     return;
                 }
 
-                ModuleUtils.sendMessage(savableUser, getWithOther(savableUser,
+                ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser,
                         messageResultPermissionedBase
                                 .replace("%this_identifier%", group)
                                 .replace("%this_online_global%", getOnlineGlobal())
                                 .replace("%this_online_exact%", getOnlineExact(group))
                                 .replace("%this_online_permission%", getOnlineByPermission(group))
                         ,
-                        savableUser
+                        StreamlineUser
                 ));
             }
             default -> {
@@ -132,20 +132,20 @@ public class OnlineCommand extends ModuleCommand {
     }
 
     @Override
-    public List<String> doTabComplete(SavableUser savableUser, String[] strings) {
+    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         if (strings.length <= 1) return List.of("server", "group");
         if (strings.length > 2) return new ArrayList<>();
         if (strings[0].equals("server")) {
             List<String> r = new ArrayList<>();
             ModuleUtils.getServerNames().forEach(a -> {
-                if (ModuleUtils.hasPermission(savableUser, permissionServers + a)) r.add(a);
+                if (ModuleUtils.hasPermission(StreamlineUser, permissionServers + a)) r.add(a);
             });
             return r;
         }
         if (strings[0].equals("group")) {
             List<String> r = new ArrayList<>();
             StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().keySet().stream().toList().forEach(a -> {
-                if (ModuleUtils.hasPermission(savableUser, permissionServers + a)) r.add(a);
+                if (ModuleUtils.hasPermission(StreamlineUser, permissionServers + a)) r.add(a);
             });
             return r;
         }
@@ -175,8 +175,8 @@ public class OnlineCommand extends ModuleCommand {
         if (group == null) return "";
 
         List<String> modified = new ArrayList<>();
-        ModuleUtils.getLoadedUsers().forEach(a -> {
-            if (! a.online) return;
+        ModuleUtils.getLoadedUsersSet().forEach(a -> {
+            if (! a.isOnline()) return;
             if (! ModuleUtils.hasPermission(a, group.permission())) return;
             modified.add(messageResultPermissionedModified.replace("%this_username%", a.getName()));
         });

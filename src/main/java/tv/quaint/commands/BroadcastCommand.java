@@ -3,7 +3,7 @@ package tv.quaint.commands;
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.SavableUser;
+import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class BroadcastCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(SavableUser savableUser, String[] strings) {
+    public void run(StreamlineUser StreamlineUser, String[] strings) {
         String message = ModuleUtils.argsToString(strings);
 
         boolean isCustom = false;
@@ -34,16 +34,16 @@ public class BroadcastCommand extends ModuleCommand {
         }
 
         final String finalMessage = message;
-        ModuleUtils.getLoadedUsers().forEach(a -> {
+        ModuleUtils.getLoadedUsersSet().forEach(a -> {
             ModuleUtils.sendMessage(a, messageResultAll
                     .replace("%this_message%", finalMessage)
-                    .replace("%this_sender%", savableUser.getName())
+                    .replace("%this_sender%", StreamlineUser.getName())
             );
         });
     }
 
     @Override
-    public List<String> doTabComplete(SavableUser savableUser, String[] strings) {
+    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         return new ArrayList<>();
     }
 }

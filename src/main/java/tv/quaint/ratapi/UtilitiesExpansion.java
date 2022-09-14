@@ -1,7 +1,7 @@
 package tv.quaint.ratapi;
 
 import net.streamline.api.placeholder.RATExpansion;
-import net.streamline.api.savables.users.SavableUser;
+import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.configs.obj.PermissionGroup;
 
@@ -28,7 +28,7 @@ public class UtilitiesExpansion extends RATExpansion {
     }
 
     @Override
-    public String onRequest(SavableUser savableUser, String s) {
+    public String onRequest(StreamlineUser StreamlineUser, String s) {
         return null;
     }
 }

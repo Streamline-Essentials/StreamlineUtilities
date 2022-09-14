@@ -89,9 +89,9 @@ public class StreamlineUtilities extends SimpleModule {
                 new AliasGetter("online_names", () -> {
                     List<String> r = new ArrayList<>();
 
-                    ModuleUtils.getLoadedUsers().forEach(a -> {
+                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
 //            if (a.online && ! (a instanceof SavableConsole))
-                        if (a.online) r.add(a.getName());
+                        if (a.isOnline()) r.add(a.getName());
                     });
 
                     return r;
@@ -99,9 +99,9 @@ public class StreamlineUtilities extends SimpleModule {
                 new AliasGetter("online_uuids", () -> {
                     List<String> r = new ArrayList<>();
 
-                    ModuleUtils.getLoadedUsers().forEach(a -> {
+                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
 //            if (a.online && ! (a instanceof SavableConsole))
-                        if (a.online) r.add(a.uuid);
+                        if (a.isOnline()) r.add(a.getUuid());
                     });
 
                     return r;
@@ -109,7 +109,7 @@ public class StreamlineUtilities extends SimpleModule {
                 new AliasGetter("loaded_names", () -> {
                     List<String> r = new ArrayList<>();
 
-                    ModuleUtils.getLoadedUsers().forEach(a -> {
+                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
                         r.add(a.getName());
                     });
 
@@ -118,8 +118,8 @@ public class StreamlineUtilities extends SimpleModule {
                 new AliasGetter("loaded_uuids", () -> {
                     List<String> r = new ArrayList<>();
 
-                    ModuleUtils.getLoadedUsers().forEach(a -> {
-                        r.add(a.uuid);
+                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
+                        r.add(a.getUuid());
                     });
 
                     return r;
@@ -129,6 +129,7 @@ public class StreamlineUtilities extends SimpleModule {
             ExecutableHandler.unloadGetter(a);
             ExecutableHandler.loadGetter(a);
         });
+        utilitiesExpansion = new UtilitiesExpansion();
     }
 
     @Override
@@ -189,7 +190,7 @@ public class StreamlineUtilities extends SimpleModule {
             ModuleUtils.getRATAPI().unregisterExpansion(expansion);
             expansion = ModuleUtils.getRATAPI().getExpansionByIdentifier("utils");
         }
-        utilitiesExpansion = new UtilitiesExpansion();
+        getUtilitiesExpansion().register();
     }
 
     @Override
@@ -198,7 +199,6 @@ public class StreamlineUtilities extends SimpleModule {
         ExecutableHandler.disableAllFunctions();
         ExecutableHandler.unloadAllFunctions();
 
-//        getUtilitiesExpansion().disable();
-        ModuleUtils.getRATAPI().unregisterExpansion(getUtilitiesExpansion());
+        getUtilitiesExpansion().unregister();
     }
 }

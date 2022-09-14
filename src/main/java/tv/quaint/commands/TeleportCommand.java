@@ -2,9 +2,9 @@ package tv.quaint.commands;
 
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
+import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.SavableUser;
-import net.streamline.base.configs.MainMessagesHandler;
+import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 
 import java.util.ArrayList;
@@ -25,28 +25,28 @@ public class TeleportCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(SavableUser savableUser, String[] strings) {
+    public void run(StreamlineUser StreamlineUser, String[] strings) {
         if (strings.length < 1) {
-            ModuleUtils.sendMessage(savableUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         } else if (strings.length > 1) {
-            ModuleUtils.sendMessage(savableUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
+            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
             return;
         }
 
         String username = strings[0];
-        SavableUser other = ModuleUtils.getOrGetUserByName(username);
+        StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
         if (other == null) {
-            ModuleUtils.sendMessage(savableUser, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
+            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
         }
 
-        ModuleUtils.connect(savableUser, other.latestServer);
-        ModuleUtils.sendMessage(savableUser, getWithOther(savableUser, messageResult, other));
+        ModuleUtils.connect(StreamlineUser, other.getLatestServer());
+        ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser, messageResult, other));
     }
 
     @Override
-    public List<String> doTabComplete(SavableUser savableUser, String[] strings) {
+    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         return ModuleUtils.getOnlinePlayerNames();
     }
 }

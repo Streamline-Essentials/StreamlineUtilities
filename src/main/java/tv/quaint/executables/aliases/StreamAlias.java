@@ -3,7 +3,7 @@ package tv.quaint.executables.aliases;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.savables.users.SavableUser;
+import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 
 import java.io.File;
@@ -27,12 +27,12 @@ public class StreamAlias extends ModuleCommand {
     }
 
     @Override
-    public void run(SavableUser savableUser, String[] strings) {
-        execution.execute(savableUser);
+    public void run(StreamlineUser StreamlineUser, String[] strings) {
+        execution.execute(StreamlineUser);
     }
 
     @Override
-    public List<String> doTabComplete(SavableUser savableUser, String[] strings) {
+    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         if (AliasCompletions.getCompletions(this).containsKey(strings.length)) {
             return AliasCompletions.getCompletions(this).get(strings.length);
         }

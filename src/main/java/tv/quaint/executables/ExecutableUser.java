@@ -2,7 +2,7 @@ package tv.quaint.executables;
 
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.savables.users.OperatorUser;
-import net.streamline.api.savables.users.SavableUser;
+import net.streamline.api.savables.users.StreamlineUser;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,8 +11,8 @@ public record ExecutableUser<T>(T user) {
     private static final int FAIL = -1;
 
     public int runCommand(String command) {
-        if (user instanceof SavableUser savableUser) {
-            return ModuleUtils.runAs(savableUser, command) ? SUCCESS : FAIL;
+        if (user instanceof StreamlineUser StreamlineUser) {
+            return ModuleUtils.runAs(StreamlineUser, command) ? SUCCESS : FAIL;
         }
         if (user instanceof OperatorUser operatorUser) {
             return ModuleUtils.runAs(operatorUser, command) ? SUCCESS : FAIL;

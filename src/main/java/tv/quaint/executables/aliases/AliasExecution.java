@@ -3,7 +3,7 @@ package tv.quaint.executables.aliases;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.SavableUser;
+import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.executables.ExecutableHandler;
 
@@ -25,7 +25,7 @@ public class AliasExecution {
         ;
     }
 
-    public boolean execute(SavableUser sender) {
+    public boolean execute(StreamlineUser sender) {
         switch (getType()) {
             case COMMAND -> {
                 ModuleUtils.runAs(sender, execution);
