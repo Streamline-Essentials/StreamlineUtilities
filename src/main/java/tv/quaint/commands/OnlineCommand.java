@@ -11,6 +11,7 @@ import tv.quaint.configs.obj.PermissionGroup;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class OnlineCommand extends ModuleCommand {
     @Getter
@@ -132,24 +133,24 @@ public class OnlineCommand extends ModuleCommand {
     }
 
     @Override
-    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
-        if (strings.length <= 1) return List.of("server", "group");
-        if (strings.length > 2) return new ArrayList<>();
+    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+        if (strings.length <= 1) return new ConcurrentSkipListSet<>(List.of("server", "group"));
+        if (strings.length > 2) return new ConcurrentSkipListSet<>();
         if (strings[0].equals("server")) {
-            List<String> r = new ArrayList<>();
+            ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
             ModuleUtils.getServerNames().forEach(a -> {
                 if (ModuleUtils.hasPermission(StreamlineUser, permissionServers + a)) r.add(a);
             });
             return r;
         }
         if (strings[0].equals("group")) {
-            List<String> r = new ArrayList<>();
+            ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
             StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().keySet().stream().toList().forEach(a -> {
                 if (ModuleUtils.hasPermission(StreamlineUser, permissionServers + a)) r.add(a);
             });
             return r;
         }
-        return new ArrayList<>();
+        return new ConcurrentSkipListSet<>();
     }
 
     public String getOnlineGlobal() {

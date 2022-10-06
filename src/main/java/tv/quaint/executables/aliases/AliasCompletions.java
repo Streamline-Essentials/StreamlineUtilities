@@ -7,12 +7,14 @@ import tv.quaint.executables.ExecutableHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class AliasCompletions {
-    public static TreeMap<Integer, List<String>> getCompletions(StreamAlias alias) {
+    public static ConcurrentSkipListMap<Integer, ConcurrentSkipListSet<String>> getCompletions(StreamAlias alias) {
         FlatFileSection section = alias.getCommandResource().resource.getSection("basic.completion");
 
-        TreeMap<Integer, List<String>> r = new TreeMap<>();
+        ConcurrentSkipListMap<Integer, ConcurrentSkipListSet<String>> r = new ConcurrentSkipListMap<>();
 
         StreamlineUtilities.getGetters().forEach(a -> {
             ExecutableHandler.unloadGetter(a);
@@ -27,7 +29,7 @@ public class AliasCompletions {
                 StreamlineUtilities.getInstance().logWarning("StreamAlias '" + alias.getBase() + "' has a mis-configured completion argument! Argument '" + key + "' was found to not be an integer! It must be an integer!");
             }
 
-            List<String> completion = section.getOrSetDefault(key, new ArrayList<>());
+            ConcurrentSkipListSet<String> completion = new ConcurrentSkipListSet<>(section.getOrSetDefault(key, new ArrayList<>()));
             for (String string : new ArrayList<>(completion)) {
                 if (string.startsWith("@")) {
                     String identifier = string.substring("@".length());

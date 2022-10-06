@@ -9,6 +9,7 @@ import tv.quaint.executables.ExecutableHandler;
 import tv.quaint.executables.functions.StreamFunction;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class FunctionCommand extends ModuleCommand {
     private final String messageResultSuccess;
@@ -71,9 +72,9 @@ public class FunctionCommand extends ModuleCommand {
     }
 
     @Override
-    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         if (strings.length <= 1) {
-            List<String> r = ModuleUtils.getOnlinePlayerNames();
+            ConcurrentSkipListSet<String> r = ModuleUtils.getOnlinePlayerNames();
             r.add("reload");
             return r;
         }

@@ -8,6 +8,7 @@ import tv.quaint.StreamlineUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class BroadcastCommand extends ModuleCommand {
     @Getter
@@ -43,7 +44,7 @@ public class BroadcastCommand extends ModuleCommand {
     }
 
     @Override
-    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
-        return new ArrayList<>();
+    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+        return new ConcurrentSkipListSet<>();
     }
 }

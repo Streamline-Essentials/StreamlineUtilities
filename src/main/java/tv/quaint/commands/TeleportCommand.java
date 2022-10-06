@@ -9,6 +9,7 @@ import tv.quaint.StreamlineUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class TeleportCommand extends ModuleCommand {
     @Getter
@@ -46,7 +47,7 @@ public class TeleportCommand extends ModuleCommand {
     }
 
     @Override
-    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         return ModuleUtils.getOnlinePlayerNames();
     }
 }

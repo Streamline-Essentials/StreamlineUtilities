@@ -8,7 +8,7 @@ import net.streamline.api.events.server.StreamlineChatEvent;
 import net.streamline.api.modules.ModuleUtils;
 import tv.quaint.StreamlineUtilities;
 
-public class MainListener implements StreamlineListener {
+public class MainListener extends StreamlineListener {
     @EventProcessor
     public void onChat(StreamlineChatEvent chatEvent) {
         if (StreamlineUtilities.getConfigs().chatModifyEnabled()) {

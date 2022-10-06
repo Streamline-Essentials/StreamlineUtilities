@@ -9,6 +9,7 @@ import tv.quaint.StreamlineUtilities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class StreamAlias extends ModuleCommand {
     @Getter @Setter
@@ -32,11 +33,11 @@ public class StreamAlias extends ModuleCommand {
     }
 
     @Override
-    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         if (AliasCompletions.getCompletions(this).containsKey(strings.length)) {
             return AliasCompletions.getCompletions(this).get(strings.length);
         }
 
-        return new ArrayList<>();
+        return new ConcurrentSkipListSet<>();
     }
 }

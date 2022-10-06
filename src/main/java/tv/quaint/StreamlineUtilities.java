@@ -6,6 +6,7 @@ import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.modules.SimpleModule;
 import net.streamline.api.modules.dependencies.Dependency;
 import net.streamline.api.placeholder.RATExpansion;
+import org.pf4j.PluginWrapper;
 import tv.quaint.commands.*;
 import tv.quaint.configs.Configs;
 import tv.quaint.configs.CustomPlaceholdersConfig;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class StreamlineUtilities extends SimpleModule {
     @Getter
@@ -50,23 +52,10 @@ public class StreamlineUtilities extends SimpleModule {
     static UtilitiesExpansion utilitiesExpansion;
 
     @Getter
-    static List<AliasGetter> getters;
+    static ConcurrentSkipListSet<AliasGetter> getters;
 
-    @Override
-    public String identifier() {
-        return "streamline-utils";
-    }
-
-    @Override
-    public List<String> authors() {
-        return List.of(
-                "Quaint"
-        );
-    }
-
-    @Override
-    public List<Dependency> dependencies() {
-        return Collections.emptyList();
+    public StreamlineUtilities(PluginWrapper wrapper) {
+        super(wrapper);
     }
 
     @Override
@@ -85,9 +74,9 @@ public class StreamlineUtilities extends SimpleModule {
     public void onLoad() {
         instance = this;
 
-        getters = List.of(new AliasGetter("servers", ModuleUtils::getServerNames),
+        getters = new ConcurrentSkipListSet<>(List.of(new AliasGetter("servers", ModuleUtils::getServerNames),
                 new AliasGetter("online_names", () -> {
-                    List<String> r = new ArrayList<>();
+                    ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
                     ModuleUtils.getLoadedUsersSet().forEach(a -> {
 //            if (a.online && ! (a instanceof SavableConsole))
@@ -97,7 +86,7 @@ public class StreamlineUtilities extends SimpleModule {
                     return r;
                 }),
                 new AliasGetter("online_uuids", () -> {
-                    List<String> r = new ArrayList<>();
+                    ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
                     ModuleUtils.getLoadedUsersSet().forEach(a -> {
 //            if (a.online && ! (a instanceof SavableConsole))
@@ -107,7 +96,7 @@ public class StreamlineUtilities extends SimpleModule {
                     return r;
                 }),
                 new AliasGetter("loaded_names", () -> {
-                    List<String> r = new ArrayList<>();
+                    ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
                     ModuleUtils.getLoadedUsersSet().forEach(a -> {
                         r.add(a.getName());
@@ -116,14 +105,14 @@ public class StreamlineUtilities extends SimpleModule {
                     return r;
                 }),
                 new AliasGetter("loaded_uuids", () -> {
-                    List<String> r = new ArrayList<>();
+                    ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
                     ModuleUtils.getLoadedUsersSet().forEach(a -> {
                         r.add(a.getUuid());
                     });
 
                     return r;
-                }));
+                })));
 
         getGetters().forEach(a -> {
             ExecutableHandler.unloadGetter(a);

@@ -9,10 +9,12 @@ import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.objects.StreamlineTitle;
 import net.streamline.api.savables.users.StreamlinePlayer;
 import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.utils.MessageUtils;
 import tv.quaint.StreamlineUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class TitleCommand extends ModuleCommand {
     @Getter
@@ -74,16 +76,13 @@ public class TitleCommand extends ModuleCommand {
         }
         String message = ModuleUtils.argsToStringMinus(strings, 0, 1, 2, 3);
 
-        SLAPI.getInstance().getMessenger().logInfo("Message got: " + message);
-
         String[] parts = message.split(subtitleSplitter, 2);
-        SLAPI.getInstance().getMessenger().logInfo("Splitter: " + subtitleSplitter);
         String title, sub;
         if (parts.length <= 0) {
             title = "";
             sub = "";
         } else if (parts.length == 1) {
-            SLAPI.getInstance().getMessenger().logInfo("");
+            MessageUtils.logInfo("");
             title = parts[0];
             sub = "";
         } else {
@@ -114,13 +113,13 @@ public class TitleCommand extends ModuleCommand {
     }
 
     @Override
-    public List<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
-        List<String> online = ModuleUtils.getOnlinePlayerNames();
+    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+        ConcurrentSkipListSet<String> online = ModuleUtils.getOnlinePlayerNames();
 
         if (strings.length <= 1) return online;
-        if (strings.length == 2) return List.of("<fade-in>");
-        if (strings.length == 3) return List.of("<stay>");
-        if (strings.length == 4) return List.of("<fade-out>");
+        if (strings.length == 2) return new ConcurrentSkipListSet<>(List.of("<fade-in>"));
+        if (strings.length == 3) return new ConcurrentSkipListSet<>(List.of("<stay>"));
+        if (strings.length == 4) return new ConcurrentSkipListSet<>(List.of("<fade-out>"));
         String message = ModuleUtils.argsToStringMinus(strings, 0, 1, 2, 3);
         if (! message.contains(subtitleSplitter)) online.add(subtitleSplitter);
 

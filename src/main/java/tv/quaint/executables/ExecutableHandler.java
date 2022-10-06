@@ -9,11 +9,13 @@ import tv.quaint.executables.functions.StreamFunction;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExecutableHandler {
     @Getter @Setter
-    private static TreeMap<String, StreamFunction> loadedFunctions = new TreeMap<>();
+    private static ConcurrentSkipListMap<String, StreamFunction> loadedFunctions = new ConcurrentSkipListMap<>();
 
     public static void loadFunctions(File folder) {
         if (! folder.isDirectory()) return;
@@ -21,7 +23,7 @@ public class ExecutableHandler {
 
         File[] files = folder.listFiles();
         if (files == null) return;
-        List<StreamFunction> toLoad = new ArrayList<>();
+        ConcurrentSkipListSet<StreamFunction> toLoad = new ConcurrentSkipListSet<>();
         for (File file : files) {
             toLoad.add(new StreamFunction(file.getParentFile(), file.getName()));
         }
@@ -38,7 +40,7 @@ public class ExecutableHandler {
         StreamlineUtilities.getInstance().logInfo("Unloaded function with identifier of '" + function.getIdentifier() + "'!");
     }
 
-    public static void loadTheseFunctions(Collection<StreamFunction> functions) {
+    public static void loadTheseFunctions(ConcurrentSkipListSet<StreamFunction> functions) {
         AtomicInteger count = new AtomicInteger();
         functions.forEach((streamFunction) -> {
             if (streamFunction.load()) count.getAndIncrement();
@@ -48,10 +50,10 @@ public class ExecutableHandler {
     }
 
     public static void unloadAllFunctions() {
-        unloadTheseFunctions(new ArrayList<>(getLoadedFunctions().values()));
+        unloadTheseFunctions(new ConcurrentSkipListSet<>(getLoadedFunctions().values()));
     }
 
-    public static void unloadTheseFunctions(Collection<StreamFunction> functions) {
+    public static void unloadTheseFunctions(ConcurrentSkipListSet<StreamFunction> functions) {
         AtomicInteger count = new AtomicInteger();
         functions.forEach((streamFunction) -> {
             if (streamFunction.unload()) count.getAndIncrement();
@@ -64,18 +66,18 @@ public class ExecutableHandler {
         return getLoadedFunctions().containsValue(function);
     }
 
-    public static TreeMap<String, StreamFunction> getEnabledFunctions() {
-        TreeMap<String, StreamFunction> r = new TreeMap<>();
+    public static ConcurrentSkipListMap<String, StreamFunction> getEnabledFunctions() {
+        ConcurrentSkipListMap<String, StreamFunction> r = new ConcurrentSkipListMap<>();
 
-        for (StreamFunction function : getLoadedFunctions().values()) {
+        getLoadedFunctions().forEach((s, function) -> {
             if (function.isEnabled()) r.put(function.getIdentifier(), function);
-        }
+        });
 
         return r;
     }
 
     public static int reloadFunctions() {
-        unloadTheseFunctions(new ArrayList<>(getLoadedFunctions().values()));
+        unloadTheseFunctions(new ConcurrentSkipListSet<>(getLoadedFunctions().values()));
         loadFunctions(StreamlineUtilities.getFunctionsFolder());
         enableAllFunctions();
         return getLoadedFunctions().size();
@@ -123,8 +125,8 @@ public class ExecutableHandler {
         return r;
     }
 
-    public static List<String> getEnabledFunctionIdentifiers() {
-        List<String> r = new ArrayList<>();
+    public static ConcurrentSkipListSet<String> getEnabledFunctionIdentifiers() {
+        ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
         getEnabledFunctions().forEach((s, function) -> r.add(s));
 
@@ -158,7 +160,7 @@ public class ExecutableHandler {
         return getLoadedAliasGetters().get(identifier);
     }
 
-    public static List<String> getGetterAndGet(String identifier) {
+    public static ConcurrentSkipListSet<String> getGetterAndGet(String identifier) {
         return getGetter(identifier).get();
     }
 
