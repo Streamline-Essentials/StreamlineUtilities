@@ -70,7 +70,7 @@ public class OnlineCommand extends ModuleCommand {
 
     @Override
     public void run(StreamlineUser StreamlineUser, String[] strings) {
-        if (strings.length <= 0) {
+        if (strings[0].equals("")) {
             ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser,
                     messageResultGlobalBase
                             .replace("%this_online_global%", getOnlineGlobal())

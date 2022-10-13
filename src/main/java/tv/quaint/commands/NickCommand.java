@@ -63,7 +63,10 @@ public class NickCommand extends ModuleCommand {
             return;
         }
 
-        if (message.equals("")) strings = new String[] { "-clear" };
+        if (message.equals("")) {
+            strings = new String[] { "-clear" };
+            message = ModuleUtils.argsToString(strings);
+        }
 
         if (strings.length <= 2) {
             if (strings[strings.length - 1].equals("-clear")) {
@@ -90,11 +93,17 @@ public class NickCommand extends ModuleCommand {
                 }
 
                 ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser, getMessageResultCleared(), user)
-                        .replace("%this_new%", message)
+                        .replace("%this_new%", ModuleUtils.replaceAllPlayerBungee(user, "%streamline_user_formatted%"))
                         .replace("%this_previous%", current)
                 );
+                return;
             }
-            return;
+        }
+
+        if (message.startsWith("!") && ModuleUtils.hasPermission(streamlineUser, getPermissionSetNonFormatted())) {
+            message = message.substring("!".length());
+        } else {
+            message = StreamlineUtilities.getConfigs().getNicknamesFormat().replace("%this_input%", message);
         }
 
         String current = user.getDisplayName();
@@ -126,25 +135,16 @@ public class NickCommand extends ModuleCommand {
 
     @Override
     public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
-        if (strings == null) {
-            ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
-
-            ModuleUtils.getOnlinePlayerNames().forEach(s -> {
-                r.add("-p:" + s);
-            });
-            r.add("-clear");
-
-            return r;
-        }
-
         if (strings.length == 1) {
             if (strings[0].startsWith("-p:")) {
                 ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
                 ModuleUtils.getOnlinePlayerNames().forEach(s -> {
                     r.add("-p:" + s);
+                    r.add("!" + s);
                 });
                 r.add("-clear");
+                r.add("!");
 
                 return r;
             }
@@ -152,7 +152,13 @@ public class NickCommand extends ModuleCommand {
             ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
             r.addAll(ModuleUtils.getOnlinePlayerNames());
+
+            ModuleUtils.getOnlinePlayerNames().forEach(s -> {
+                r.add("!" + s);
+            });
+
             r.add("-clear");
+            r.add("!");
 
             return r;
         }
@@ -168,8 +174,10 @@ public class NickCommand extends ModuleCommand {
             }
         }
 
-        if (strings[strings.length - 2].equals("-clear")) {
-            return new ConcurrentSkipListSet<>();
+        if (strings.length >= 2) {
+            if (strings[strings.length - 2].equals("-clear")) {
+                return new ConcurrentSkipListSet<>();
+            }
         }
 
         return ModuleUtils.getOnlinePlayerNames();

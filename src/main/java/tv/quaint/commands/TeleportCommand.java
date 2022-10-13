@@ -27,7 +27,7 @@ public class TeleportCommand extends ModuleCommand {
 
     @Override
     public void run(StreamlineUser StreamlineUser, String[] strings) {
-        if (strings.length < 1) {
+        if (strings[0].equals("")) {
             ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         } else if (strings.length > 1) {

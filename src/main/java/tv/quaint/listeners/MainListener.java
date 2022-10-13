@@ -80,6 +80,11 @@ public class MainListener extends StreamlineListener {
         }
     }
 
+    @EventProcessor
+    public void onUserCreate() {
+
+    }
+
     @EventProcessor(priority = EventPriority.LOWEST)
     public void onProxiedMessage(ProxiedMessageEvent event) {
         if (event.getMessage().getSubChannel().equals(SavablePlayerMessageBuilder.getSubChannel())) {

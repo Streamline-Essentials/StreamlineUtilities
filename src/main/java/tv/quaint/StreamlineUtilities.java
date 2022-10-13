@@ -69,6 +69,7 @@ public class StreamlineUtilities extends SimpleModule {
                 new OnlineCommand(),
                 new TeleportCommand(),
                 new MaintenanceCommand(),
+                new WhitelistCommand(),
                 new NickCommand()
         ));
 

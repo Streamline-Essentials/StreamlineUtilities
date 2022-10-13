@@ -1,9 +1,10 @@
 package tv.quaint.commands;
 
-import com.earth2me.essentials.User;
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
+import net.streamline.api.configs.given.GivenConfigs;
 import net.streamline.api.configs.given.MainMessagesHandler;
+import net.streamline.api.configs.given.whitelist.WhitelistEntry;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.savables.users.StreamlinePlayer;
 import net.streamline.api.savables.users.StreamlineUser;
@@ -12,11 +13,12 @@ import net.streamline.api.utils.UserUtils;
 import tv.quaint.StreamlineUtilities;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MaintenanceCommand extends ModuleCommand {
+public class WhitelistCommand extends ModuleCommand {
     @Getter
     private final String messageResultAll;
     @Getter
@@ -24,18 +26,18 @@ public class MaintenanceCommand extends ModuleCommand {
     @Getter
     private final String messageResultRemove;
 
-    public MaintenanceCommand() {
+    public WhitelistCommand() {
         super(StreamlineUtilities.getInstance(),
-                "proxymaintenance",
-                "streamline.command.maintenance.default",
-                "pmaint", "pmaintenance", "pmnt"
+                "proxywhitelist",
+                "streamline.command.whitelist.default",
+                "pwhite", "pwhitelist", "pwl"
         );
 
-        messageResultAll = getCommandResource().getOrSetDefault("messages.result.all", "&cMaintenance Mode &eis now %utils_maintenance_mode% &b(&ewas %this_previous%&b)&8.");
+        messageResultAll = getCommandResource().getOrSetDefault("messages.result.all", "&cWhitelist Mode &eis now %utils_whitelist_mode% &b(&ewas %this_previous%&b)&8.");
         messageResultAdd = getCommandResource().getOrSetDefault("messages.result.add",
-                "&eAdded &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*% &eto &cMaintenance Mode &ewhitelist&e.");
+                "&eAdded &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*% &eto &cWhitelist Mode &ewhitelist&e.");
         messageResultRemove = getCommandResource().getOrSetDefault("messages.result.remove",
-                "&eRemoved &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*% &efrom &cMaintenance Mode &ewhitelist&e.");
+                "&eRemoved &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*% &efrom &cWhitelist Mode &ewhitelist&e.");
     }
 
     @Override
@@ -43,10 +45,6 @@ public class MaintenanceCommand extends ModuleCommand {
         if (strings.length < 1) {
             strings = new String[] { String.valueOf(! StreamlineUtilities.getMaintenanceConfig().isModeEnabled()) };
         }
-//        if (strings.length > 1) {
-//            ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
-//            return;
-//        }
 
         if (strings.length == 1) {
             if (strings[0].equals("add") || strings[0].equals("remove")) {
@@ -54,17 +52,17 @@ public class MaintenanceCommand extends ModuleCommand {
                 return;
             }
             try {
-                String previous = ModuleUtils.replaceAllLogicalBungee("%utils_maintenance_mode%").join();
+                String previous = ModuleUtils.replaceAllLogicalBungee("%utils_whitelist_mode%").join();
                 boolean bool = Boolean.parseBoolean(strings[0]);
-                StreamlineUtilities.getMaintenanceConfig().setModeEnabled(bool);
+                GivenConfigs.getWhitelistConfig().setEnabled(bool);
                 ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser, getMessageResultAll(), streamlineUser)
                         .replace("%this_previous%", previous)
                 );
 
                 if (bool) {
                     ModuleUtils.getLoadedUsers().forEach((s, player) -> {
-                        if (StreamlineUtilities.getMaintenanceConfig().containsAllowed(player.getUuid())) return;
-                        ModuleUtils.kick(player, ModuleUtils.replaceAllPlayerBungee(streamlineUser, StreamlineUtilities.getMaintenanceConfig().getModeKickMessage()));
+                        if (GivenConfigs.getWhitelistConfig().getEntry(player.getUuid()) != null) return;
+                        ModuleUtils.kick(player, ModuleUtils.replaceAllPlayerBungee(streamlineUser, "%utils_whitelist_message%"));
                     });
                 }
                 return;
@@ -86,7 +84,7 @@ public class MaintenanceCommand extends ModuleCommand {
                         return;
                     }
 
-                    StreamlineUtilities.getMaintenanceConfig().addAllowed(player.getUuid());
+                    GivenConfigs.getWhitelistConfig().addEntry(new WhitelistEntry(player.getUuid(), new Date(), streamlineUser.getUuid()));
                     atomicInteger.getAndAdd(1);
 
                     ModuleUtils.sendMessage(streamlineUser,
@@ -109,10 +107,10 @@ public class MaintenanceCommand extends ModuleCommand {
                         return;
                     }
 
-                    StreamlineUtilities.getMaintenanceConfig().removeAllowed(player.getUuid());
+                    GivenConfigs.getWhitelistConfig().getEntry(player.getUuid()).remove();
 
-                    if (StreamlineUtilities.getMaintenanceConfig().isModeEnabled()) {
-                        if (player.updateOnline()) ModuleUtils.kick(player, "%utils_maintenance_message%");
+                    if (GivenConfigs.getWhitelistConfig().isEnabled()) {
+                        if (player.updateOnline()) ModuleUtils.kick(player, "%utils_whitelist_message%");
                     }
 
                     atomicInteger.getAndAdd(1);

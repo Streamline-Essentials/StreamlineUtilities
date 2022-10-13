@@ -1,5 +1,6 @@
 package tv.quaint.ratapi;
 
+import net.streamline.api.configs.given.GivenConfigs;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.placeholder.RATExpansion;
 import net.streamline.api.savables.users.StreamlineUser;
@@ -28,6 +29,9 @@ public class UtilitiesExpansion extends RATExpansion {
         if (s.equals("maintenance_mode")) return (StreamlineUtilities.getMaintenanceConfig().isModeEnabled()
                 ? MainMessagesHandler.MESSAGES.DEFAULTS.PLACEHOLDERS.IS_TRUE.get() : MainMessagesHandler.MESSAGES.DEFAULTS.PLACEHOLDERS.IS_FALSE.get());
         if (s.equals("maintenance_message")) return StreamlineUtilities.getMaintenanceConfig().getModeKickMessage();
+        if (s.equals("whitelist_mode")) return (GivenConfigs.getWhitelistConfig().isEnabled()
+                ? MainMessagesHandler.MESSAGES.DEFAULTS.PLACEHOLDERS.IS_TRUE.get() : MainMessagesHandler.MESSAGES.DEFAULTS.PLACEHOLDERS.IS_FALSE.get());
+        if (s.equals("whitelist_message")) return MainMessagesHandler.MESSAGES.INVALID.WHITELIST_NOT.get();
         return null;
     }
 

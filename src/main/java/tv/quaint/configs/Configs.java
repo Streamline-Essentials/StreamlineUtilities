@@ -42,6 +42,6 @@ public class Configs extends ModularizedConfig {
     public String getNicknamesFormat() {
         reloadResource();
 
-        return resource.getOrSetDefault("nicknames.enabled", "%streamline_user_prefix%%this_input%%streamline_user_suffix%");
+        return resource.getOrSetDefault("nicknames.format", "%streamline_user_prefix%%this_input%%streamline_user_suffix%");
     }
 }
