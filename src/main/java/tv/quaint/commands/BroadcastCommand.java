@@ -35,11 +35,18 @@ public class BroadcastCommand extends ModuleCommand {
         }
 
         final String finalMessage = message;
+        boolean finalIsCustom = isCustom;
         ModuleUtils.getLoadedUsersSet().forEach(a -> {
-            ModuleUtils.sendMessage(a, messageResultAll
-                    .replace("%this_message%", finalMessage)
-                    .replace("%this_sender%", StreamlineUser.getName())
-            );
+            if (! finalIsCustom) {
+                ModuleUtils.sendMessage(a, messageResultAll
+                        .replace("%this_message%", finalMessage)
+                        .replace("%this_sender%", StreamlineUser.getName())
+                );
+            } else {
+                ModuleUtils.sendMessage(a, finalMessage
+                        .replace("%this_sender%", StreamlineUser.getName())
+                );
+            }
         });
     }
 

@@ -1,5 +1,6 @@
 package tv.quaint.ratapi;
 
+import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.placeholder.RATExpansion;
 import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
@@ -24,6 +25,9 @@ public class UtilitiesExpansion extends RATExpansion {
                 return group.permission();
             }
         }
+        if (s.equals("maintenance_mode")) return (StreamlineUtilities.getMaintenanceConfig().isModeEnabled()
+                ? MainMessagesHandler.MESSAGES.DEFAULTS.PLACEHOLDERS.IS_TRUE.get() : MainMessagesHandler.MESSAGES.DEFAULTS.PLACEHOLDERS.IS_FALSE.get());
+        if (s.equals("maintenance_message")) return StreamlineUtilities.getMaintenanceConfig().getModeKickMessage();
         return null;
     }
 

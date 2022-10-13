@@ -8,10 +8,7 @@ import net.streamline.api.modules.dependencies.Dependency;
 import net.streamline.api.placeholder.RATExpansion;
 import org.pf4j.PluginWrapper;
 import tv.quaint.commands.*;
-import tv.quaint.configs.Configs;
-import tv.quaint.configs.CustomPlaceholdersConfig;
-import tv.quaint.configs.GroupedPermissionConfig;
-import tv.quaint.configs.Messages;
+import tv.quaint.configs.*;
 import tv.quaint.executables.ExecutableHandler;
 import tv.quaint.executables.aliases.AliasGetter;
 import tv.quaint.listeners.MainListener;
@@ -40,7 +37,11 @@ public class StreamlineUtilities extends SimpleModule {
     @Getter
     static CustomPlaceholdersConfig customPlaceholdersConfig;
     @Getter
+    static ServerAliasesConfig serverAliasesConfig;
+    @Getter
     static GroupedPermissionConfig groupedPermissionConfig;
+    @Getter
+    static MaintenanceConfig maintenanceConfig;
     @Getter
     static Configs configs;
     @Getter
@@ -66,8 +67,12 @@ public class StreamlineUtilities extends SimpleModule {
                 new TextCommand(),
                 new TitleCommand(),
                 new OnlineCommand(),
-                new TeleportCommand()
+                new TeleportCommand(),
+                new MaintenanceCommand(),
+                new NickCommand()
         ));
+
+//        if (getConfigs().isNicknamesEnabled()) getCommands().add(new NickCommand());
     }
 
     @Override
@@ -166,7 +171,9 @@ public class StreamlineUtilities extends SimpleModule {
         ExecutableHandler.loadAllAliases(aliasesFolder);
 
         customPlaceholdersConfig = new CustomPlaceholdersConfig();
+        serverAliasesConfig = new ServerAliasesConfig();
         groupedPermissionConfig = new GroupedPermissionConfig();
+        maintenanceConfig = new MaintenanceConfig();
 
         configs = new Configs();
         messages = new Messages();
