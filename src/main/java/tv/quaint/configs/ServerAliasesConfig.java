@@ -23,6 +23,11 @@ public class ServerAliasesConfig extends ModularizedConfig {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void reloadResource(boolean force) {
         getAsObjects().forEach(a -> ModuleUtils.getRATAPI().unregisterCustomPlaceholder(a));
         super.reloadResource(force);
@@ -32,19 +37,19 @@ public class ServerAliasesConfig extends ModularizedConfig {
 
     private ConcurrentSkipListMap<String, String> getCustomPlaceholders() {
         ModuleUtils.getServerNames().forEach(s -> {
-            if (resource.contains(s)) return;
-            resource.set(s, new ArrayList<>());
+            if (getResource().contains(s)) return;
+            getResource().set(s, new ArrayList<>());
         });
 
         ConcurrentSkipListMap<String, String> r = new ConcurrentSkipListMap<>();
-        for (String key : resource.singleLayerKeySet()) {
+        for (String key : getResource().singleLayerKeySet()) {
             if (! ModuleUtils.getServerNames().contains(key)) {
                 StreamlineUtilities.getInstance().logWarning("Supposed server '" + key + "' in your 'server-aliases.yml' is not actually a server... Skipping...");
                 continue;
             }
 
             try {
-                resource.singleLayerKeySet(key).forEach(s -> {
+                getResource().singleLayerKeySet(key).forEach(s -> {
                     r.put(s, key);
                 });
             } catch (Exception e) {

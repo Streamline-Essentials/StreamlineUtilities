@@ -8,15 +8,21 @@ public class Messages extends ModularizedConfig {
         super(StreamlineUtilities.getInstance(), "messages.yml", true);
     }
 
+    @Override
+    public void init() {
+        errorsFunctionsNotEnabled();
+        errorsFunctionsNotLoaded();
+    }
+
     public String errorsFunctionsNotLoaded() {
         reloadResource();
 
-        return resource.getString("errors.functions.not.loaded");
+        return getResource().getOrSetDefault("errors.functions.not.loaded", "&cThat function is not loaded!");
     }
 
     public String errorsFunctionsNotEnabled() {
         reloadResource();
 
-        return resource.getString("errors.functions.not.enabled");
+        return getResource().getOrSetDefault("errors.functions.not.enabled", "&cThat function is not enabled!");
     }
 }

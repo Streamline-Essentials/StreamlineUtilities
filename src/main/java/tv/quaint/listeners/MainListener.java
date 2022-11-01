@@ -1,27 +1,26 @@
 package tv.quaint.listeners;
 
 import net.streamline.api.SLAPI;
-import net.streamline.api.events.EventPriority;
-import net.streamline.api.events.EventProcessor;
-import net.streamline.api.events.StreamlineEvent;
-import net.streamline.api.events.StreamlineListener;
 import net.streamline.api.events.server.LoginCompletedEvent;
-import net.streamline.api.events.server.LoginEvent;
 import net.streamline.api.events.server.LoginReceivedEvent;
 import net.streamline.api.events.server.StreamlineChatEvent;
-import net.streamline.api.interfaces.IStreamline;
 import net.streamline.api.messages.builders.SavablePlayerMessageBuilder;
 import net.streamline.api.messages.events.ProxiedMessageEvent;
 import net.streamline.api.modules.ModuleUtils;
+import net.streamline.api.savables.events.CreateSavableResourceEvent;
+import net.streamline.api.savables.events.UserNameUpdateByOtherEvent;
 import net.streamline.api.savables.events.UserNameUpdateEvent;
 import net.streamline.api.savables.users.StreamlinePlayer;
 import net.streamline.api.utils.UserUtils;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.accessors.SpigotAccessor;
+import tv.quaint.events.BaseEventListener;
 import tv.quaint.events.NicknameUpdateEvent;
+import tv.quaint.events.processing.BaseEventPriority;
+import tv.quaint.events.processing.BaseProcessor;
 
-public class MainListener extends StreamlineListener {
-    @EventProcessor
+public class MainListener implements BaseEventListener {
+    @BaseProcessor
     public void onChat(StreamlineChatEvent chatEvent) {
         if (StreamlineUtilities.getConfigs().chatModifyEnabled()) {
             if (! ModuleUtils.hasPermission(chatEvent.getSender(), StreamlineUtilities.getConfigs().chatModifyPermission())) return;
@@ -31,7 +30,7 @@ public class MainListener extends StreamlineListener {
         }
     }
 
-    @EventProcessor
+    @BaseProcessor
     public void onPreJoin(LoginReceivedEvent event) {
         if (event.isCancelled()) return;
 
@@ -50,29 +49,30 @@ public class MainListener extends StreamlineListener {
         }
     }
 
-    @EventProcessor
+    @BaseProcessor
     public void onFullyJoin(LoginCompletedEvent event) {
         if (event.isCancelled()) return;
         if (StreamlineUtilities.getConfigs().isNicknamesEnabled()) {
-            SpigotAccessor.updateCustomName(event.getResource());
+            SpigotAccessor.updateCustomName(event.getResource(), event.getResource().getDisplayName());
         }
     }
 
-    @EventProcessor
+    @BaseProcessor
     public void onNameUpdate(UserNameUpdateEvent event) {
         if (event.isCancelled()) return;
 
         if (StreamlineUtilities.getConfigs().isNicknamesEnabled()) {
-            if (! (event instanceof NicknameUpdateEvent)) {
-                if (SLAPI.getInstance().getPlatform().getServerType().equals(IStreamline.ServerType.PROXY)) {
+            if (! (event instanceof NicknameUpdateEvent) && ! (event instanceof UserNameUpdateByOtherEvent)) {
+                if (SLAPI.isProxy()) {
                     event.setCancelled(true);
                 } else {
                     String name = ModuleUtils.parseOnProxy("%streamline_user_formatted%");
+                    if (name == null) return;
                     event.setChangeTo(name);
                     if (event.getResource().updateOnline()) {
                         StreamlinePlayer player = UserUtils.getOrGetPlayer(event.getResource().getUuid());
                         if (player != null) {
-                            SpigotAccessor.updateCustomName(player, false);
+                            SpigotAccessor.updateCustomName(player, event.getChangeTo());
                         }
                     }
                 }
@@ -80,12 +80,15 @@ public class MainListener extends StreamlineListener {
         }
     }
 
-    @EventProcessor
-    public void onUserCreate() {
+    @BaseProcessor
+    public void onUserCreate(CreateSavableResourceEvent<?> resourceEvent) {
+        if (! (resourceEvent.getResource() instanceof StreamlinePlayer player)) return;
 
+        player.setDisplayName(ModuleUtils.getDisplayName(player.getUuid(), player.getUuid()));
+        player.saveMore();
     }
 
-    @EventProcessor(priority = EventPriority.LOWEST)
+    @BaseProcessor(priority = BaseEventPriority.LOWEST)
     public void onProxiedMessage(ProxiedMessageEvent event) {
         if (event.getMessage().getSubChannel().equals(SavablePlayerMessageBuilder.getSubChannel())) {
             SpigotAccessor.updateTabCMI();

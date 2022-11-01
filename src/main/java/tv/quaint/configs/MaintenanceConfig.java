@@ -1,7 +1,5 @@
 package tv.quaint.configs;
 
-import de.leonhard.storage.Json;
-import net.streamline.api.configs.FlatFileResource;
 import net.streamline.api.configs.ModularizedConfig;
 import tv.quaint.StreamlineUtilities;
 
@@ -13,10 +11,9 @@ public class MaintenanceConfig extends ModularizedConfig {
 
     public MaintenanceConfig() {
         super(StreamlineUtilities.getInstance(), "maintenance-config.yml", false);
-
-        init();
     }
 
+    @Override
     public void init() {
         isModeEnabled();
         getModeKickMessage();
@@ -27,29 +24,29 @@ public class MaintenanceConfig extends ModularizedConfig {
     public boolean isModeEnabled() {
         reloadResource();
 
-        return resource.getOrSetDefault("mode.enabled", false);
+        return getResource().getOrSetDefault("mode.enabled", false);
     }
 
     public void setModeEnabled(boolean bool) {
-        resource.set("mode.enabled", bool);
+        getResource().set("mode.enabled", bool);
     }
 
     public String getModeKickMessage() {
         reloadResource();
 
-        return resource.getOrSetDefault("mode.kick.message", "&cThis server is currently being maintenanced&8!%newline%&cPlease feel free to come back in a little bit&8!%newline%%newline%&aJoin our &9&lDiscord &afor updates&8: {{discord_link}}");
+        return getResource().getOrSetDefault("mode.kick.message", "&cThis server is currently being maintenanced&8!%newline%&cPlease feel free to come back in a little bit&8!%newline%%newline%&aJoin our &9&lDiscord &afor updates&8: {{discord_link}}");
     }
 
     public boolean isModeKickOnline() {
         reloadResource();
 
-        return resource.getOrSetDefault("mode.kick.online", true);
+        return getResource().getOrSetDefault("mode.kick.online", true);
     }
 
     public ConcurrentSkipListSet<String> getAllowedUUIDs() {
         reloadResource();
 
-        return new ConcurrentSkipListSet<>(resource.getOrSetDefault("allowed-to-join.uuids", new ArrayList<>()));
+        return new ConcurrentSkipListSet<>(getResource().getOrSetDefault("allowed-to-join.uuids", new ArrayList<>()));
     }
 
     public boolean containsAllowed(String uuid) {
@@ -62,7 +59,7 @@ public class MaintenanceConfig extends ModularizedConfig {
         ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>(getAllowedUUIDs());
         r.add(uuid);
 
-        resource.set("allowed-to-join.uuids", r.stream().toList());
+        getResource().set("allowed-to-join.uuids", r.stream().toList());
     }
 
     public void removeAllowed(String uuid) {
@@ -71,6 +68,6 @@ public class MaintenanceConfig extends ModularizedConfig {
         ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>(getAllowedUUIDs());
         r.remove(uuid);
 
-        resource.set("allowed-to-join.uuids", r.stream().toList());
+        getResource().set("allowed-to-join.uuids", r.stream().toList());
     }
 }

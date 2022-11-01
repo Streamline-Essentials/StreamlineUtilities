@@ -15,6 +15,7 @@ public class Configs extends ModularizedConfig {
         super(StreamlineUtilities.getInstance(), "config.yml", true);
     }
 
+    @Override
     public void init() {
         chatModifyEnabled();
         chatModifyPermission();
@@ -24,24 +25,24 @@ public class Configs extends ModularizedConfig {
     public boolean chatModifyEnabled() {
         reloadResource();
 
-        return resource.getOrSetDefault("chat.modify.modify", true);
+        return getResource().getOrSetDefault("chat.modify.modify", true);
     }
 
     public String chatModifyPermission() {
         reloadResource();
 
-        return resource.getOrSetDefault("chat.modify.permission", "streamline.utils.chat.modify");
+        return getResource().getOrSetDefault("chat.modify.permission", "streamline.utils.chat.modify");
     }
 
     public boolean isNicknamesEnabled() {
         reloadResource();
 
-        return resource.getOrSetDefault("nicknames.enabled", true);
+        return getResource().getOrSetDefault("nicknames.enabled", true);
     }
 
     public String getNicknamesFormat() {
         reloadResource();
 
-        return resource.getOrSetDefault("nicknames.format", "%streamline_user_prefix%%this_input%%streamline_user_suffix%");
+        return getResource().getOrSetDefault("nicknames.format", "%streamline_user_prefix%%this_input%%streamline_user_suffix%");
     }
 }

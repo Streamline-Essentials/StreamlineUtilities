@@ -20,6 +20,11 @@ public class CustomPlaceholdersConfig extends ModularizedConfig {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void reloadResource(boolean force) {
         getAsObjects().forEach(a -> ModuleUtils.getRATAPI().unregisterCustomPlaceholder(a));
         super.reloadResource(force);
@@ -29,9 +34,9 @@ public class CustomPlaceholdersConfig extends ModularizedConfig {
 
     private TreeMap<String, String> getCustomPlaceholders() {
         TreeMap<String, String> r = new TreeMap<>();
-        for (String key : resource.singleLayerKeySet()) {
+        for (String key : getResource().singleLayerKeySet()) {
             try {
-                r.put(key, resource.getString(key));
+                r.put(key, getResource().getString(key));
             } catch (Exception e) {
                 StreamlineUtilities.getInstance().logWarning("Could not load placeholder value for '" + key + "' due to: " + e.getMessage());
             }

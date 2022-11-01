@@ -1,8 +1,8 @@
 package tv.quaint.executables.aliases;
 
-import de.leonhard.storage.sections.FlatFileSection;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.executables.ExecutableHandler;
+import tv.quaint.thebase.lib.leonhard.storage.sections.FlatFileSection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class AliasCompletions {
     public static ConcurrentSkipListMap<Integer, ConcurrentSkipListSet<String>> getCompletions(StreamAlias alias) {
-        FlatFileSection section = alias.getCommandResource().resource.getSection("basic.completion");
+        FlatFileSection section = alias.getCommandResource().getResource().getSection("basic.completion");
 
         ConcurrentSkipListMap<Integer, ConcurrentSkipListSet<String>> r = new ConcurrentSkipListMap<>();
 

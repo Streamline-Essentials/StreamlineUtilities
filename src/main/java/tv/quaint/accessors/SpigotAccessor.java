@@ -24,34 +24,34 @@ public class SpigotAccessor {
         return Bukkit.getPlayer(UUID.fromString(uuid));
     }
 
-    public static void updateCustomName(StreamlinePlayer player) {
+    public static void updateCustomName(StreamlinePlayer player, String name) {
         if (! ensureSafe()) return;
 
-        updateCustomName(player, true);
+        updateCustomName(player, name, true);
     }
 
 
-    public static void updateCustomName(StreamlinePlayer player, boolean tabListAlso) {
+    public static void updateCustomName(StreamlinePlayer player, String name, boolean tabListAlso) {
         if (! ensureSafe()) return;
 
-        updateNickCMI(player);
-        updateNickEss(player);
+        updateNickCMI(player, name, false);
+        updateNickEss(player, name);
 
         Player p = getPlayer(player.getUuid());
         if (p == null) return;
 
-        p.setCustomName(player.getDisplayName());
-        p.setDisplayName(player.getDisplayName());
-        if (tabListAlso) updateTabList(player);
+        p.setCustomName(name);
+        p.setDisplayName(name);
+        if (tabListAlso) updateTabList(player, name);
     }
 
-    public static void updateTabList(StreamlinePlayer player) {
+    public static void updateTabList(StreamlinePlayer player, String name) {
         if (! ensureSafe()) return;
 
         Player p = getPlayer(player.getUuid());
         if (p == null) return;
 
-        p.setPlayerListName(player.getDisplayName());
+        p.setPlayerListName(name);
     }
 
     public static boolean isCMI() {
@@ -59,11 +59,11 @@ public class SpigotAccessor {
         return Bukkit.getServer().getPluginManager().isPluginEnabled("CMI");
     }
 
-    public static void updateNickCMI(StreamlinePlayer player) {
-        updateNickCMI(player, true);
+    public static void updateNickCMI(StreamlinePlayer player, String name) {
+        updateNickCMI(player, name, true);
     }
 
-    public static void updateNickCMI(StreamlinePlayer player, boolean updateTab) {
+    public static void updateNickCMI(StreamlinePlayer player, String name, boolean updateTab) {
         if (! isCMI()) return;
 
         CMIUser user = CMI.getInstance().getPlayerManager().getUser(UUID.fromString(player.getUuid()));
@@ -72,8 +72,8 @@ public class SpigotAccessor {
             return;
         }
 
-        user.setNickName(player.getDisplayName(), true);
-        user.setDisplayName(player.getDisplayName());
+        user.setNickName(name, true);
+        user.setDisplayName(name);
         if (updateTab) updateTabCMI();
     }
 
@@ -88,7 +88,7 @@ public class SpigotAccessor {
         return Bukkit.getServer().getPluginManager().isPluginEnabled("Essentials");
     }
 
-    public static void updateNickEss(StreamlinePlayer player) {
+    public static void updateNickEss(StreamlinePlayer player, String name) {
         if (! isEssX()) return;
 
         Essentials essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
@@ -99,7 +99,7 @@ public class SpigotAccessor {
             return;
         }
 
-        user.setNickname(player.getDisplayName());
+        user.setNickname(name);
         user.setDisplayNick();
     }
 }

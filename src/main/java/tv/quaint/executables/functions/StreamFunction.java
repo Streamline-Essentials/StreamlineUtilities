@@ -44,7 +44,7 @@ public class StreamFunction extends File {
         for (int i : map.keySet()) {
             SingleSet<ExecutableUser<?>, String> set = map.get(i);
             if (set == null) continue;
-            int result = set.key.runCommand(set.value);
+            int result = set.getKey().runCommand(set.getValue());
             if (result > 0) count.getAndAdd(result);
         }
 

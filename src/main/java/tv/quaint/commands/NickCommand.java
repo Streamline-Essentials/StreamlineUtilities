@@ -40,7 +40,7 @@ public class NickCommand extends ModuleCommand {
                 "&eChanged &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*%&8'&es nickname to &b'%this_new%&b' &7(&efrom &b'%this_previous%&b'&7)");
         messageResultChanged = getCommandResource().getOrSetDefault("messages.result.changed",
                 "&eChanged &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*%&8'&es nickname to &b'%this_new%&b' &7(&efrom &b'%this_previous%&b'&7)");
-        messageResultCancelled = getCommandResource().getOrSetDefault("messages.result.changed",
+        messageResultCancelled = getCommandResource().getOrSetDefault("messages.result.cancelled",
                 "&cDid not change your nickname because a plugin / module cancelled it.");
         permissionSetOthers = getCommandResource().getOrSetDefault("permission.set.others", "streamline.command.nickname.set.others");
         permissionSetNonFormatted = getCommandResource().getOrSetDefault("permission.set.non-formatted", "streamline.command.nickname.set.non-formatted");
@@ -53,9 +53,11 @@ public class NickCommand extends ModuleCommand {
         StreamlineUser user = streamlineUser;
 
         if (message.startsWith("-p:")) {
-            String name = strings[0].substring("-p:".length());
-            user = ModuleUtils.getOrGetUserByName(name);
-            message = message.substring(message.indexOf(' ') + 1);
+            if (ModuleUtils.hasPermission(streamlineUser, getPermissionSetOthers())) {
+                String name = strings[0].substring("-p:".length());
+                user = ModuleUtils.getOrGetUserByName(name);
+                message = message.substring(message.indexOf(' ') + 1);
+            }
         }
 
         if (user == null) {
@@ -84,7 +86,7 @@ public class NickCommand extends ModuleCommand {
 
                 user.setDisplayName(updateEvent.getChangeTo());
                 if (user instanceof StreamlinePlayer player) {
-                    SpigotAccessor.updateCustomName(player);
+                    SpigotAccessor.updateCustomName(player, updateEvent.getChangeTo());
                     if (SLAPI.getInstance().getPlatform().getServerType().equals(IStreamline.ServerType.PROXY)) {
                         ProxiedMessage proxiedMessage = SavablePlayerMessageBuilder.build(player, true);
                         proxiedMessage.setServer(player.getLatestServer());
@@ -119,7 +121,7 @@ public class NickCommand extends ModuleCommand {
 
         user.setDisplayName(updateEvent.getChangeTo());
         if (user instanceof StreamlinePlayer player) {
-            SpigotAccessor.updateCustomName(player);
+            SpigotAccessor.updateCustomName(player, updateEvent.getChangeTo());
             if (SLAPI.getInstance().getPlatform().getServerType().equals(IStreamline.ServerType.PROXY)) {
                 ProxiedMessage proxiedMessage = SavablePlayerMessageBuilder.build(player, true);
                 proxiedMessage.setServer(player.getLatestServer());

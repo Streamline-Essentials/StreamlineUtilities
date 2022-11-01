@@ -198,4 +198,9 @@ public class StreamlineUtilities extends SimpleModule {
 
         getUtilitiesExpansion().unregister();
     }
+
+    @Override
+    public String getIdentifier() {
+        return identifier();
+    }
 }
