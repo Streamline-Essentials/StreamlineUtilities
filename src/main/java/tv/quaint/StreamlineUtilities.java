@@ -70,7 +70,9 @@ public class StreamlineUtilities extends SimpleModule {
                 new TeleportCommand(),
                 new MaintenanceCommand(),
                 new WhitelistCommand(),
-                new NickCommand()
+                new NickCommand(),
+                new SudoCommand(),
+                new SudoOpCommand()
         ));
 
 //        if (getConfigs().isNicknamesEnabled()) getCommands().add(new NickCommand());

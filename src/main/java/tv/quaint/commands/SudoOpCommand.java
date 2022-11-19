@@ -4,23 +4,24 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
+import net.streamline.api.savables.users.OperatorUser;
 import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
-public class SudoCommand extends ModuleCommand {
+public class SudoOpCommand extends ModuleCommand {
     @Getter
     private final String messageResult;
 
-    public SudoCommand() {
+    public SudoOpCommand() {
         super(StreamlineUtilities.getInstance(),
-                "proxysudo",
-                "streamline.command.sudo.default",
-                "ps", "psudo", "psu"
+                "proxysudoop",
+                "streamline.command.sudo-op.default",
+                "pso", "psudoop", "psuop"
         );
 
-        messageResult = getCommandResource().getOrSetDefault("messages.result.sudoer", "&eYou have successfully ran the command &f%this_input%&e as &f%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*%&8!");
+        messageResult = getCommandResource().getOrSetDefault("messages.result.sudoer", "&eYou have successfully ran the command &f%this_input%&e as &f%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*% &ewith operator privileges&8!");
     }
 
     @Override
@@ -38,7 +39,9 @@ public class SudoCommand extends ModuleCommand {
             return;
         }
 
-        ModuleUtils.runAs(other, command);
+        OperatorUser operatorUser = new OperatorUser(other);
+
+        ModuleUtils.runAs(operatorUser, command);
         ModuleUtils.sendMessage(sender, getWithOther(sender, messageResult, other));
     }
 
