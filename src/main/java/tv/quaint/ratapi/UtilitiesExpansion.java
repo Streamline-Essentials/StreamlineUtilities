@@ -17,11 +17,8 @@ public class UtilitiesExpansion extends RATExpansion {
     @Override
     public void init() {
         new IdentifiedReplaceable(this, MatcherUtils.makeLiteral("group_") + "(.*?)", 1, (s) -> {
-            AtomicString string = new AtomicString(s.string());
-            s.handledString().isolateIn(s.string()).forEach(str -> {
-                string.set(startsWithGroup(str));
-            });
-            return string.get() == null ? s.string() : string.get();
+            String string = startsWithGroup(s.get());
+            return string == null ? s.string() : string;
         }).register();
 
         new IdentifiedReplaceable(this, "maintenance_mode", (s) -> StreamlineUtilities.getMaintenanceConfig().isModeEnabled()
@@ -33,11 +30,8 @@ public class UtilitiesExpansion extends RATExpansion {
         new IdentifiedReplaceable(this, "whitelist_message", (s) -> MainMessagesHandler.MESSAGES.INVALID.WHITELIST_NOT.get()).register();
 
         new IdentifiedReplaceable(this, MatcherUtils.makeLiteral("server_alias_") + "(.*?)", 1, (s) -> {
-            AtomicString string = new AtomicString(s.string());
-            s.handledString().isolateIn(s.string()).forEach(str -> {
-                string.set(StreamlineUtilities.getServerAliasesConfig().getActualName(str));
-            });
-            return string.get() == null ? s.string() : string.get();
+            String string = StreamlineUtilities.getServerAliasesConfig().getActualName(s.get());
+            return string == null ? s.string() : string;
         }).register();
     }
 
