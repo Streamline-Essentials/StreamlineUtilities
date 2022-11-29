@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Update : Something?">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fixed : TPA and TPAHere command suggestions.">
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPAHereCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPAHereCommand.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -269,7 +269,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669712760672</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Fixed : TPA and TPAHere command suggestions.">
+      <created>1669713767919</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1669713767919</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -304,6 +311,7 @@
     <MESSAGE value="Fix : Incorrect usage." />
     <MESSAGE value="Fix : Incorrect method call." />
     <MESSAGE value="Update : Something?" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update : Something?" />
+    <MESSAGE value="Fixed : TPA and TPAHere command suggestions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed : TPA and TPAHere command suggestions." />
   </component>
 </project>

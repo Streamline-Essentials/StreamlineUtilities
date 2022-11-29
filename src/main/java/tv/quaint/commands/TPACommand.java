@@ -78,8 +78,8 @@ public class TPACommand extends ModuleCommand {
 
                 EssentialsManager.requestTPA(senderPlayer, otherPlayer);
 
-                ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultSentTo, other));
-                ModuleUtils.sendMessage(other, getWithOther(sender, messageResultSentFrom, other));
+                ModuleUtils.sendMessage(sender, getWithOther(sender, other, messageResultSentTo));
+                ModuleUtils.sendMessage(other, getWithOther(sender, other, messageResultSentFrom));
             }
             case "accept" -> {
                 StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
@@ -100,8 +100,8 @@ public class TPACommand extends ModuleCommand {
 
                 EssentialsManager.acceptTPA(senderPlayer, otherPlayer);
 
-                ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultAcceptedFrom, other));
-                ModuleUtils.sendMessage(other, getWithOther(sender, messageResultAcceptedTo, other));
+                ModuleUtils.sendMessage(sender, getWithOther(sender, other, messageResultAcceptedFrom));
+                ModuleUtils.sendMessage(other, getWithOther(sender, other, messageResultAcceptedTo));
             }
             case "deny" -> {
                 StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
@@ -122,10 +122,17 @@ public class TPACommand extends ModuleCommand {
 
                 EssentialsManager.denyTPA(senderPlayer, otherPlayer);
 
-                ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultDeniedFrom, other));
-                ModuleUtils.sendMessage(other, getWithOther(sender, messageResultDeniedTo, other));
+                ModuleUtils.sendMessage(sender, getWithOther(sender, other, messageResultDeniedFrom));
+                ModuleUtils.sendMessage(other, getWithOther(sender, other, messageResultDeniedTo));
             }
         }
+    }
+
+    public String getWithOther(StreamlineUser from, StreamlineUser to, String message) {
+        message = message
+                .replace("%this_from%", from.getLatestName())
+                .replace("%this_to%", to.getLatestName());
+        return getWithOther(from, message, to);
     }
 
     @Override
