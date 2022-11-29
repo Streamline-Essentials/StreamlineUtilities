@@ -16,10 +16,10 @@ public class EssentialsManager {
         pendingTPARequests.remove(request);
     }
 
-    public static TPARequest getTPARequest(String senderUuid, String receiverUuid) {
+    public static TPARequest getTPARequest(String senderUuid, String receiverUuid, TPARequest.TransportType transportType) {
         AtomicReference<TPARequest> atomicReference = new AtomicReference<>();
         pendingTPARequests.forEach((request) -> {
-            if (request.getSender().getUuid().equals(senderUuid) && request.getReceiver().getUuid().equals(receiverUuid)) {
+            if (request.getSender().getUuid().equals(senderUuid) && request.getReceiver().getUuid().equals(receiverUuid) && request.getTransportType().equals(transportType)) {
                 atomicReference.set(request);
             }
         });
@@ -36,17 +36,35 @@ public class EssentialsManager {
         addTPARequest(request);
     }
 
-    public static void acceptTPA(StreamlinePlayer senderPlayer, StreamlinePlayer otherPlayer) {
-        TPARequest request = getTPARequest(senderPlayer.getUuid(), otherPlayer.getUuid());
+    public static void acceptTPA(StreamlinePlayer senderPlayer, StreamlinePlayer otherPlayer, TPARequest.TransportType transportType) {
+        TPARequest request = getTPARequest(senderPlayer.getUuid(), otherPlayer.getUuid(), transportType);
         if (request != null) {
             request.perform();
         }
     }
 
-    public static void denyTPA(StreamlinePlayer senderPlayer, StreamlinePlayer otherPlayer) {
-        TPARequest request = getTPARequest(senderPlayer.getUuid(), otherPlayer.getUuid());
+    public static void denyTPA(StreamlinePlayer senderPlayer, StreamlinePlayer otherPlayer, TPARequest.TransportType transportType) {
+        TPARequest request = getTPARequest(senderPlayer.getUuid(), otherPlayer.getUuid(), transportType);
         if (request != null) {
             request.deny();
         }
+    }
+
+    public static ConcurrentSkipListSet<TPARequest> getPendingTPARequests(StreamlinePlayer asPlayerSentTo, TPARequest.TransportType transportType) {
+        ConcurrentSkipListSet<TPARequest> requests = new ConcurrentSkipListSet<>();
+        pendingTPARequests.forEach((request) -> {
+            if (request.getReceiver().getUuid().equals(asPlayerSentTo.getUuid()) && request.getTransportType() == transportType) {
+                requests.add(request);
+            }
+        });
+        return requests;
+    }
+
+    public static TPARequest getLatestPendingTPARequest(StreamlinePlayer asPlayerSentTo, TPARequest.TransportType transportType) {
+        ConcurrentSkipListSet<TPARequest> requests = getPendingTPARequests(asPlayerSentTo, transportType);
+        if (requests.size() > 0) {
+            return requests.last();
+        }
+        return null;
     }
 }

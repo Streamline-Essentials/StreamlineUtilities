@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fixed : Impropper swappage.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/TPARequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/TPARequest.java" afterDir="false" />
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Add : Safety stuffs.">
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPACommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPACommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPAHereCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPAHereCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/EssentialsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/EssentialsManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -291,7 +292,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669714687537</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Add : Safety stuffs.">
+      <created>1669716091605</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1669716091605</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -329,6 +337,7 @@
     <MESSAGE value="Fixed : TPA and TPAHere command suggestions." />
     <MESSAGE value="Fixed : Slight issues with placeholer parsing." />
     <MESSAGE value="Fixed : Impropper swappage." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed : Impropper swappage." />
+    <MESSAGE value="Add : Safety stuffs." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add : Safety stuffs." />
   </component>
 </project>
