@@ -1,14 +1,7 @@
 package tv.quaint.configs;
 
-import lombok.Getter;
 import net.streamline.api.configs.ModularizedConfig;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.placeholder.CustomPlaceholder;
 import tv.quaint.StreamlineUtilities;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
 
 public class Configs extends ModularizedConfig {
     public Configs() {
@@ -44,5 +37,11 @@ public class Configs extends ModularizedConfig {
         reloadResource();
 
         return getResource().getOrSetDefault("nicknames.format", "%streamline_user_prefix%%this_input%%streamline_user_suffix%");
+    }
+
+    public long tpaTimeout() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("tpa.timeout", 600L);
     }
 }

@@ -1,11 +1,8 @@
 package tv.quaint;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.modules.SimpleModule;
-import net.streamline.api.modules.dependencies.Dependency;
-import net.streamline.api.placeholder.RATExpansion;
 import org.pf4j.PluginWrapper;
 import tv.quaint.commands.*;
 import tv.quaint.configs.*;
@@ -17,9 +14,6 @@ import tv.quaint.ratapi.UtilitiesExpansion;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -72,10 +66,11 @@ public class StreamlineUtilities extends SimpleModule {
                 new WhitelistCommand(),
                 new NickCommand(),
                 new SudoCommand(),
-                new SudoOpCommand()
+                new SudoOpCommand(),
+                new TPACommand(),
+                new TPAHereCommand(),
+                new ConnectCommand()
         ));
-
-//        if (getConfigs().isNicknamesEnabled()) getCommands().add(new NickCommand());
     }
 
     @Override
@@ -183,13 +178,6 @@ public class StreamlineUtilities extends SimpleModule {
 
         mainListener = new MainListener();
         ModuleUtils.listen(mainListener, this);
-
-        RATExpansion expansion = ModuleUtils.getRATAPI().getExpansionByIdentifier("utils");
-        while (expansion != null) {
-            ModuleUtils.getRATAPI().unregisterExpansion(expansion);
-            expansion = ModuleUtils.getRATAPI().getExpansionByIdentifier("utils");
-        }
-        getUtilitiesExpansion().register();
     }
 
     @Override
@@ -198,11 +186,6 @@ public class StreamlineUtilities extends SimpleModule {
         ExecutableHandler.disableAllFunctions();
         ExecutableHandler.unloadAllFunctions();
 
-        getUtilitiesExpansion().unregister();
-    }
-
-    @Override
-    public String getIdentifier() {
-        return identifier();
+        getUtilitiesExpansion().stop();
     }
 }

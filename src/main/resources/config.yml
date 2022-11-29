@@ -7,7 +7,14 @@ chat:
     # The permission the sender needs in order for their messages to be modified.
     permission: "streamline.utils.chat.modify"
 
+# Configurations for nicknames.
 nicknames:
+  # Enable nicknames?
   enabled: true
   # The format for the final output of the nickname.
   format: "%streamline_user_prefix%%this_input%%streamline_user_suffix%"
+
+# Configurations for tpa.
+tpa:
+  # Time in server ticks before a tpa request expires.
+  timeout: 600

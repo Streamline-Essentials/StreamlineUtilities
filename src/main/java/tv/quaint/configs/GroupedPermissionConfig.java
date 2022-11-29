@@ -1,15 +1,10 @@
 package tv.quaint.configs;
 
-import lombok.Getter;
 import net.streamline.api.configs.ModularizedConfig;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.placeholder.CustomPlaceholder;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.configs.obj.PermissionGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class GroupedPermissionConfig extends ModularizedConfig {
 
@@ -22,8 +17,8 @@ public class GroupedPermissionConfig extends ModularizedConfig {
 
     }
 
-    public TreeMap<String, PermissionGroup> getPermissionGroups() {
-        TreeMap<String, PermissionGroup> r = new TreeMap<>();
+    public ConcurrentSkipListMap<String, PermissionGroup> getPermissionGroups() {
+        ConcurrentSkipListMap<String, PermissionGroup> r = new ConcurrentSkipListMap<>();
         for (String key : getResource().singleLayerKeySet()) {
             try {
                 String name = getResource().getString(key + ".name");

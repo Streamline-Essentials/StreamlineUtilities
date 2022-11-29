@@ -3,16 +3,16 @@ package tv.quaint.configs;
 import lombok.Getter;
 import net.streamline.api.configs.ModularizedConfig;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.placeholder.CustomPlaceholder;
+import net.streamline.api.placeholders.RATRegistry;
+import net.streamline.api.placeholders.replaceables.GenericReplaceable;
 import tv.quaint.StreamlineUtilities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class CustomPlaceholdersConfig extends ModularizedConfig {
     @Getter
-    private TreeMap<String, String> loadedPlaceholders = new TreeMap<>();
+    private ConcurrentSkipListMap<String, String> loadedPlaceholders = new ConcurrentSkipListMap<>();
 
     public CustomPlaceholdersConfig() {
         super(StreamlineUtilities.getInstance(), "custom-placeholders.yml", true);
@@ -21,19 +21,19 @@ public class CustomPlaceholdersConfig extends ModularizedConfig {
 
     @Override
     public void init() {
-
+        loadedPlaceholders = new ConcurrentSkipListMap<>();
     }
 
     @Override
     public void reloadResource(boolean force) {
-        getAsObjects().forEach(a -> ModuleUtils.getRATAPI().unregisterCustomPlaceholder(a));
+        getAsObjects().forEach(RATRegistry::unregister);
         super.reloadResource(force);
         this.loadedPlaceholders = getCustomPlaceholders();
-        getAsObjects().forEach(a -> ModuleUtils.getRATAPI().registerCustomPlaceholder(a));
+        getAsObjects().forEach(RATRegistry::register);
     }
 
-    private TreeMap<String, String> getCustomPlaceholders() {
-        TreeMap<String, String> r = new TreeMap<>();
+    private ConcurrentSkipListMap<String, String> getCustomPlaceholders() {
+        ConcurrentSkipListMap<String, String> r = new ConcurrentSkipListMap<>();
         for (String key : getResource().singleLayerKeySet()) {
             try {
                 r.put(key, getResource().getString(key));
@@ -44,13 +44,13 @@ public class CustomPlaceholdersConfig extends ModularizedConfig {
         return r;
     }
 
-    public List<CustomPlaceholder> getAsObjects() {
-        List<CustomPlaceholder> r = new ArrayList<>();
+    public ConcurrentSkipListSet<GenericReplaceable> getAsObjects() {
+        ConcurrentSkipListSet<GenericReplaceable> r = new ConcurrentSkipListSet<>();
 
         if (getLoadedPlaceholders() == null) return r;
 
         for (String key : getLoadedPlaceholders().keySet()) {
-            r.add(new CustomPlaceholder(key, getLoadedPlaceholders().get(key)));
+            r.add(new GenericReplaceable(key, (s) -> getLoadedPlaceholders().get(key)));
         }
 
         return r;

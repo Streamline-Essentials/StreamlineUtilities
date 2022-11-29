@@ -6,8 +6,10 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import net.streamline.api.SLAPI;
 import net.streamline.api.interfaces.IStreamline;
+import net.streamline.api.savables.users.StreamlineLocation;
 import net.streamline.api.savables.users.StreamlinePlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import tv.quaint.StreamlineUtilities;
 
@@ -101,5 +103,17 @@ public class SpigotAccessor {
 
         user.setNickname(name);
         user.setDisplayNick();
+    }
+
+    public static void teleport(StreamlinePlayer player, StreamlineLocation location) {
+        Player p = getPlayer(player.getUuid());
+        if (p == null) return;
+        Location l = new Location(Bukkit.getWorld(location.getWorld()), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+
+        p.teleport(l);
+    }
+
+    public static void teleport(StreamlinePlayer player, StreamlinePlayer to) {
+        teleport(player, to.getLocation());
     }
 }
