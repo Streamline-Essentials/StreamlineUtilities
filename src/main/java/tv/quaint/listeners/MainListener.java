@@ -66,7 +66,7 @@ public class MainListener implements BaseEventListener {
                 if (SLAPI.isProxy()) {
                     event.setCancelled(true);
                 } else {
-                    String name = ModuleUtils.parseOnProxy("%streamline_user_formatted%");
+                    String name = ModuleUtils.parseOnProxy(event.getResource(), "%streamline_user_formatted%");
                     if (name == null) return;
                     event.setChangeTo(name);
                     if (event.getResource().updateOnline()) {
