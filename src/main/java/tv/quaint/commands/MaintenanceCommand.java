@@ -54,7 +54,7 @@ public class MaintenanceCommand extends ModuleCommand {
                 return;
             }
             try {
-                String previous = ModuleUtils.replaceAllLogicalBungee("%utils_maintenance_mode%").join();
+                String previous = ModuleUtils.replacePlaceholders("%utils_maintenance_mode%");
                 boolean bool = Boolean.parseBoolean(strings[0]);
                 StreamlineUtilities.getMaintenanceConfig().setModeEnabled(bool);
                 ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser, getMessageResultAll(), streamlineUser)

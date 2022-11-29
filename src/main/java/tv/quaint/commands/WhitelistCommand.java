@@ -52,7 +52,7 @@ public class WhitelistCommand extends ModuleCommand {
                 return;
             }
             try {
-                String previous = ModuleUtils.replaceAllLogicalBungee("%utils_whitelist_mode%").join();
+                String previous = ModuleUtils.replacePlaceholders("%utils_whitelist_mode%");
                 boolean bool = Boolean.parseBoolean(strings[0]);
                 GivenConfigs.getWhitelistConfig().setEnabled(bool);
                 ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser, getMessageResultAll(), streamlineUser)
