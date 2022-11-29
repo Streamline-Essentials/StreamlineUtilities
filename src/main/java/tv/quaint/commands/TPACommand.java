@@ -71,7 +71,17 @@ public class TPACommand extends ModuleCommand {
                     return;
                 }
 
+                if (otherPlayer.getLocation() == null) {
+                    ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
+                    return;
+                }
+
                 if (! (sender instanceof StreamlinePlayer senderPlayer)) {
+                    ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
+                    return;
+                }
+
+                if (senderPlayer.getLocation() == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
                     return;
                 }

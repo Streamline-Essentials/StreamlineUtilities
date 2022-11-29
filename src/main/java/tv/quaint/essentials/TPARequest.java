@@ -2,7 +2,6 @@ package tv.quaint.essentials;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.interfaces.ModuleLike;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.savables.users.StreamlineLocation;
 import net.streamline.api.savables.users.StreamlinePlayer;
@@ -96,6 +95,8 @@ public class TPARequest implements Comparable<TPARequest> {
     }
 
     public void perform() {
+        EssentialsManager.removeTPARequest(this);
+
         StreamlinePlayer from;
         StreamlinePlayer to;
 
@@ -140,11 +141,11 @@ public class TPARequest implements Comparable<TPARequest> {
                             .replace("%this_to%", to.getLatestName())
             ));
         }
-
-        EssentialsManager.removeTPARequest(this);
     }
 
     public void deny() {
+        EssentialsManager.removeTPARequest(this);
+
         StreamlinePlayer from;
         StreamlinePlayer to;
 
@@ -171,11 +172,11 @@ public class TPARequest implements Comparable<TPARequest> {
 //                        .replace("%this_from%", from.getLatestName())
 //                        .replace("%this_to%", to.getLatestName())
 //        ));
-
-        EssentialsManager.removeTPARequest(this);
     }
 
     public void timeout() {
+        EssentialsManager.removeTPARequest(this);
+
         StreamlinePlayer from;
         StreamlinePlayer to;
 
@@ -201,8 +202,6 @@ public class TPARequest implements Comparable<TPARequest> {
                         .replace("%this_from%", from.getLatestName())
                         .replace("%this_to%", to.getLatestName())
         ));
-
-        EssentialsManager.removeTPARequest(this);
     }
 
     public static class TPATimer extends ModuleDelayedRunnable {
