@@ -98,10 +98,10 @@ public class TPACommand extends ModuleCommand {
                     return;
                 }
 
-                EssentialsManager.acceptTPA(senderPlayer, otherPlayer);
+                EssentialsManager.acceptTPA(otherPlayer, senderPlayer);
 
-                ModuleUtils.sendMessage(sender, getWithOther(sender, other, messageResultAcceptedFrom));
-                ModuleUtils.sendMessage(other, getWithOther(sender, other, messageResultAcceptedTo));
+                ModuleUtils.sendMessage(sender, getWithOther(other, sender, messageResultAcceptedTo));
+                ModuleUtils.sendMessage(other, getWithOther(other, sender, messageResultAcceptedFrom));
             }
             case "deny" -> {
                 StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
@@ -120,10 +120,10 @@ public class TPACommand extends ModuleCommand {
                     return;
                 }
 
-                EssentialsManager.denyTPA(senderPlayer, otherPlayer);
+                EssentialsManager.denyTPA(otherPlayer, senderPlayer);
 
-                ModuleUtils.sendMessage(sender, getWithOther(sender, other, messageResultDeniedFrom));
-                ModuleUtils.sendMessage(other, getWithOther(sender, other, messageResultDeniedTo));
+                ModuleUtils.sendMessage(sender, getWithOther(other, sender, messageResultDeniedTo));
+                ModuleUtils.sendMessage(other, getWithOther(other, sender, messageResultDeniedFrom));
             }
         }
     }
