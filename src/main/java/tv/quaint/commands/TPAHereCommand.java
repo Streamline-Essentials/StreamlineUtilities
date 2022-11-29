@@ -9,6 +9,7 @@ import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.essentials.EssentialsManager;
 
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class TPAHereCommand extends ModuleCommand {
@@ -129,6 +130,9 @@ public class TPAHereCommand extends ModuleCommand {
 
     @Override
     public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
-        return ModuleUtils.getOnlinePlayerNames();
+        if (strings.length <= 1) return new ConcurrentSkipListSet<>(Arrays.asList("request", "accept", "deny"));
+        if (strings.length == 2) return ModuleUtils.getOnlinePlayerNames();
+
+        return new ConcurrentSkipListSet<>();
     }
 }
