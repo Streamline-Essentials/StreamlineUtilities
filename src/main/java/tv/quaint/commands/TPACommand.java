@@ -100,7 +100,7 @@ public class TPACommand extends ModuleCommand {
                     return;
                 }
 
-                EssentialsManager.requestTPAHere(senderPlayer, otherPlayer);
+                EssentialsManager.requestTPA(senderPlayer, otherPlayer);
 
                 ModuleUtils.sendMessage(sender, getWithOther(sender, other, messageResultSentTo));
                 ModuleUtils.sendMessage(other, getWithOther(sender, other, messageResultSentFrom));

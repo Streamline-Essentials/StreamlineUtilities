@@ -20,6 +20,6 @@ tpa:
   # Messages for when the TPA times out.
   timeout:
     # The player being tpa-ed to.
-    to: "&eTeleport request from &d%streamline_parse_%this_from%:::*/*streamline_user_formatted*/*% &ctimed out&8!"
+    to: "&eTeleport request from &d%streamline_parse_%this_sender%:::*/*streamline_user_formatted*/*% &ctimed out&8!"
     # The player tpa-ing.
-    from: "&eTeleport request to &d%streamline_parse_%this_to%:::*/*streamline_user_formatted*/*% &ctimed out&8!"
+    from: "&eTeleport request to &d%streamline_parse_%this_receiver%:::*/*streamline_user_formatted*/*% &ctimed out&8!"

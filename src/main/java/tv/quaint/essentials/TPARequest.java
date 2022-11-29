@@ -192,15 +192,19 @@ public class TPARequest implements Comparable<TPARequest> {
             return;
         }
 
-        ModuleUtils.sendMessage(to, ModuleUtils.replaceAllPlayerBungee(to,
+        ModuleUtils.sendMessage(getReceiver(), ModuleUtils.replaceAllPlayerBungee(to,
                 StreamlineUtilities.getMessages().tpaTimeoutTo()
                         .replace("%this_from%", from.getLatestName())
+                        .replace("%this_sender%", getSender().getLatestName())
                         .replace("%this_to%", to.getLatestName())
+                        .replace("%this_receiver%", getReceiver().getLatestName())
         ));
-        ModuleUtils.sendMessage(from, ModuleUtils.replaceAllPlayerBungee(from,
+        ModuleUtils.sendMessage(getSender(), ModuleUtils.replaceAllPlayerBungee(from,
                 StreamlineUtilities.getMessages().tpaTimeoutFrom()
                         .replace("%this_from%", from.getLatestName())
+                        .replace("%this_sender%", getSender().getLatestName())
                         .replace("%this_to%", to.getLatestName())
+                        .replace("%this_receiver%", getReceiver().getLatestName())
         ));
     }
 
