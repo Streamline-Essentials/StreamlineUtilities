@@ -47,9 +47,12 @@ public class ConnectCommand extends ModuleCommand {
         String serverName = strings[0];
         boolean silent = false;
 
-        if (! (sender instanceof StreamlinePlayer target)) {
+        StreamlinePlayer target = null;
+        if (! (sender instanceof StreamlinePlayer) && strings.length == 1) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
+        } else {
+            if (sender instanceof StreamlinePlayer) target = (StreamlinePlayer) sender;
         }
 
         if (strings.length == 2) {

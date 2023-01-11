@@ -46,10 +46,8 @@ public class ServerAliasesConfig extends ModularizedConfig {
             }
 
             try {
-                getResource().singleLayerKeySet(key).forEach(s -> {
-                    ServerAlias serverAlias = ServerAlias.buildFrom(s, getResource().getSection(key));
-                    r.put(serverAlias.getActualServer(), serverAlias);
-                });
+                ServerAlias serverAlias = ServerAlias.buildFrom(key, getResource().getStringList(key));
+                r.put(serverAlias.getActualServer(), serverAlias);
             } catch (Exception e) {
                 StreamlineUtilities.getInstance().logWarning("Could not load server alias value for '" + key + "' due to: " + e.getMessage());
             }

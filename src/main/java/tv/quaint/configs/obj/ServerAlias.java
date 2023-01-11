@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import tv.quaint.thebase.lib.leonhard.storage.sections.FlatFileSection;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ServerAlias implements Comparable<ServerAlias> {
@@ -46,5 +47,9 @@ public class ServerAlias implements Comparable<ServerAlias> {
     public static ServerAlias buildFrom(String key, FlatFileSection section) {
         ConcurrentSkipListSet<String> aliases = new ConcurrentSkipListSet<>(section.getStringList(key));
         return new ServerAlias(key, aliases);
+    }
+
+    public static ServerAlias buildFrom(String name, List<String> aliases) {
+        return new ServerAlias(name, new ConcurrentSkipListSet<>(aliases));
     }
 }

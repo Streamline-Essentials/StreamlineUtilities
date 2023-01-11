@@ -3,6 +3,7 @@ package tv.quaint.commands;
 import lombok.Getter;
 import net.streamline.api.SLAPI;
 import net.streamline.api.command.ModuleCommand;
+import net.streamline.api.configs.given.GivenConfigs;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.interfaces.IStreamline;
 import net.streamline.api.messages.builders.SavablePlayerMessageBuilder;
@@ -74,7 +75,7 @@ public class NickCommand extends ModuleCommand {
             if (strings[strings.length - 1].equals("-clear")) {
                 String current = user.getDisplayName();
                 NicknameUpdateEvent updateEvent =
-                        new NicknameUpdateEvent(user, UserUtils.getDisplayName(user.getLatestName(), user.getLatestName()), current);
+                        new NicknameUpdateEvent(user, UserUtils.getFormattedDefaultNickname(user), current);
                 ModuleUtils.fireEvent(updateEvent);
                 if (updateEvent.isCancelled()) {
                     ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser, getMessageResultCancelled(), user)

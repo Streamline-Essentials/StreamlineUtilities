@@ -1,6 +1,7 @@
 package tv.quaint.listeners;
 
 import net.streamline.api.SLAPI;
+import net.streamline.api.configs.given.GivenConfigs;
 import net.streamline.api.events.server.LoginCompletedEvent;
 import net.streamline.api.events.server.LoginReceivedEvent;
 import net.streamline.api.events.server.StreamlineChatEvent;
@@ -11,6 +12,7 @@ import net.streamline.api.savables.events.CreateSavableResourceEvent;
 import net.streamline.api.savables.events.UserNameUpdateByOtherEvent;
 import net.streamline.api.savables.events.UserNameUpdateEvent;
 import net.streamline.api.savables.users.StreamlinePlayer;
+import net.streamline.api.savables.users.StreamlineUser;
 import net.streamline.api.utils.UserUtils;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.accessors.SpigotAccessor;
@@ -66,26 +68,21 @@ public class MainListener implements BaseEventListener {
                 if (SLAPI.isProxy()) {
                     event.setCancelled(true);
                 } else {
-                    String name = ModuleUtils.parseOnProxy(event.getResource(), "%streamline_user_formatted%");
+                    String name = ModuleUtils.parseOnProxy(event.getResource(), StreamlineUtilities.getConfigs().getNicknamesFormat()
+                            .replace("%this_input%", event.getResource().getLatestName()));
                     if (name == null) return;
                     event.setChangeTo(name);
                     if (event.getResource().updateOnline()) {
-                        StreamlinePlayer player = UserUtils.getOrGetPlayer(event.getResource().getUuid());
-                        if (player != null) {
-                            SpigotAccessor.updateCustomName(player, event.getChangeTo());
+                        StreamlineUser user = UserUtils.getOrGetUser(event.getResource().getUuid());
+                        if (user != null) {
+                            if (user instanceof StreamlinePlayer) {
+                                SpigotAccessor.updateCustomName((StreamlinePlayer) user, name);
+                            }
                         }
                     }
                 }
             }
         }
-    }
-
-    @BaseProcessor
-    public void onUserCreate(CreateSavableResourceEvent<?> resourceEvent) {
-        if (! (resourceEvent.getResource() instanceof StreamlinePlayer player)) return;
-
-        player.setDisplayName(ModuleUtils.getDisplayName(player.getUuid(), player.getUuid()));
-        player.saveMore();
     }
 
     @BaseProcessor(priority = BaseEventPriority.LOWEST)
