@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fixed : Typos.">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fixed : Some issues.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/ConnectCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/ConnectCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/NickCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/NickCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/ServerAliasesConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/ServerAliasesConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/ServerAlias.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/ServerAlias.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/listeners/MainListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/listeners/MainListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +109,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1658370025409</updated>
-      <workItem from="1673418150894" duration="1864000" />
+      <workItem from="1673418150894" duration="2692000" />
     </task>
     <task id="LOCAL-00001" summary="Init.">
       <created>1658438907327</created>
@@ -320,7 +314,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669717767913</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Fixed : Some issues.">
+      <created>1673420034709</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1673420034709</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -364,6 +365,7 @@
     <MESSAGE value="Add : Safety stuffs." />
     <MESSAGE value="Add : More safety stuffs." />
     <MESSAGE value="Fixed : Typos." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed : Typos." />
+    <MESSAGE value="Fixed : Some issues." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed : Some issues." />
   </component>
 </project>

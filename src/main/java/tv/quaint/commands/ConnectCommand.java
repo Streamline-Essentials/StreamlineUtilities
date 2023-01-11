@@ -55,7 +55,7 @@ public class ConnectCommand extends ModuleCommand {
             if (sender instanceof StreamlinePlayer) target = (StreamlinePlayer) sender;
         }
 
-        if (strings.length == 2) {
+        if (strings.length >= 2) {
             target = UserUtils.getOrGetPlayerByName(strings[1]);
             if (target == null) {
                 ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
