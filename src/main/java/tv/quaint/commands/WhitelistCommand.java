@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class WhitelistCommand extends ModuleCommand {
     @Getter
@@ -73,8 +74,8 @@ public class WhitelistCommand extends ModuleCommand {
         }
 
         switch (strings[0]) {
-            case "add" -> {
-                ConcurrentSkipListSet<String> names = new ConcurrentSkipListSet<>(Arrays.stream(MessageUtils.argsMinus(strings, 0)).toList());
+            case "add":
+                ConcurrentSkipListSet<String> names = Arrays.stream(MessageUtils.argsMinus(strings, 0)).collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
                 AtomicInteger atomicInteger = new AtomicInteger(0);
                 names.forEach(s -> {
@@ -95,12 +96,12 @@ public class WhitelistCommand extends ModuleCommand {
                 });
 
                 StreamlineUtilities.getInstance().logInfo("Added " + atomicInteger.get() + " users to the &cMaintenance Mode &awhitelist&f!");
-            }
-            case "remove" -> {
-                ConcurrentSkipListSet<String> names = new ConcurrentSkipListSet<>(Arrays.stream(MessageUtils.argsMinus(strings, 0)).toList());
+                break;
+            case "remove":
+                ConcurrentSkipListSet<String> namesRemove = Arrays.stream(MessageUtils.argsMinus(strings, 0)).collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
-                AtomicInteger atomicInteger = new AtomicInteger(0);
-                names.forEach(s -> {
+                AtomicInteger atomicIntegerRemove = new AtomicInteger(0);
+                namesRemove.forEach(s -> {
                     StreamlinePlayer player = UserUtils.getOrGetPlayerByName(s);
                     if (player == null) {
                         ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
@@ -113,21 +114,20 @@ public class WhitelistCommand extends ModuleCommand {
                         if (player.updateOnline()) ModuleUtils.kick(player, "%utils_whitelist_message%");
                     }
 
-                    atomicInteger.getAndAdd(1);
+                    atomicIntegerRemove.getAndAdd(1);
 
                     ModuleUtils.sendMessage(streamlineUser,
                             getWithOther(streamlineUser, getMessageResultRemove(), player)
-                                    .replace("%this_index%", String.valueOf(atomicInteger.get())
+                                    .replace("%this_index%", String.valueOf(atomicIntegerRemove.get())
                                     )
                     );
                 });
 
-                StreamlineUtilities.getInstance().logInfo("Removed " + atomicInteger.get() + " users from the &cMaintenance Mode &awhitelist&f!");
-            }
-            default -> {
+                StreamlineUtilities.getInstance().logInfo("Removed " + atomicIntegerRemove.get() + " users from the &cMaintenance Mode &awhitelist&f!");
+                break;
+            default:
                 ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
                 return;
-            }
         }
     }
 

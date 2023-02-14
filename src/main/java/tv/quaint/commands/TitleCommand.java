@@ -100,10 +100,11 @@ public class TitleCommand extends ModuleCommand {
             ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
         }
-        if (! (other instanceof StreamlinePlayer player)) {
+        if (! (other instanceof StreamlinePlayer)) {
             ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser, messageErrorNotPlayer, other));
             return;
         }
+        StreamlinePlayer player = (StreamlinePlayer) other;
 
         ModuleUtils.sendTitle(player, streamlineTitle);
         if (sendResultSenderMessage) ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser, messageResultSender

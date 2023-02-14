@@ -2,6 +2,8 @@ package tv.quaint.essentials;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.streamline.api.messages.builders.TeleportMessageBuilder;
+import net.streamline.api.messages.proxied.ProxiedMessage;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.savables.users.StreamlineLocation;
 import net.streamline.api.savables.users.StreamlinePlayer;
@@ -18,7 +20,7 @@ public class TPARequest implements Comparable<TPARequest> {
         private final TPARequest request;
 
         public TimeoutTimer(TPARequest request) {
-            super(StreamlineUtilities.getInstance(), StreamlineUtilities.getConfigs().tpaTimeout());
+            super(StreamlineUtilities.getInstance(), StreamlineUtilities.getConfigs().getTPATimeout());
             this.request = request;
         }
 
@@ -95,8 +97,6 @@ public class TPARequest implements Comparable<TPARequest> {
     }
 
     public void perform() {
-        EssentialsManager.removeTPARequest(this);
-
         StreamlinePlayer from;
         StreamlinePlayer to;
 
@@ -112,35 +112,30 @@ public class TPARequest implements Comparable<TPARequest> {
             return;
         }
 
+        StreamlineLocation location = to.getLocation();
+        StreamlineUtilities.getInstance().logDebug("Performing TPA from " + from.getLatestName() + " to " + to.getLatestName() + " at " + location.toString());
         if (resolveType == ResolveType.CURRENT_LOCATION) {
-            StreamlineLocation location = to.getLocation();
             ModuleUtils.connect(from, to.getLatestServer());
-            new TPATimer(from, location);
-            ModuleUtils.sendMessage(to, ModuleUtils.replaceAllPlayerBungee(to,
-                    StreamlineUtilities.getMessages().tpaPerformTo()
-                            .replace("%this_from%", from.getLatestName())
-                            .replace("%this_to%", to.getLatestName())
-            ));
-            ModuleUtils.sendMessage(from, ModuleUtils.replaceAllPlayerBungee(from,
-                    StreamlineUtilities.getMessages().tpaPerformFrom()
-                            .replace("%this_from%", from.getLatestName())
-                            .replace("%this_to%", to.getLatestName())
-            ));
         } else {
-            StreamlineLocation location = to.getLocation();
             ModuleUtils.connect(from, getServer());
-            new TPATimer(from, location);
-            ModuleUtils.sendMessage(to, ModuleUtils.replaceAllPlayerBungee(to,
-                    StreamlineUtilities.getMessages().tpaPerformTo()
-                            .replace("%this_from%", from.getLatestName())
-                            .replace("%this_to%", to.getLatestName())
-            ));
-            ModuleUtils.sendMessage(from, ModuleUtils.replaceAllPlayerBungee(from,
-                    StreamlineUtilities.getMessages().tpaPerformFrom()
-                            .replace("%this_from%", from.getLatestName())
-                            .replace("%this_to%", to.getLatestName())
-            ));
         }
+
+        ProxiedMessage message = TeleportMessageBuilder.build(to, location, from);
+        new EssentialsManager.TeleportRunner(message);
+        ModuleUtils.sendMessage(to, ModuleUtils.replaceAllPlayerBungee(to,
+                StreamlineUtilities.getMessages().tpaPerformTo()
+                        .replace("%this_from%", from.getLatestName())
+                        .replace("%this_to%", to.getLatestName())
+        ));
+        ModuleUtils.sendMessage(from, ModuleUtils.replaceAllPlayerBungee(from,
+                StreamlineUtilities.getMessages().tpaPerformFrom()
+                        .replace("%this_from%", from.getLatestName())
+                        .replace("%this_to%", to.getLatestName())
+        ));
+
+        EssentialsManager.removeTPARequest(this);
+
+        this.timeoutTimer.cancel();
     }
 
     public void deny() {
@@ -206,22 +201,6 @@ public class TPARequest implements Comparable<TPARequest> {
                         .replace("%this_to%", to.getLatestName())
                         .replace("%this_receiver%", getReceiver().getLatestName())
         ));
-    }
-
-    public static class TPATimer extends ModuleDelayedRunnable {
-        StreamlinePlayer player;
-        StreamlineLocation location;
-
-        public TPATimer(StreamlinePlayer player, StreamlineLocation location) {
-            super(StreamlineUtilities.getInstance(), 60);
-            this.player = player;
-            this.location = location;
-        }
-
-        @Override
-        public void runDelayed() {
-            ModuleUtils.teleport(player, location);
-        }
     }
 
     @Override

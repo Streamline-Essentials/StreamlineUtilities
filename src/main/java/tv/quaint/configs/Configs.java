@@ -13,6 +13,9 @@ public class Configs extends ModularizedConfig {
         chatModifyEnabled();
         chatModifyPermission();
         isNicknamesEnabled();
+
+        getTPATimeout();
+        getTPAWaitTime();
     }
 
     public boolean chatModifyEnabled() {
@@ -39,9 +42,15 @@ public class Configs extends ModularizedConfig {
         return getResource().getOrSetDefault("nicknames.format", "%streamline_user_prefix%%this_input%%streamline_user_suffix%");
     }
 
-    public long tpaTimeout() {
+    public long getTPATimeout() {
         reloadResource();
 
         return getResource().getOrSetDefault("tpa.timeout", 600L);
+    }
+
+    public long getTPAWaitTime() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("tpa.wait-time", 10L);
     }
 }

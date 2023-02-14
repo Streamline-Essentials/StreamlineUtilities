@@ -6,6 +6,7 @@ import tv.quaint.StreamlineUtilities;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 public class MaintenanceConfig extends ModularizedConfig {
 
@@ -59,7 +60,7 @@ public class MaintenanceConfig extends ModularizedConfig {
         ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>(getAllowedUUIDs());
         r.add(uuid);
 
-        getResource().set("allowed-to-join.uuids", r.stream().toList());
+        getResource().set("allowed-to-join.uuids", new ArrayList<>(r));
     }
 
     public void removeAllowed(String uuid) {
@@ -68,6 +69,6 @@ public class MaintenanceConfig extends ModularizedConfig {
         ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>(getAllowedUUIDs());
         r.remove(uuid);
 
-        getResource().set("allowed-to-join.uuids", r.stream().toList());
+        getResource().set("allowed-to-join.uuids", new ArrayList<>(r));
     }
 }

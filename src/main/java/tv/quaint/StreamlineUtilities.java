@@ -3,13 +3,13 @@ package tv.quaint;
 import lombok.Getter;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.modules.SimpleModule;
-import org.pf4j.PluginWrapper;
 import tv.quaint.commands.*;
 import tv.quaint.configs.*;
 import tv.quaint.executables.ExecutableHandler;
 import tv.quaint.executables.aliases.AliasGetter;
 import tv.quaint.listeners.MainListener;
 import tv.quaint.ratapi.UtilitiesExpansion;
+import tv.quaint.thebase.lib.pf4j.PluginWrapper;
 
 import java.io.File;
 import java.io.InputStream;

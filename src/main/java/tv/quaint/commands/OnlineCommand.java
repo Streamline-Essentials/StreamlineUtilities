@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 public class OnlineCommand extends ModuleCommand {
     @Getter
@@ -92,7 +93,7 @@ public class OnlineCommand extends ModuleCommand {
 
         String option = strings[0];
         switch (option.toLowerCase(Locale.ROOT)) {
-            case "server" -> {
+            case "server":
                 String serverName = strings[1];
                 if (! ModuleUtils.equalsAnyServer(serverName)) {
                     ModuleUtils.sendMessage(StreamlineUser, messageErrorInvalidServer.replace("%this_identifier%", serverName));
@@ -108,8 +109,8 @@ public class OnlineCommand extends ModuleCommand {
                         ,
                         StreamlineUser
                 ));
-            }
-            case "group" -> {
+                break;
+            case "group":
                 String group = strings[1];
                 if (! StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().containsKey(group)) {
                     ModuleUtils.sendMessage(StreamlineUser, messageErrorInvalidGroup.replace("%this_identifier%", group));
@@ -125,10 +126,7 @@ public class OnlineCommand extends ModuleCommand {
                         ,
                         StreamlineUser
                 ));
-            }
-            default -> {
-
-            }
+                break;
         }
     }
 
@@ -145,7 +143,7 @@ public class OnlineCommand extends ModuleCommand {
         }
         if (strings[0].equals("group")) {
             ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
-            StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().keySet().stream().toList().forEach(a -> {
+            new ArrayList<>(StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().keySet()).forEach(a -> {
                 if (ModuleUtils.hasPermission(StreamlineUser, permissionServers + a)) r.add(a);
             });
             return r;
@@ -178,7 +176,7 @@ public class OnlineCommand extends ModuleCommand {
         List<String> modified = new ArrayList<>();
         ModuleUtils.getLoadedUsersSet().forEach(a -> {
             if (! a.isOnline()) return;
-            if (! ModuleUtils.hasPermission(a, group.permission())) return;
+            if (! ModuleUtils.hasPermission(a, group.getPermission())) return;
             modified.add(messageResultPermissionedModified.replace("%this_username%", a.getName()));
         });
 

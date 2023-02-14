@@ -27,13 +27,12 @@ public class AliasExecution {
 
     public boolean execute(StreamlineUser sender) {
         switch (getType()) {
-            case COMMAND -> {
+            case COMMAND:
                 ModuleUtils.runAs(sender, execution);
-            }
-            case SCRIPT -> {
+                break;
+            case SCRIPT:
                 return false;
-            }
-            case FUNCTION -> {
+            case FUNCTION:
                 if (! ExecutableHandler.isFunctionLoadedByName(execution)) {
                     ModuleUtils.sendMessage(sender, StreamlineUtilities.getMessages().errorsFunctionsNotLoaded());
                     return false;
@@ -43,7 +42,7 @@ public class AliasExecution {
                     return false;
                 }
                 ExecutableHandler.getFunction(execution).runAs(sender);
-            }
+                break;
         }
         return true;
     }

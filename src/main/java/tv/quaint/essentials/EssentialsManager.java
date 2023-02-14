@@ -1,11 +1,36 @@
 package tv.quaint.essentials;
 
+import lombok.Getter;
+import lombok.Setter;
+import net.streamline.api.messages.proxied.ProxiedMessage;
 import net.streamline.api.savables.users.StreamlinePlayer;
+import net.streamline.api.scheduler.ModuleDelayedRunnable;
+import tv.quaint.StreamlineUtilities;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EssentialsManager {
+    public static class TeleportRunner extends ModuleDelayedRunnable {
+        @Getter
+        @Setter
+        private ProxiedMessage message;
+
+        public TeleportRunner(long ticksDelayed, ProxiedMessage message) {
+            super(StreamlineUtilities.getInstance(), ticksDelayed);
+            this.message = message;
+        }
+
+        public TeleportRunner(ProxiedMessage message) {
+            this(StreamlineUtilities.getConfigs().getTPAWaitTime(), message);
+        }
+
+        @Override
+        public void runDelayed() {
+            this.message.send();
+        }
+    }
+
     static ConcurrentSkipListSet<TPARequest> pendingTPARequests = new ConcurrentSkipListSet<>();
 
     public static void addTPARequest(TPARequest request) {

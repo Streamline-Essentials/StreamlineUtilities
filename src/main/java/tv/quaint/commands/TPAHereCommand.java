@@ -38,8 +38,8 @@ public class TPAHereCommand extends ModuleCommand {
                 "pteleportaskhere"
         );
 
-        messageResultSentTo = getCommandResource().getOrSetDefault("messages.result.sent.to", "&eSent &d%streamline_parse_%this_from%:::*/*streamline_user_formatted*/*% &ea tpahere request&8!");
-        messageResultSentFrom = getCommandResource().getOrSetDefault("messages.result.sent.from", "&d%streamline_parse_%this_to%:::*/*streamline_user_formatted*/*% &ewants to tpahere to you&8!" +
+        messageResultSentTo = getCommandResource().getOrSetDefault("messages.result.sent.to", "&eSent &d%streamline_parse_%this_to%:::*/*streamline_user_formatted*/*% &ea tpahere request&8!");
+        messageResultSentFrom = getCommandResource().getOrSetDefault("messages.result.sent.from", "&d%streamline_parse_%this_from%:::*/*streamline_user_formatted*/*% &ewants to tpahere to you&8!" +
                 "&eType &7'&a/ptpahere accept %this_from%&7' &eto accept&8!");
 
         messageResultAcceptedTo = getCommandResource().getOrSetDefault("messages.result.accepted.to",
@@ -65,15 +65,16 @@ public class TPAHereCommand extends ModuleCommand {
             return;
         }
 
-        if (! (sender instanceof StreamlinePlayer senderPlayer)) {
+        if (! (sender instanceof StreamlinePlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
+        StreamlinePlayer senderPlayer = (StreamlinePlayer) sender;
 
         String action = strings[0];
 
         switch (action) {
-            case "request" -> {
+            case "request":
                 if (strings.length < 2) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
                     return;
@@ -85,10 +86,11 @@ public class TPAHereCommand extends ModuleCommand {
                     return;
                 }
 
-                if (! (other instanceof StreamlinePlayer otherPlayer)) {
+                if (! (other instanceof StreamlinePlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
+                StreamlinePlayer otherPlayer = (StreamlinePlayer) other;
 
                 if (otherPlayer.getLocation() == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
@@ -102,79 +104,84 @@ public class TPAHereCommand extends ModuleCommand {
 
                 EssentialsManager.requestTPAHere(senderPlayer, otherPlayer);
 
-                ModuleUtils.sendMessage(sender, getWithOther(sender, other, messageResultSentTo));
+                ModuleUtils.sendMessage(sender, getWithOther(sender, sender, messageResultSentTo));
                 ModuleUtils.sendMessage(other, getWithOther(sender, other, messageResultSentFrom));
-            }
-            case "accept" -> {
-                String username = "";
+                break;
+            case "accept":
+                String usernameAccept = "";
                 if (strings.length > 1) {
-                    username = strings[1];
+                    usernameAccept = strings[1];
                 } else {
                     TPARequest request = EssentialsManager.getLatestPendingTPARequest(senderPlayer, TPARequest.TransportType.RECEIVER_TO_SENDER);
                     if (request == null) {
-                        ModuleUtils.sendMessage(sender, getWithOther(sender.getLatestName(), messageResultNonePendingAll));
+                        ModuleUtils.sendMessage(sender, getWithOther(sender.getUuid(), messageResultNonePendingAll));
                         return;
                     }
-                    username = request.getSender().getLatestName();
+                    usernameAccept = request.getSender().getLatestName();
                 }
 
-                StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
-                if (other == null) {
+                StreamlineUser otherAccept = ModuleUtils.getOrGetUserByName(usernameAccept);
+                if (otherAccept == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                if (! (other instanceof StreamlinePlayer otherPlayer)) {
+                if (! (otherAccept instanceof StreamlinePlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
+                StreamlinePlayer otherPlayerAccept = (StreamlinePlayer) otherAccept;
 
-                TPARequest request = EssentialsManager.getTPARequest(otherPlayer.getUuid(), senderPlayer.getUuid(), TPARequest.TransportType.RECEIVER_TO_SENDER);
+                TPARequest request = EssentialsManager.getTPARequest(otherPlayerAccept.getUuid(), senderPlayer.getUuid(), TPARequest.TransportType.RECEIVER_TO_SENDER);
                 if (request == null) {
-                    ModuleUtils.sendMessage(sender, getWithOther(sender, other, getWithOther(sender, messageResultNonePendingSpecific, other)));
+                    ModuleUtils.sendMessage(sender, getWithOther(sender, otherAccept, getWithOther(sender, messageResultNonePendingSpecific, otherAccept)));
                     return;
                 }
 
-                EssentialsManager.acceptTPA(otherPlayer, senderPlayer, TPARequest.TransportType.RECEIVER_TO_SENDER);
+                request.perform();
 
-                ModuleUtils.sendMessage(sender, getWithOther(other, sender, messageResultAcceptedTo));
-                ModuleUtils.sendMessage(other, getWithOther(other, sender, messageResultAcceptedFrom));
-            }
-            case "deny" -> {
-                String username = "";
+                ModuleUtils.sendMessage(sender, getWithOther(sender, sender, messageResultAcceptedTo));
+                ModuleUtils.sendMessage(otherAccept, getWithOther(sender, otherAccept, messageResultAcceptedFrom));
+                break;
+            case "deny":
+                String usernameDeny = "";
                 if (strings.length > 1) {
-                    username = strings[1];
+                    usernameDeny = strings[1];
                 } else {
-                    TPARequest request = EssentialsManager.getLatestPendingTPARequest(senderPlayer, TPARequest.TransportType.RECEIVER_TO_SENDER);
-                    if (request == null) {
-                        ModuleUtils.sendMessage(sender, getWithOther(sender.getLatestName(), messageResultNonePendingAll));
+                    TPARequest requestDeny = EssentialsManager.getLatestPendingTPARequest(senderPlayer, TPARequest.TransportType.RECEIVER_TO_SENDER);
+                    if (requestDeny == null) {
+                        ModuleUtils.sendMessage(sender, getWithOther(sender.getUuid(), messageResultNonePendingAll));
                         return;
                     }
-                    username = request.getSender().getLatestName();
+                    usernameDeny = requestDeny.getSender().getLatestName();
                 }
 
-                StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
-                if (other == null) {
+                StreamlineUser otherDeny = ModuleUtils.getOrGetUserByName(usernameDeny);
+                if (otherDeny == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                if (! (other instanceof StreamlinePlayer otherPlayer)) {
+                if (! (otherDeny instanceof StreamlinePlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
+                StreamlinePlayer otherPlayerDeny = (StreamlinePlayer) otherDeny;
 
-                TPARequest request = EssentialsManager.getTPARequest(otherPlayer.getUuid(), senderPlayer.getUuid(), TPARequest.TransportType.RECEIVER_TO_SENDER);
-                if (request == null) {
-                    ModuleUtils.sendMessage(sender, getWithOther(sender, other, getWithOther(sender, messageResultNonePendingSpecific, other)));
+                TPARequest requestDeny = EssentialsManager.getTPARequest(otherPlayerDeny.getUuid(), senderPlayer.getUuid(), TPARequest.TransportType.RECEIVER_TO_SENDER);
+                if (requestDeny == null) {
+                    ModuleUtils.sendMessage(sender, getWithOther(sender, otherDeny, getWithOther(sender, messageResultNonePendingSpecific, otherDeny)));
                     return;
                 }
 
-                EssentialsManager.denyTPA(otherPlayer, senderPlayer, TPARequest.TransportType.RECEIVER_TO_SENDER);
+                requestDeny.deny();
 
-                ModuleUtils.sendMessage(sender, getWithOther(other, sender, messageResultDeniedTo));
-                ModuleUtils.sendMessage(other, getWithOther(other, sender, messageResultDeniedFrom));
-            }
+                ModuleUtils.sendMessage(sender, getWithOther(sender, sender, messageResultDeniedTo));
+                ModuleUtils.sendMessage(otherDeny, getWithOther(sender, otherDeny, messageResultDeniedFrom));
+                break;
+            default:
+                ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+                break;
         }
     }
 

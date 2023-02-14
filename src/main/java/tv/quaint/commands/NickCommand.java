@@ -86,7 +86,8 @@ public class NickCommand extends ModuleCommand {
                 }
 
                 user.setDisplayName(updateEvent.getChangeTo());
-                if (user instanceof StreamlinePlayer player) {
+                if (user instanceof StreamlinePlayer) {
+                    StreamlinePlayer player = (StreamlinePlayer) user;
                     SpigotAccessor.updateCustomName(player, updateEvent.getChangeTo());
                     if (SLAPI.getInstance().getPlatform().getServerType().equals(IStreamline.ServerType.PROXY)) {
                         ProxiedMessage proxiedMessage = SavablePlayerMessageBuilder.build(player, true);
@@ -121,7 +122,8 @@ public class NickCommand extends ModuleCommand {
         }
 
         user.setDisplayName(updateEvent.getChangeTo());
-        if (user instanceof StreamlinePlayer player) {
+        if (user instanceof StreamlinePlayer) {
+            StreamlinePlayer player = (StreamlinePlayer) user;
             SpigotAccessor.updateCustomName(player, updateEvent.getChangeTo());
             if (SLAPI.getInstance().getPlatform().getServerType().equals(IStreamline.ServerType.PROXY)) {
                 ProxiedMessage proxiedMessage = SavablePlayerMessageBuilder.build(player, true);

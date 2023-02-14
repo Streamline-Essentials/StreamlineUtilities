@@ -41,10 +41,10 @@ public class UtilitiesExpansion extends RATExpansion {
         PermissionGroup group = StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().get(identifier);
         if (group == null) return null;
         if (s.equals(identifier + "_name")) {
-            return group.name();
+            return group.getName();
         }
         if (s.equals(identifier + "_permission")) {
-            return group.permission();
+            return group.getPermission();
         }
         return null;
     }
