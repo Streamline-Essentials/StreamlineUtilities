@@ -1,10 +1,12 @@
 package tv.quaint;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.modules.SimpleModule;
 import tv.quaint.commands.*;
 import tv.quaint.configs.*;
+import tv.quaint.essentials.EssentialsManager;
 import tv.quaint.executables.ExecutableHandler;
 import tv.quaint.executables.aliases.AliasGetter;
 import tv.quaint.listeners.MainListener;
@@ -31,7 +33,7 @@ public class StreamlineUtilities extends SimpleModule {
     @Getter
     static CustomPlaceholdersConfig customPlaceholdersConfig;
     @Getter
-    static ServerAliasesConfig serverAliasesConfig;
+    static ServersConfig serversConfig;
     @Getter
     static GroupedPermissionConfig groupedPermissionConfig;
     @Getter
@@ -48,6 +50,9 @@ public class StreamlineUtilities extends SimpleModule {
 
     @Getter
     static ConcurrentSkipListSet<AliasGetter> getters;
+
+    @Getter @Setter
+    static File usersFolder;
 
     public StreamlineUtilities(PluginWrapper wrapper) {
         super(wrapper);
@@ -69,7 +74,11 @@ public class StreamlineUtilities extends SimpleModule {
                 new SudoOpCommand(),
                 new TPACommand(),
                 new TPAHereCommand(),
-                new ConnectCommand()
+                new ConnectCommand(),
+                new ModifyServerCommand(),
+                new DeleteHomeCommand(),
+                new SetHomeCommand(),
+                new HomeCommand()
         ));
     }
 
@@ -122,6 +131,9 @@ public class StreamlineUtilities extends SimpleModule {
             ExecutableHandler.loadGetter(a);
         });
         utilitiesExpansion = new UtilitiesExpansion();
+
+        usersFolder = new File(getDataFolder(), "users" + File.separator);
+        usersFolder.mkdirs();
     }
 
     @Override
@@ -169,7 +181,8 @@ public class StreamlineUtilities extends SimpleModule {
         ExecutableHandler.loadAllAliases(aliasesFolder);
 
         customPlaceholdersConfig = new CustomPlaceholdersConfig();
-        serverAliasesConfig = new ServerAliasesConfig();
+        serversConfig = new ServersConfig();
+        serversConfig.reloadResource(true);
         groupedPermissionConfig = new GroupedPermissionConfig();
         maintenanceConfig = new MaintenanceConfig();
 
@@ -182,6 +195,11 @@ public class StreamlineUtilities extends SimpleModule {
 
     @Override
     public void onDisable() {
+        EssentialsManager.getLoadedUsers().forEach(user -> {
+            user.saveAll();
+            EssentialsManager.syncUser(user);
+        });
+
         ExecutableHandler.unloadAllAliases();
         ExecutableHandler.disableAllFunctions();
         ExecutableHandler.unloadAllFunctions();

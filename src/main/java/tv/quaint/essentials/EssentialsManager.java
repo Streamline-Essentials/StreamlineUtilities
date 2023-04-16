@@ -2,11 +2,28 @@ package tv.quaint.essentials;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.streamline.api.SLAPI;
+import net.streamline.api.configs.given.GivenConfigs;
 import net.streamline.api.messages.proxied.ProxiedMessage;
+import net.streamline.api.savables.SavableResource;
 import net.streamline.api.savables.users.StreamlinePlayer;
+import net.streamline.api.savables.users.StreamlineUser;
 import net.streamline.api.scheduler.ModuleDelayedRunnable;
 import tv.quaint.StreamlineUtilities;
+import tv.quaint.essentials.users.UtilitiesUser;
+import tv.quaint.storage.StorageUtils;
+import tv.quaint.storage.resources.StorageResource;
+import tv.quaint.storage.resources.cache.CachedResource;
+import tv.quaint.storage.resources.cache.CachedResourceUtils;
+import tv.quaint.storage.resources.databases.configurations.DatabaseConfig;
+import tv.quaint.storage.resources.flat.FlatFileResource;
+import tv.quaint.thebase.lib.leonhard.storage.Config;
+import tv.quaint.thebase.lib.leonhard.storage.Json;
+import tv.quaint.thebase.lib.leonhard.storage.Toml;
+import tv.quaint.thebase.lib.mongodb.MongoClient;
 
+import java.io.File;
+import java.sql.Connection;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -22,7 +39,7 @@ public class EssentialsManager {
         }
 
         public TeleportRunner(ProxiedMessage message) {
-            this(StreamlineUtilities.getConfigs().getTPAWaitTime(), message);
+            this(StreamlineUtilities.getConfigs().getTPADelayTicks(), message);
         }
 
         @Override
@@ -90,6 +107,140 @@ public class EssentialsManager {
         if (requests.size() > 0) {
             return requests.last();
         }
+        return null;
+    }
+
+    @Getter @Setter
+    private static ConcurrentSkipListSet<UtilitiesUser> loadedUsers = new ConcurrentSkipListSet<>();
+
+    public static UtilitiesUser getOrGetUser(StreamlineUser streamlineUser) {
+        return getOrGetUser(streamlineUser.getUuid());
+    }
+
+    private static UtilitiesUser getUser(String uuid) {
+        AtomicReference<UtilitiesUser> atomicReference = new AtomicReference<>();
+        loadedUsers.forEach((user) -> {
+            if (user.getUuid().equals(uuid)) {
+                atomicReference.set(user);
+            }
+        });
+        return atomicReference.get();
+    }
+
+    public static void addUser(UtilitiesUser user) {
+        loadedUsers.add(user);
+        syncUser(user);
+    }
+
+    public static void removeUser(UtilitiesUser user) {
+        loadedUsers.remove(user);
+    }
+
+    public static void saveAllUsers() {
+        loadedUsers.forEach(UtilitiesUser::saveAll);
+    }
+
+    public static UtilitiesUser getOrGetUser(String uuid) {
+        UtilitiesUser user = getUser(uuid);
+        if (user != null) return user;
+
+        user = new UtilitiesUser(uuid);
+        addUser(user);
+        getUserFromDatabase(user);
+        return user;
+    }
+
+    public static void getUserFromDatabase(UtilitiesUser user) {
+        StorageUtils.SupportedStorageType type = StreamlineUtilities.getConfigs().getUserStorageType();
+        if (type == StorageUtils.SupportedStorageType.YAML || type == StorageUtils.SupportedStorageType.JSON || type == StorageUtils.SupportedStorageType.TOML) return;
+
+        CachedResource<?> cachedResource = (CachedResource<?>) user.getStorageResource();
+        String tableName = SLAPI.getMainDatabase().getConfig().getTablePrefix() + "utilities_users";
+
+        try {
+            boolean changed = false;
+            switch (GivenConfigs.getMainConfig().savingUseType()) {
+                case MONGO:
+                case SQLITE:
+                case MYSQL:
+                    if (! SLAPI.getMainDatabase().exists(tableName)) {
+                        return;
+                    }
+                    CachedResourceUtils.updateCache(tableName, cachedResource.getDiscriminatorKey(), cachedResource.getDiscriminatorAsString(), cachedResource, SLAPI.getMainDatabase());
+                    changed = true;
+                    break;
+            }
+            if (changed) user.loadValues();
+        } catch (Exception e) {
+            syncUser(user);
+        }
+    }
+
+    public static void syncUser(UtilitiesUser user) {
+        switch (StreamlineUtilities.getConfigs().getUserStorageType()) {
+            case MONGO:
+            case SQLITE:
+            case MYSQL:
+                CachedResource<?> cachedResource = (CachedResource<?>) user.getStorageResource();
+                String tableName = SLAPI.getMainDatabase().getConfig().getTablePrefix() + "utilities_users";
+                CachedResourceUtils.pushToDatabase(tableName, cachedResource, SLAPI.getMainDatabase());
+                break;
+        }
+    }
+
+    public static boolean userExists(String uuid) {
+        StorageUtils.SupportedStorageType type = StreamlineUtilities.getConfigs().getUserStorageType();
+        DatabaseConfig config = GivenConfigs.getMainConfig().getConfiguredDatabase();
+        File userFolder = SLAPI.getUserFolder();
+        switch (type) {
+            case YAML:
+                File[] files = userFolder.listFiles();
+                if (files == null) return false;
+
+                for (File file : files) {
+                    if (file.getName().equals(uuid + ".yml")) return true;
+                }
+                return false;
+            case JSON:
+                File[] files2 = userFolder.listFiles();
+                if (files2 == null) return false;
+
+                for (File file : files2) {
+                    if (file.getName().equals(uuid + ".json")) return true;
+                }
+                return false;
+            case TOML:
+                File[] files3 = userFolder.listFiles();
+                if (files3 == null) return false;
+
+                for (File file : files3) {
+                    if (file.getName().equals(uuid + ".toml")) return true;
+                }
+                return false;
+            case MONGO:
+            case MYSQL:
+            case SQLITE:
+                return SLAPI.getMainDatabase().exists(SLAPI.getMainDatabase().getConfig().getTablePrefix() + "utilities_users", "uuid", uuid);
+            default:
+                return false;
+        }
+    }
+
+    public static StorageResource<?> newStorageResourceUsers(String uuid, Class<? extends SavableResource> clazz) {
+        switch (StreamlineUtilities.getConfigs().getUserStorageType()) {
+            case YAML:
+                return new FlatFileResource<>(Config.class, uuid + ".yml", StreamlineUtilities.getUsersFolder(), false);
+            case JSON:
+                return new FlatFileResource<>(Json.class, uuid + ".json", StreamlineUtilities.getUsersFolder(), false);
+            case TOML:
+                return new FlatFileResource<>(Toml.class, uuid + ".toml", StreamlineUtilities.getUsersFolder(), false);
+            case MONGO:
+                return new CachedResource<>(MongoClient.class, "uuid", uuid);
+            case MYSQL:
+            case SQLITE:
+                return new CachedResource<>(Connection.class, "uuid", uuid);
+        }
+
         return null;
     }
 }

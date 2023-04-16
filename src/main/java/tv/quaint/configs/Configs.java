@@ -2,6 +2,10 @@ package tv.quaint.configs;
 
 import net.streamline.api.configs.ModularizedConfig;
 import tv.quaint.StreamlineUtilities;
+import tv.quaint.essentials.configured.ConfiguredBlacklist;
+import tv.quaint.essentials.configured.ConfiguredPermissionsList;
+import tv.quaint.storage.StorageUtils;
+import tv.quaint.storage.resources.databases.configurations.DatabaseConfig;
 
 public class Configs extends ModularizedConfig {
     public Configs() {
@@ -15,7 +19,18 @@ public class Configs extends ModularizedConfig {
         isNicknamesEnabled();
 
         getTPATimeout();
-        getTPAWaitTime();
+        getTPADelayTicks();
+        getTPABlacklist();
+
+        lastServerEnabled();
+        lastServerPermissionRequired();
+        lastServerPermissionValue();
+        lastServerDefaultServer();
+
+        homesEnabled();
+        homesDelayTicks();
+        getHomesPermissions();
+        getHomesBlacklist();
     }
 
     public boolean chatModifyEnabled() {
@@ -48,9 +63,92 @@ public class Configs extends ModularizedConfig {
         return getResource().getOrSetDefault("tpa.timeout", 600L);
     }
 
-    public long getTPAWaitTime() {
+    public long getTPADelayTicks() {
         reloadResource();
 
-        return getResource().getOrSetDefault("tpa.wait-time", 10L);
+        return getResource().getOrSetDefault("tpa.delay-ticks", 20L);
+    }
+
+    public ConfiguredBlacklist getTPABlacklist() {
+        reloadResource();
+
+        return new ConfiguredBlacklist(getResource().getSection("tpa.blacklist"));
+    }
+
+    public boolean lastServerEnabled() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("last-server.enabled", false);
+    }
+
+    public boolean lastServerPermissionRequired() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("last-server.permission.required", true);
+    }
+
+    public String lastServerPermissionValue() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("last-server.permission.value", "streamline.utils.last-server");
+    }
+
+    public String lastServerDefaultServer() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("last-server.default-server", "hub");
+    }
+
+    public boolean homesEnabled() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("homes.enabled", true);
+    }
+
+    public int homesDelayTicks() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("homes.delay-ticks", 20);
+    }
+
+    public ConfiguredPermissionsList getHomesPermissions() {
+        reloadResource();
+
+        return new ConfiguredPermissionsList(getResource().getSection("homes.permissions"));
+    }
+
+    public ConfiguredBlacklist getHomesBlacklist() {
+        reloadResource();
+
+        return new ConfiguredBlacklist(getResource().getSection("homes.blacklist"));
+    }
+
+    public StorageUtils.SupportedStorageType getUserStorageType() {
+        reloadResource();
+
+        return StorageUtils.SupportedStorageType.valueOf(getResource().getOrSetDefault("saving.use", "YAML"));
+    }
+
+    public String getUserStorageURI() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("saving.databases.uri", "jdbc:mysql://localhost:3306/utilities_users?useSSL=false");
+    }
+
+    public String getUserStoragePrefix() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("saving.databases.prefix", "utilities_");
+    }
+
+    public DatabaseConfig getUserStorageDatabaseConfig() {
+        StorageUtils.SupportedDatabaseType type;
+        try {
+            type = StorageUtils.SupportedDatabaseType.valueOf(getUserStorageType().name());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
+        return new DatabaseConfig(type, getUserStorageURI(), getUserStoragePrefix());
     }
 }

@@ -4,35 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fixed : Some issues.">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix teleporting.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/DeleteHomeCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/HomeCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/ModifyServerCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/SetHomeCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/configured/ConfiguredBlacklist.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/configured/ConfiguredIntegerPermission.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/configured/ConfiguredPermissionsList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/users/StreamlineHome.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/users/UtilitiesUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/CMIAPI.jar" beforeDir="false" afterPath="$PROJECT_DIR$/implement/CMIAPI.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/EssentialsX.jar" beforeDir="false" afterPath="$PROJECT_DIR$/implement/EssentialsX.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/StreamlineUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/StreamlineUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/MaintenanceCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/MaintenanceCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/NickCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/NickCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/OnlineCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/OnlineCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/ConnectCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/ConnectCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPACommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPACommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPAHereCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPAHereCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TeleportCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TeleportCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TitleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TitleCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/WhitelistCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/WhitelistCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/Configs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/Configs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/MaintenanceConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/MaintenanceConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/PermissionGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/PermissionGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/ServerAliasesConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/ServersConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/ServerAlias.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/ConfiguredServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/EssentialsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/EssentialsManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/TPARequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/TPARequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/ExecutableUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/ExecutableUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/aliases/AliasExecution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/executables/aliases/AliasExecution.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/listeners/MainListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/listeners/MainListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/ratapi/UtilitiesExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/ratapi/UtilitiesExpansion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,6 +96,7 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
@@ -160,7 +155,11 @@
       <workItem from="1674893495170" duration="2704000" />
       <workItem from="1674930190013" duration="654000" />
       <workItem from="1675912187604" duration="636000" />
-      <workItem from="1676352674868" duration="4970000" />
+      <workItem from="1676352674868" duration="5814000" />
+      <workItem from="1676359733746" duration="10000" />
+      <workItem from="1676601595914" duration="7541000" />
+      <workItem from="1677662527503" duration="16205000" />
+      <workItem from="1681597518424" duration="7495000" />
     </task>
     <task id="LOCAL-00001" summary="Init.">
       <created>1658438907327</created>
@@ -379,7 +378,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673420865111</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Fix teleporting.">
+      <created>1676358236341</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1676358236342</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -424,6 +430,7 @@
     <MESSAGE value="Add : More safety stuffs." />
     <MESSAGE value="Fixed : Typos." />
     <MESSAGE value="Fixed : Some issues." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed : Some issues." />
+    <MESSAGE value="Fix teleporting." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix teleporting." />
   </component>
 </project>

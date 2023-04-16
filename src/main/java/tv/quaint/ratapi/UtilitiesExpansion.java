@@ -2,7 +2,6 @@ package tv.quaint.ratapi;
 
 import net.streamline.api.configs.given.GivenConfigs;
 import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.objects.AtomicString;
 import net.streamline.api.placeholders.expansions.RATExpansion;
 import net.streamline.api.placeholders.replaceables.IdentifiedReplaceable;
 import tv.quaint.StreamlineUtilities;
@@ -30,7 +29,12 @@ public class UtilitiesExpansion extends RATExpansion {
         new IdentifiedReplaceable(this, "whitelist_message", (s) -> MainMessagesHandler.MESSAGES.INVALID.WHITELIST_NOT.get()).register();
 
         new IdentifiedReplaceable(this, MatcherUtils.makeLiteral("server_alias_") + "(.*?)", 1, (s) -> {
-            String string = StreamlineUtilities.getServerAliasesConfig().getActualName(s.get());
+            String string = StreamlineUtilities.getServersConfig().getActualName(s.get());
+            return string == null ? s.string() : string;
+        }).register();
+
+        new IdentifiedReplaceable(this, MatcherUtils.makeLiteral("server_pretty_name_") + "(.*?)", 1, (s) -> {
+            String string = StreamlineUtilities.getServersConfig().getPrettyName(s.get());
             return string == null ? s.string() : string;
         }).register();
     }

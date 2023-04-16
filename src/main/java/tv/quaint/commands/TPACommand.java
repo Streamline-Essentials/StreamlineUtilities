@@ -4,14 +4,17 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
+import net.streamline.api.savables.users.StreamlineLocation;
 import net.streamline.api.savables.users.StreamlinePlayer;
 import net.streamline.api.savables.users.StreamlineUser;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.essentials.EssentialsManager;
 import tv.quaint.essentials.TPARequest;
+import tv.quaint.essentials.configured.ConfiguredBlacklist;
 
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TPACommand extends ModuleCommand {
     @Getter
@@ -30,6 +33,10 @@ public class TPACommand extends ModuleCommand {
     private final String messageResultNonePendingSpecific;
     @Getter
     private final String messageResultNonePendingAll;
+    @Getter
+    private final String messageResultBlacklistedServerTo;
+    @Getter
+    private final String messageResultBlacklistedWorldTo;
 
     public TPACommand() {
         super(StreamlineUtilities.getInstance(),
@@ -56,6 +63,12 @@ public class TPACommand extends ModuleCommand {
                 "&eYou have no pending tpa requests from &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*%&8!");
         messageResultNonePendingAll = getCommandResource().getOrSetDefault("messages.result.none_pending.all",
                 "&eYou have no pending tpa requests&8!");
+
+        messageResultBlacklistedServerTo = getCommandResource().getOrSetDefault("messages.result.blocked.server.other",
+                "&eYou cannot tpa to &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*% &ebecause they are on a disallowed server&8!");
+
+        messageResultBlacklistedWorldTo = getCommandResource().getOrSetDefault("messages.result.blocked.world.other",
+                "&eYou cannot tpa to &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*% &ebecause they are in a disallowed world&8!");
     }
 
     @Override
@@ -108,6 +121,48 @@ public class TPACommand extends ModuleCommand {
                 } else {
                     if (senderPlayer.getLocation().isNull()) {
                         ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
+                        return;
+                    }
+                }
+
+                StreamlineLocation senderLocation = senderPlayer.getLocation();
+                StreamlineLocation otherLocation = otherPlayer.getLocation();
+
+                ConfiguredBlacklist configuredBlacklist = StreamlineUtilities.getConfigs().getTPABlacklist();
+
+                if (configuredBlacklist != null) {
+                    AtomicBoolean isServerBlacklisted = new AtomicBoolean(false);
+                    configuredBlacklist.getServers().forEach(server -> {
+                        if (configuredBlacklist.isAsWhitelist()) {
+                            if (! server.equals(otherPlayer.getLatestServer())) {
+                                isServerBlacklisted.set(true);
+                            }
+                        } else {
+                            if (server.equals(otherPlayer.getLatestServer())) {
+                                isServerBlacklisted.set(true);
+                            }
+                        }
+                    });
+                    AtomicBoolean isWorldBlacklisted = new AtomicBoolean(false);
+                    configuredBlacklist.getWorlds().forEach(world -> {
+                        if (configuredBlacklist.isAsWhitelist()) {
+                            if (! world.equals(otherLocation.getWorld())) {
+                                isWorldBlacklisted.set(true);
+                            }
+                        } else {
+                            if (world.equals(otherLocation.getWorld())) {
+                                isWorldBlacklisted.set(true);
+                            }
+                        }
+                    });
+
+                    if (isServerBlacklisted.get()) {
+                        ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultBlacklistedServerTo, otherPlayer));
+                        return;
+                    }
+
+                    if (isWorldBlacklisted.get()) {
+                        ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultBlacklistedWorldTo, otherPlayer));
                         return;
                     }
                 }

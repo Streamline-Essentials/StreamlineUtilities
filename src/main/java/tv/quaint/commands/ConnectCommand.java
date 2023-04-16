@@ -27,9 +27,9 @@ public class ConnectCommand extends ModuleCommand {
                 "conn", "cnct"
         );
 
-        messageResultConnecting = getCommandResource().getOrSetDefault("messages.result.connecting", "&eAttempting to &a&lconnect &eto &7'&c%this_input%&7' &d(&b%utils_servers_alias_%this_input%%&d)&8!");
+        messageResultConnecting = getCommandResource().getOrSetDefault("messages.result.connecting", "&eAttempting to &a&lconnect &eto &7'&c%this_input%&7' &d(&b%server_pretty_name_%this_input%%&d)&8!");
         messageResultSending = getCommandResource().getOrSetDefault("messages.result.sending", "&eAttempting to &a&lconnect &d%streamline_parse_%this_other%:::*/*streamline_user_formatted*/*%" +
-                " &eto &7'&c%this_input%&7' &d(&b%utils_servers_alias_%this_input%%&d)&8!");
+                " &eto &7'&c%this_input%&7' &d(&b%server_pretty_name_%this_input%%&d)&8!");
         messageResultNotAServer = getCommandResource().getOrSetDefault("messages.result.not_a_server", "&7'&a%this_input%&7' &cis not a valid server!");
     }
 
@@ -72,7 +72,7 @@ public class ConnectCommand extends ModuleCommand {
             }
         }
 
-        String targetServer = StreamlineUtilities.getServerAliasesConfig().getActualName(serverName);
+        String targetServer = StreamlineUtilities.getServersConfig().getActualName(serverName);
         if (targetServer == null) {
             ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultNotAServer
                     .replace("%this_input%", serverName)
@@ -92,7 +92,7 @@ public class ConnectCommand extends ModuleCommand {
     @Override
     public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
         if (strings.length <= 1) {
-            return StreamlineUtilities.getServerAliasesConfig().getPossibleNames();
+            return StreamlineUtilities.getServersConfig().getPossibleNames();
         }
         if (strings.length == 2) {
             return ModuleUtils.getOnlinePlayerNames();

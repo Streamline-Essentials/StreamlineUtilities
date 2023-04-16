@@ -4,6 +4,7 @@ import net.streamline.api.SLAPI;
 import net.streamline.api.configs.given.GivenConfigs;
 import net.streamline.api.events.server.LoginCompletedEvent;
 import net.streamline.api.events.server.LoginReceivedEvent;
+import net.streamline.api.events.server.LogoutEvent;
 import net.streamline.api.events.server.StreamlineChatEvent;
 import net.streamline.api.messages.builders.SavablePlayerMessageBuilder;
 import net.streamline.api.messages.events.ProxiedMessageEvent;
@@ -16,6 +17,8 @@ import net.streamline.api.savables.users.StreamlineUser;
 import net.streamline.api.utils.UserUtils;
 import tv.quaint.StreamlineUtilities;
 import tv.quaint.accessors.SpigotAccessor;
+import tv.quaint.essentials.EssentialsManager;
+import tv.quaint.essentials.users.UtilitiesUser;
 import tv.quaint.events.BaseEventListener;
 import tv.quaint.events.NicknameUpdateEvent;
 import tv.quaint.events.processing.BaseEventPriority;
@@ -54,9 +57,27 @@ public class MainListener implements BaseEventListener {
     @BaseProcessor
     public void onFullyJoin(LoginCompletedEvent event) {
         if (event.isCancelled()) return;
+
+        UtilitiesUser user = EssentialsManager.getOrGetUser(event.getResource().getUuid());
+        if (SLAPI.isProxy()) {
+            if (StreamlineUtilities.getConfigs().lastServerEnabled()) {
+                if (StreamlineUtilities.getConfigs().lastServerPermissionRequired()) {
+                    if (ModuleUtils.hasPermission(event.getResource(), StreamlineUtilities.getConfigs().lastServerPermissionValue())) user.goToLastServer();
+                } else user.goToLastServer();
+            }
+        }
+
         if (StreamlineUtilities.getConfigs().isNicknamesEnabled()) {
             SpigotAccessor.updateCustomName(event.getResource(), event.getResource().getDisplayName());
         }
+    }
+
+    @BaseProcessor
+    public void onLeave(LogoutEvent event) {
+        UtilitiesUser user = EssentialsManager.getOrGetUser(event.getResource().getUuid());
+        user.setLastServer(event.getResource().getLatestServer());
+        user.saveAll();
+        EssentialsManager.syncUser(user);
     }
 
     @BaseProcessor
