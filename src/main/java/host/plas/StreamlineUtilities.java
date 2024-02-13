@@ -1,0 +1,205 @@
+package host.plas;
+
+import lombok.Getter;
+import lombok.Setter;
+import net.streamline.api.modules.ModuleUtils;
+import net.streamline.api.modules.SimpleModule;
+import host.plas.commands.*;
+import host.plas.configs.*;
+import host.plas.essentials.EssentialsManager;
+import host.plas.executables.ExecutableHandler;
+import host.plas.executables.aliases.AliasGetter;
+import host.plas.listeners.MainListener;
+import host.plas.ratapi.UtilitiesExpansion;
+import net.streamline.thebase.lib.pf4j.PluginWrapper;
+
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.concurrent.ConcurrentSkipListSet;
+
+@Getter @Setter
+public class StreamlineUtilities extends SimpleModule {
+    @Getter
+    static StreamlineUtilities instance;
+    @Getter
+    static File executablesFolder;
+    @Getter
+    static File functionsFolder;
+    @Getter
+    static File scriptsFolder;
+    @Getter
+    static File aliasesFolder;
+    @Getter
+    static CustomPlaceholdersConfig customPlaceholdersConfig;
+    @Getter
+    static ServersConfig serversConfig;
+    @Getter
+    static GroupedPermissionConfig groupedPermissionConfig;
+    @Getter
+    static MaintenanceConfig maintenanceConfig;
+    @Getter
+    static Configs configs;
+    @Getter
+    static Messages messages;
+    @Getter
+    static MainListener mainListener;
+
+    @Getter
+    static UtilitiesExpansion utilitiesExpansion;
+
+    @Getter
+    static ConcurrentSkipListSet<AliasGetter> getters;
+
+    @Getter @Setter
+    static File usersFolder;
+
+    public StreamlineUtilities(PluginWrapper wrapper) {
+        super(wrapper);
+    }
+
+    @Override
+    public void onLoad() {
+        instance = this;
+
+        getters = new ConcurrentSkipListSet<>(List.of(new AliasGetter("servers", ModuleUtils::getServerNames),
+                new AliasGetter("online_names", () -> {
+                    ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
+
+                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
+//            if (a.online && ! (a instanceof SavableConsole))
+                        if (a.isOnline()) r.add(a.getName());
+                    });
+
+                    return r;
+                }),
+                new AliasGetter("online_uuids", () -> {
+                    ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
+
+                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
+//            if (a.online && ! (a instanceof SavableConsole))
+                        if (a.isOnline()) r.add(a.getUuid());
+                    });
+
+                    return r;
+                }),
+                new AliasGetter("loaded_names", () -> {
+                    ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
+
+                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
+                        r.add(a.getName());
+                    });
+
+                    return r;
+                }),
+                new AliasGetter("loaded_uuids", () -> {
+                    ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
+
+                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
+                        r.add(a.getUuid());
+                    });
+
+                    return r;
+                })));
+
+        getGetters().forEach(a -> {
+            ExecutableHandler.unloadGetter(a);
+            ExecutableHandler.loadGetter(a);
+        });
+        utilitiesExpansion = new UtilitiesExpansion();
+
+        usersFolder = new File(getDataFolder(), "users" + File.separator);
+        usersFolder.mkdirs();
+
+        new FunctionCommand().register();
+        new BroadcastCommand().register();
+        new TextCommand().register();
+        new TitleCommand().register();
+        new OnlineCommand().register();
+        new TeleportCommand().register();
+        new MaintenanceCommand().register();
+        new WhitelistCommand().register();
+        new NickCommand().register();
+        new SudoCommand().register();
+        new SudoOpCommand().register();
+        new TPACommand().register();
+        new TPAHereCommand().register();
+        new ConnectCommand().register();
+        new ModifyServerCommand().register();
+        new DeleteHomeCommand().register();
+        new SetHomeCommand().register();
+        new HomeCommand().register();
+    }
+
+    @Override
+    public void onEnable() {
+        executablesFolder = new File(getDataFolder(), "executables" + File.separator);
+        executablesFolder.mkdirs();
+        functionsFolder = new File(getExecutablesFolder(), "functions" + File.separator);
+        if (functionsFolder.mkdirs()) {
+            String dstring = "default-function.sf";
+            File file = new File(functionsFolder, dstring);
+            try (InputStream in = getResourceAsStream(dstring)) {
+                assert in != null;
+                Files.copy(in, file.toPath());
+                logInfo("Set up default file: " + dstring);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        scriptsFolder = new File(getExecutablesFolder(), "scripts" + File.separator);
+        scriptsFolder.mkdirs();
+        aliasesFolder = new File(getExecutablesFolder(), "aliases" + File.separator);
+        if (aliasesFolder.mkdirs()) {
+            String hubstring = "hub-alias.yml";
+            File hfile = new File(aliasesFolder, hubstring);
+            try (InputStream in = getResourceAsStream(hubstring)) {
+                assert in != null;
+                Files.copy(in, hfile.toPath());
+                logInfo("Set up default file: " + hubstring);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String lobbystring = "lobby-alias.yml";
+            File lfile = new File(aliasesFolder, lobbystring);
+            try (InputStream in = getResourceAsStream(lobbystring)) {
+                assert in != null;
+                Files.copy(in, lfile.toPath());
+                logInfo("Set up default file: " + lobbystring);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        ExecutableHandler.loadFunctions(functionsFolder);
+        ExecutableHandler.enableAllFunctions();
+        ExecutableHandler.loadAllAliases(aliasesFolder);
+
+        customPlaceholdersConfig = new CustomPlaceholdersConfig();
+        serversConfig = new ServersConfig();
+        serversConfig.reloadResource(true);
+        groupedPermissionConfig = new GroupedPermissionConfig();
+        maintenanceConfig = new MaintenanceConfig();
+
+        configs = new Configs();
+        messages = new Messages();
+
+        mainListener = new MainListener();
+        ModuleUtils.listen(mainListener, this);
+    }
+
+    @Override
+    public void onDisable() {
+        EssentialsManager.getLoadedUsers().forEach(user -> {
+            user.saveAll();
+            EssentialsManager.syncUser(user);
+        });
+
+        ExecutableHandler.unloadAllAliases();
+        ExecutableHandler.disableAllFunctions();
+        ExecutableHandler.unloadAllFunctions();
+
+        getUtilitiesExpansion().stop();
+    }
+}

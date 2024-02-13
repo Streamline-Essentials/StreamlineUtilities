@@ -1,0 +1,83 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group properties['group']
+version properties['version']
+
+ext {
+    FILES = [
+            './implement/CMIAPI.jar',
+            './implement/EssentialsX.jar'
+    ]
+}
+
+repositories {
+    mavenCentral()
+    // Spigot / Bukkit
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        content {
+            includeGroup 'org.bukkit'
+            includeGroup 'org.spigotmc'
+        }
+    }
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+    // JitPack
+    maven { url = 'https://jitpack.io' }
+}
+
+dependencies {
+    // Platform.
+    compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    // LuckPerms
+    compileOnly 'net.luckperms:api:5.4'
+
+    // StreamlineCore
+    compileOnly 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-API:main-SNAPSHOT'
+    annotationProcessor 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-API:main-SNAPSHOT'
+
+    if (properties['include-bapi']) {
+        compileOnly 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-BAPI:main-SNAPSHOT'
+        annotationProcessor 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-BAPI:main-SNAPSHOT'
+    }
+
+    // Files
+    implementation(shadow(files(FILES)))
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+shadowJar {
+    manifest {
+        attributes 'Plugin-Class': rootProject.properties['plugin-class']
+        attributes 'Plugin-Id': rootProject.properties['plugin-id']
+        attributes 'Plugin-Version': rootProject.properties['version']
+        attributes 'Plugin-Requires': rootProject.properties['plugin-requires']
+        attributes 'Plugin-Dependencies': rootProject.properties['plugin-dependencies']
+        attributes 'Plugin-Description': rootProject.properties['plugin-description']
+        attributes 'Plugin-Provider': rootProject.properties['plugin-provider']
+        attributes 'Plugin-License': rootProject.properties['plugin-license']
+    }
+
+    setArchiveFileName(archiveBaseName.get() + '-' + archiveVersion.get() + '.' + archiveExtension.get())
+}
+
+artifacts {
+    archives shadowJar
+}
+
+wrapper {
+    gradleVersion = '8.6'
+    distributionType = Wrapper.DistributionType.BIN
+}

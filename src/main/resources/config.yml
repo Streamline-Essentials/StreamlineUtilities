@@ -12,7 +12,7 @@ nicknames:
   # Enable nicknames?
   enabled: true
   # The format for the final output of the nickname.
-  format: "%streamline_user_prefix%%this_input%%streamline_user_suffix%"
+  format: "%this_input%"
 
 # Configurations for tpa.
 tpa:
