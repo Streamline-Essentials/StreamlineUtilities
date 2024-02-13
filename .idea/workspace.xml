@@ -4,30 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix teleporting.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/DeleteHomeCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/HomeCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/ModifyServerCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/SetHomeCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/configured/ConfiguredBlacklist.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/configured/ConfiguredIntegerPermission.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/configured/ConfiguredPermissionsList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/users/StreamlineHome.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/users/UtilitiesUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/StreamlineUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/StreamlineUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/ConnectCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/ConnectCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPACommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPACommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPAHereCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/commands/TPAHereCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/Configs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/Configs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/ServerAliasesConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/ServersConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/ServerAlias.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/configs/obj/ConfiguredServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/EssentialsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/essentials/EssentialsManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/listeners/MainListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/listeners/MainListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tv/quaint/ratapi/UtilitiesExpansion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tv/quaint/ratapi/UtilitiesExpansion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
-    </list>
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -67,17 +44,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="useMavenConfig" value="true" />
-      </MavenGeneralSettings>
-    </option>
   </component>
   <component name="ProjectId" id="2CEa6rd7LWJO4h3xbUQvkPJsz5m" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -91,6 +62,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Users/nitra/Dropbox/Streamline/Project/Streamline Modules/StreamlineUtilities",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -120,6 +92,7 @@
         <option name="myRunnerSettings" />
         <option name="myRunnerParameters">
           <MavenRunnerParameters>
+            <option name="cmdOptions" />
             <option name="profiles">
               <set />
             </option>
@@ -129,9 +102,13 @@
                 <option value="package" />
               </list>
             </option>
+            <option name="multimoduleDir" />
             <option name="pomFileName" />
             <option name="profilesMap">
               <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
             </option>
             <option name="resolveToWorkspace" value="false" />
             <option name="workingDirPath" value="$PROJECT_DIR$" />
@@ -385,7 +362,15 @@
       <option name="project" value="LOCAL" />
       <updated>1676358236342</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Fix.">
+      <option name="closed" value="true" />
+      <created>1707855160327</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1707855160327</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -431,6 +416,7 @@
     <MESSAGE value="Fixed : Typos." />
     <MESSAGE value="Fixed : Some issues." />
     <MESSAGE value="Fix teleporting." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix teleporting." />
+    <MESSAGE value="Fix." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix." />
   </component>
 </project>
