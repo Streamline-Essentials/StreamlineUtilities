@@ -7,12 +7,10 @@ import net.streamline.thebase.lib.leonhard.storage.sections.FlatFileSection;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter @Setter
 public class ConfiguredBlacklist {
-    @Getter @Setter
     private boolean asWhitelist;
-    @Getter @Setter
     private ConcurrentSkipListSet<String> servers;
-    @Getter @Setter
     private ConcurrentSkipListSet<String> worlds;
 
     public ConfiguredBlacklist(boolean asWhitelist, ConcurrentSkipListSet<String> servers, ConcurrentSkipListSet<String> worlds) {
