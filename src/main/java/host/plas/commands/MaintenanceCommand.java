@@ -4,8 +4,8 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlinePlayer;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.utils.MessageUtils;
 import net.streamline.api.utils.UserUtils;
 import host.plas.StreamlineUtilities;
@@ -16,12 +16,10 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@Getter
 public class MaintenanceCommand extends ModuleCommand {
-    @Getter
     private final String messageResultAll;
-    @Getter
     private final String messageResultAdd;
-    @Getter
     private final String messageResultRemove;
 
     public MaintenanceCommand() {
@@ -39,37 +37,37 @@ public class MaintenanceCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser streamlineUser, String[] strings) {
+    public void run(StreamSender StreamSender, String[] strings) {
         if (strings.length < 1) {
             strings = new String[] { String.valueOf(! StreamlineUtilities.getMaintenanceConfig().isModeEnabled()) };
         }
 //        if (strings.length > 1) {
-//            ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
+//            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
 //            return;
 //        }
 
         if (strings.length == 1) {
             if (strings[0].equals("add") || strings[0].equals("remove")) {
-                ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+                ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
                 return;
             }
             try {
                 String previous = ModuleUtils.replacePlaceholders("%utils_maintenance_mode%");
                 boolean bool = Boolean.parseBoolean(strings[0]);
                 StreamlineUtilities.getMaintenanceConfig().setModeEnabled(bool);
-                ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser, getMessageResultAll(), streamlineUser)
+                ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, getMessageResultAll(), StreamSender)
                         .replace("%this_previous%", previous)
                 );
 
                 if (bool) {
-                    ModuleUtils.getLoadedUsers().forEach((s, player) -> {
+                    ModuleUtils.getLoadedPlayers().forEach((s, player) -> {
                         if (StreamlineUtilities.getMaintenanceConfig().containsAllowed(player.getUuid())) return;
-                        ModuleUtils.kick(player, ModuleUtils.replaceAllPlayerBungee(streamlineUser, StreamlineUtilities.getMaintenanceConfig().getModeKickMessage()));
+                        ModuleUtils.kick(player, ModuleUtils.replaceAllPlayerBungee(StreamSender, StreamlineUtilities.getMaintenanceConfig().getModeKickMessage()));
                     });
                 }
                 return;
             } catch (Exception e) {
-                ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TYPE_DEFAULT.get());
+                ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TYPE_DEFAULT.get());
                 return;
             }
         }
@@ -80,17 +78,17 @@ public class MaintenanceCommand extends ModuleCommand {
 
                 AtomicInteger atomicInteger = new AtomicInteger(0);
                 names.forEach(s -> {
-                    StreamlinePlayer player = UserUtils.getOrGetPlayerByName(s);
+                    StreamPlayer player = UserUtils.getOrGetPlayerByName(s).orElse(null);
                     if (player == null) {
-                        ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
+                        ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                         return;
                     }
 
                     StreamlineUtilities.getMaintenanceConfig().addAllowed(player.getUuid());
                     atomicInteger.getAndAdd(1);
 
-                    ModuleUtils.sendMessage(streamlineUser,
-                            getWithOther(streamlineUser, getMessageResultAdd(), player)
+                    ModuleUtils.sendMessage(StreamSender,
+                            getWithOther(StreamSender, getMessageResultAdd(), player)
                                     .replace("%this_index%", String.valueOf(atomicInteger.get())
                                     )
                     );
@@ -103,22 +101,22 @@ public class MaintenanceCommand extends ModuleCommand {
 
                 AtomicInteger atomicIntegerRemove = new AtomicInteger(0);
                 namesRemove.forEach(s -> {
-                    StreamlinePlayer player = UserUtils.getOrGetPlayerByName(s);
+                    StreamPlayer player = UserUtils.getOrGetPlayerByName(s).orElse(null);
                     if (player == null) {
-                        ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
+                        ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                         return;
                     }
 
                     StreamlineUtilities.getMaintenanceConfig().removeAllowed(player.getUuid());
 
                     if (StreamlineUtilities.getMaintenanceConfig().isModeEnabled()) {
-                        if (player.updateOnline()) ModuleUtils.kick(player, "%utils_maintenance_message%");
+                        if (player.isOnline()) ModuleUtils.kick(player, "%utils_maintenance_message%");
                     }
 
                     atomicIntegerRemove.getAndAdd(1);
 
-                    ModuleUtils.sendMessage(streamlineUser,
-                            getWithOther(streamlineUser, getMessageResultRemove(), player)
+                    ModuleUtils.sendMessage(StreamSender,
+                            getWithOther(StreamSender, getMessageResultRemove(), player)
                                     .replace("%this_index%", String.valueOf(atomicIntegerRemove.get())
                                     )
                     );
@@ -127,13 +125,13 @@ public class MaintenanceCommand extends ModuleCommand {
                 StreamlineUtilities.getInstance().logInfo("Removed " + atomicIntegerRemove.get() + " users from the &cMaintenance Mode &awhitelist&f!");
                 break;
             default:
-                ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+                ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
                 return;
         }
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (strings.length == 1) return new ConcurrentSkipListSet<>(List.of("true", "false", "add", "remove"));
         if (strings.length >= 2) {
             if (strings[0].equals("add") || strings[0].equals("remove")) return ModuleUtils.getOnlinePlayerNames();

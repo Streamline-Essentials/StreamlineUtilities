@@ -3,14 +3,15 @@ package host.plas.executables.aliases;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.savables.users.StreamlineUser;
 import host.plas.StreamlineUtilities;
+import net.streamline.api.data.console.StreamSender;
 
 import java.io.File;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Setter
+@Getter
 public class StreamAlias extends ModuleCommand {
-    @Getter @Setter
     private AliasExecution execution;
 
 
@@ -26,12 +27,12 @@ public class StreamAlias extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser StreamlineUser, String[] strings) {
-        execution.execute(StreamlineUser);
+    public void run(StreamSender StreamSender, String[] strings) {
+        execution.execute(StreamSender);
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (AliasCompletions.getCompletions(this).containsKey(strings.length)) {
             return AliasCompletions.getCompletions(this).get(strings.length);
         }

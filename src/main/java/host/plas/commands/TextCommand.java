@@ -4,15 +4,14 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.console.StreamSender;
 import host.plas.StreamlineUtilities;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class TextCommand extends ModuleCommand {
-    @Getter
     private final String messageResultSender;
-    @Getter
     private final boolean sendResultSenderMessage;
 
     public TextCommand() {
@@ -28,28 +27,28 @@ public class TextCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser StreamlineUser, String[] strings) {
+    public void run(StreamSender StreamSender, String[] strings) {
         if (strings.length < 2) {
-            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
         String username = strings[0];
         String message = ModuleUtils.argsToStringMinus(strings, 0);
 
-        StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
+        StreamSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
         if (other == null) {
-            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
+            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
         }
 
         ModuleUtils.sendMessage(other, message);
-        if (sendResultSenderMessage) ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser, messageResultSender
+        if (sendResultSenderMessage) ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, messageResultSender
                 .replace("%this_message%", message)
                 , other));
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         return ModuleUtils.getOnlinePlayerNames();
     }
 }

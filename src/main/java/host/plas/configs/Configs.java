@@ -4,7 +4,6 @@ import host.plas.StreamlineUtilities;
 import host.plas.essentials.configured.ConfiguredBlacklist;
 import host.plas.essentials.configured.ConfiguredPermissionsList;
 import tv.quaint.storage.StorageUtils;
-import tv.quaint.storage.resources.databases.configurations.DatabaseConfig;
 import tv.quaint.storage.resources.flat.simple.SimpleConfiguration;
 
 public class Configs extends SimpleConfiguration {
@@ -121,34 +120,5 @@ public class Configs extends SimpleConfiguration {
         reloadResource();
 
         return new ConfiguredBlacklist(getResource().getSection("homes.blacklist"));
-    }
-
-    public StorageUtils.SupportedStorageType getUserStorageType() {
-        reloadResource();
-
-        return StorageUtils.SupportedStorageType.valueOf(getResource().getOrSetDefault("saving.use", "YAML"));
-    }
-
-    public String getUserStorageURI() {
-        reloadResource();
-
-        return getResource().getOrSetDefault("saving.databases.uri", "jdbc:mysql://localhost:3306/utilities_users?useSSL=false");
-    }
-
-    public String getUserStoragePrefix() {
-        reloadResource();
-
-        return getResource().getOrSetDefault("saving.databases.prefix", "utilities_");
-    }
-
-    public DatabaseConfig getUserStorageDatabaseConfig() {
-        StorageUtils.SupportedDatabaseType type;
-        try {
-            type = StorageUtils.SupportedDatabaseType.valueOf(getUserStorageType().name());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-
-        return new DatabaseConfig(type, getUserStorageURI(), getUserStoragePrefix());
     }
 }

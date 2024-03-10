@@ -4,9 +4,9 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineLocation;
-import net.streamline.api.savables.users.StreamlinePlayer;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.players.location.PlayerLocation;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.console.StreamSender;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.EssentialsManager;
 import host.plas.essentials.TPARequest;
@@ -72,17 +72,17 @@ public class TPACommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser sender, String[] strings) {
+    public void run(StreamSender sender, String[] strings) {
         if (strings.length < 1) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
 
-        if (! (sender instanceof StreamlinePlayer)) {
+        if (! (sender instanceof StreamPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
-        StreamlinePlayer senderPlayer = (StreamlinePlayer) sender;
+        StreamPlayer senderPlayer = (StreamPlayer) sender;
 
         String action = strings[0];
 
@@ -93,40 +93,40 @@ public class TPACommand extends ModuleCommand {
                     return;
                 }
                 String username = strings[1];
-                StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
+                StreamSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
                 if (other == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                if (! (other instanceof StreamlinePlayer)) {
+                if (! (other instanceof StreamPlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
-                StreamlinePlayer otherPlayer = (StreamlinePlayer) other;
+                StreamPlayer otherPlayer = (StreamPlayer) other;
 
                 if (otherPlayer.getLocation() == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 } else {
-                    if (otherPlayer.getLocation().isNull()) {
-                        ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
-                        return;
-                    }
+//                    if (otherPlayer.getLocation().isNull()) {
+//                        ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
+//                        return;
+//                    }
                 }
 
                 if (senderPlayer.getLocation() == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
                     return;
                 } else {
-                    if (senderPlayer.getLocation().isNull()) {
-                        ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
-                        return;
-                    }
+//                    if (senderPlayer.getLocation().isNull()) {
+//                        ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
+//                        return;
+//                    }
                 }
 
-                StreamlineLocation senderLocation = senderPlayer.getLocation();
-                StreamlineLocation otherLocation = otherPlayer.getLocation();
+                PlayerLocation senderLocation = senderPlayer.getLocation();
+                PlayerLocation otherLocation = otherPlayer.getLocation();
 
                 ConfiguredBlacklist configuredBlacklist = StreamlineUtilities.getConfigs().getTPABlacklist();
 
@@ -134,11 +134,11 @@ public class TPACommand extends ModuleCommand {
                     AtomicBoolean isServerBlacklisted = new AtomicBoolean(false);
                     configuredBlacklist.getServers().forEach(server -> {
                         if (configuredBlacklist.isAsWhitelist()) {
-                            if (! server.equals(otherPlayer.getLatestServer())) {
+                            if (! server.equals(otherPlayer.getServerName())) {
                                 isServerBlacklisted.set(true);
                             }
                         } else {
-                            if (server.equals(otherPlayer.getLatestServer())) {
+                            if (server.equals(otherPlayer.getServerName())) {
                                 isServerBlacklisted.set(true);
                             }
                         }
@@ -182,20 +182,20 @@ public class TPACommand extends ModuleCommand {
                         ModuleUtils.sendMessage(sender, getWithOther(sender.getUuid(), messageResultNonePendingAll));
                         return;
                     }
-                    usernameAccept = request.getSender().getLatestName();
+                    usernameAccept = request.getSender().getCurrentName();
                 }
 
-                StreamlineUser otherAccept = ModuleUtils.getOrGetUserByName(usernameAccept);
+                StreamSender otherAccept = ModuleUtils.getOrGetUserByName(usernameAccept).orElse(null);
                 if (otherAccept == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                if (! (otherAccept instanceof StreamlinePlayer)) {
+                if (! (otherAccept instanceof StreamPlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
-                StreamlinePlayer otherPlayerAccept = (StreamlinePlayer) otherAccept;
+                StreamPlayer otherPlayerAccept = (StreamPlayer) otherAccept;
 
                 TPARequest request = EssentialsManager.getTPARequest(otherPlayerAccept.getUuid(), senderPlayer.getUuid(), TPARequest.TransportType.SENDER_TO_RECEIVER);
                 if (request == null) {
@@ -218,20 +218,20 @@ public class TPACommand extends ModuleCommand {
                         ModuleUtils.sendMessage(sender, getWithOther(sender.getUuid(), messageResultNonePendingAll));
                         return;
                     }
-                    usernameDeny = requestDeny.getSender().getLatestName();
+                    usernameDeny = requestDeny.getSender().getCurrentName();
                 }
 
-                StreamlineUser otherDeny = ModuleUtils.getOrGetUserByName(usernameDeny);
+                StreamSender otherDeny = ModuleUtils.getOrGetUserByName(usernameDeny).orElse(null);
                 if (otherDeny == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                if (! (otherDeny instanceof StreamlinePlayer)) {
+                if (! (otherDeny instanceof StreamPlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
-                StreamlinePlayer otherPlayerDeny = (StreamlinePlayer) otherDeny;
+                StreamPlayer otherPlayerDeny = (StreamPlayer) otherDeny;
 
                 TPARequest requestDeny = EssentialsManager.getTPARequest(otherPlayerDeny.getUuid(), senderPlayer.getUuid(), TPARequest.TransportType.SENDER_TO_RECEIVER);
                 if (requestDeny == null) {
@@ -250,15 +250,15 @@ public class TPACommand extends ModuleCommand {
         }
     }
 
-    public String getWithOther(StreamlineUser from, StreamlineUser to, String message) {
+    public String getWithOther(StreamSender from, StreamSender to, String message) {
         message = message
-                .replace("%this_from%", from.getLatestName())
-                .replace("%this_to%", to.getLatestName());
+                .replace("%this_from%", from.getCurrentName())
+                .replace("%this_to%", to.getCurrentName());
         return getWithOther(from, message, to);
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (strings.length <= 1) return new ConcurrentSkipListSet<>(Arrays.asList("request", "accept", "deny"));
         if (strings.length == 2) return ModuleUtils.getOnlinePlayerNames();
 

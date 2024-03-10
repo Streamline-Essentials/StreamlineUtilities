@@ -3,21 +3,19 @@ package host.plas.commands;
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
+import net.streamline.api.data.console.StreamSender;
+import net.streamline.api.data.players.StreamPlayer;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlinePlayer;
-import net.streamline.api.savables.users.StreamlineUser;
 import net.streamline.api.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class ConnectCommand extends ModuleCommand {
-    @Getter
     private final String messageResultConnecting;
-    @Getter
     private final String messageResultSending;
-    @Getter
     private final String messageResultNotAServer;
 
     public ConnectCommand() {
@@ -34,7 +32,7 @@ public class ConnectCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser sender, String[] strings) {
+    public void run(StreamSender sender, String[] strings) {
         if (strings.length < 1) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
@@ -47,16 +45,16 @@ public class ConnectCommand extends ModuleCommand {
         String serverName = strings[0];
         boolean silent = false;
 
-        StreamlinePlayer target = null;
-        if (! (sender instanceof StreamlinePlayer) && strings.length == 1) {
+        StreamPlayer target = null;
+        if (! (sender instanceof StreamPlayer) && strings.length == 1) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         } else {
-            if (sender instanceof StreamlinePlayer) target = (StreamlinePlayer) sender;
+            if (sender instanceof StreamPlayer) target = (StreamPlayer) sender;
         }
 
         if (strings.length >= 2) {
-            target = UserUtils.getOrGetPlayerByName(strings[1]);
+            target = UserUtils.getOrGetPlayerByName(strings[1]).orElse(null);
             if (target == null) {
                 ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                 return;
@@ -90,7 +88,7 @@ public class ConnectCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (strings.length <= 1) {
             return StreamlineUtilities.getServersConfig().getPossibleNames();
         }

@@ -1,5 +1,6 @@
 package host.plas;
 
+import host.plas.database.Keeper;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamline.api.modules.ModuleUtils;
@@ -11,7 +12,7 @@ import host.plas.executables.ExecutableHandler;
 import host.plas.executables.aliases.AliasGetter;
 import host.plas.listeners.MainListener;
 import host.plas.ratapi.UtilitiesExpansion;
-import net.streamline.thebase.lib.pf4j.PluginWrapper;
+import org.pf4j.PluginWrapper;
 
 import java.io.File;
 import java.io.InputStream;
@@ -55,6 +56,9 @@ public class StreamlineUtilities extends SimpleModule {
     @Getter @Setter
     static File usersFolder;
 
+    @Getter @Setter
+    private static Keeper keeper;
+
     public StreamlineUtilities(PluginWrapper wrapper) {
         super(wrapper);
     }
@@ -67,9 +71,8 @@ public class StreamlineUtilities extends SimpleModule {
                 new AliasGetter("online_names", () -> {
                     ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
-                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
-//            if (a.online && ! (a instanceof SavableConsole))
-                        if (a.isOnline()) r.add(a.getName());
+                    ModuleUtils.getOnlineUsers().forEach((a, b) -> {
+                        if (b.isOnline()) r.add(b.getCurrentName());
                     });
 
                     return r;
@@ -77,9 +80,8 @@ public class StreamlineUtilities extends SimpleModule {
                 new AliasGetter("online_uuids", () -> {
                     ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
-                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
-//            if (a.online && ! (a instanceof SavableConsole))
-                        if (a.isOnline()) r.add(a.getUuid());
+                    ModuleUtils.getOnlineUsers().forEach((a, b) -> {
+                        if (b.isOnline()) r.add(b.getUuid());
                     });
 
                     return r;
@@ -87,8 +89,8 @@ public class StreamlineUtilities extends SimpleModule {
                 new AliasGetter("loaded_names", () -> {
                     ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
-                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
-                        r.add(a.getName());
+                    ModuleUtils.getLoadedSendersSet().forEach(a -> {
+                        r.add(a.getCurrentName());
                     });
 
                     return r;
@@ -96,7 +98,7 @@ public class StreamlineUtilities extends SimpleModule {
                 new AliasGetter("loaded_uuids", () -> {
                     ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
 
-                    ModuleUtils.getLoadedUsersSet().forEach(a -> {
+                    ModuleUtils.getLoadedSendersSet().forEach(a -> {
                         r.add(a.getUuid());
                     });
 
@@ -120,7 +122,7 @@ public class StreamlineUtilities extends SimpleModule {
         new TeleportCommand().register();
         new MaintenanceCommand().register();
         new WhitelistCommand().register();
-        new NickCommand().register();
+//        new NickCommand().register();
         new SudoCommand().register();
         new SudoOpCommand().register();
         new TPACommand().register();
@@ -134,6 +136,8 @@ public class StreamlineUtilities extends SimpleModule {
 
     @Override
     public void onEnable() {
+        setKeeper(new Keeper());
+
         executablesFolder = new File(getDataFolder(), "executables" + File.separator);
         executablesFolder.mkdirs();
         functionsFolder = new File(getExecutablesFolder(), "functions" + File.separator);
@@ -192,8 +196,8 @@ public class StreamlineUtilities extends SimpleModule {
     @Override
     public void onDisable() {
         EssentialsManager.getLoadedUsers().forEach(user -> {
-            user.saveAll();
-            EssentialsManager.syncUser(user);
+            user.save();
+            user.unregister();
         });
 
         ExecutableHandler.unloadAllAliases();

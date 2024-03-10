@@ -7,7 +7,6 @@ import tv.quaint.storage.resources.flat.simple.SimpleConfiguration;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class GroupedPermissionConfig extends SimpleConfiguration {
-
     public GroupedPermissionConfig() {
         super("grouped-permissions.yml", StreamlineUtilities.getInstance().getDataFolder(), true);
     }

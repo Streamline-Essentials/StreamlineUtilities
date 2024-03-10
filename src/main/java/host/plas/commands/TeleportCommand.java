@@ -6,16 +6,16 @@ import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.messages.builders.TeleportMessageBuilder;
 import net.streamline.api.messages.proxied.ProxiedMessage;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlinePlayer;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.EssentialsManager;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class TeleportCommand extends ModuleCommand {
-    @Getter
     private final String messageResult;
 
     public TeleportCommand() {
@@ -29,12 +29,12 @@ public class TeleportCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser sender, String[] strings) {
-        if (! (sender instanceof StreamlinePlayer)) {
+    public void run(StreamSender sender, String[] strings) {
+        if (! (sender instanceof StreamPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
-        StreamlinePlayer player = (StreamlinePlayer) sender;
+        StreamPlayer player = (StreamPlayer) sender;
 
         if (strings[0].equals("")) {
             ModuleUtils.sendMessage(player, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
@@ -45,13 +45,13 @@ public class TeleportCommand extends ModuleCommand {
         }
 
         String username = strings[0];
-        StreamlinePlayer other = UserUtils.getOrGetPlayerByName(username);
+        StreamPlayer other = UserUtils.getOrGetPlayerByName(username).orElse(null);
         if (other == null) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
         }
 
-        ModuleUtils.connect(sender, other.getLatestServer());
+        ModuleUtils.connect(sender, other.getServerName());
 
         ProxiedMessage message = TeleportMessageBuilder.build(player, other.getLocation(), player);
         new EssentialsManager.TeleportRunner(message);
@@ -60,7 +60,7 @@ public class TeleportCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         return ModuleUtils.getOnlinePlayerNames();
     }
 }

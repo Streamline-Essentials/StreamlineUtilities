@@ -5,28 +5,22 @@ import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.objects.StreamlineTitle;
-import net.streamline.api.savables.users.StreamlinePlayer;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.utils.MessageUtils;
 import host.plas.StreamlineUtilities;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class TitleCommand extends ModuleCommand {
-    @Getter
     private final String messageResultSender;
-    @Getter
     private final String messageErrorNotPlayer;
-    @Getter
     private final boolean sendResultSenderMessage;
-    @Getter
     private final String subtitleSplitter;
-    @Getter
     private final long subtitleDefaultFadeIn;
-    @Getter
     private final long subtitleDefaultStay;
-    @Getter
     private final long subtitleDefaultFadeOut;
 
     public TitleCommand() {
@@ -49,9 +43,9 @@ public class TitleCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser StreamlineUser, String[] strings) {
+    public void run(StreamSender StreamSender, String[] strings) {
         if (strings.length < 5) {
-            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
         String username = strings[0];
@@ -92,26 +86,26 @@ public class TitleCommand extends ModuleCommand {
         streamlineTitle.setStay(stay);
         streamlineTitle.setFadeOut(fadeOut);
 
-        StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
+        StreamSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
         if (other == null) {
-            ModuleUtils.sendMessage(StreamlineUser, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
+            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
         }
-        if (! (other instanceof StreamlinePlayer)) {
-            ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser, messageErrorNotPlayer, other));
+        if (! (other instanceof StreamPlayer)) {
+            ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, messageErrorNotPlayer, other));
             return;
         }
-        StreamlinePlayer player = (StreamlinePlayer) other;
+        StreamPlayer player = (StreamPlayer) other;
 
         ModuleUtils.sendTitle(player, streamlineTitle);
-        if (sendResultSenderMessage) ModuleUtils.sendMessage(StreamlineUser, getWithOther(StreamlineUser, messageResultSender
+        if (sendResultSenderMessage) ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, messageResultSender
                         .replace("%this_title%", title)
                         .replace("%this_subtitle%", sub)
                 , other));
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         ConcurrentSkipListSet<String> online = ModuleUtils.getOnlinePlayerNames();
 
         if (strings.length <= 1) return online;

@@ -12,10 +12,9 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Getter
 public class ServersConfig extends SimpleConfiguration {
-    @Getter
     private ConcurrentSkipListMap<String, ConfiguredServer> loadedServers = new ConcurrentSkipListMap<>();
-    @Getter
     private Boolean hasLoaded = false;
 
     public ServersConfig() {

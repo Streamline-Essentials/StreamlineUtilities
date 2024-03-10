@@ -2,11 +2,11 @@ package host.plas.executables.functions;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.configs.given.CachedUUIDsHandler;
+import net.streamline.api.data.console.StreamSender;
+import net.streamline.api.data.uuid.UuidManager;
 import net.streamline.api.modules.ModuleUtils;
 import net.streamline.api.objects.SingleSet;
-import net.streamline.api.savables.users.OperatorUser;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.utils.UserUtils;
 import org.jetbrains.annotations.NotNull;
 import host.plas.StreamlineUtilities;
 import host.plas.executables.ExecutableHandler;
@@ -16,6 +16,7 @@ import tv.quaint.utils.MatcherUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,10 +36,10 @@ public class StreamFunction extends File {
     }
 
     public int run() {
-        return runAs(ModuleUtils.getConsole());
+        return runAs(UserUtils.getConsole());
     }
 
-    public int runAs(StreamlineUser user) {
+    public int runAs(StreamSender user) {
         AtomicInteger count = new AtomicInteger();
         TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> map = getCommandsWithAs(user);
         for (int i : map.keySet()) {
@@ -82,25 +83,29 @@ public class StreamFunction extends File {
         return r;
     }
 
-    public TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> getCommandsWithAs(StreamlineUser as) {
+    public TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> getCommandsWithAs(StreamSender as) {
         TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> r = new TreeMap<>();
 
         for (int integer : uncommentedLines().keySet()) {
             String s = uncommentedLines().get(integer);
             if (s.startsWith("@o")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+//                r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@c")) {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getConsole()), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@a")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedUsersSet())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedSendersSet())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@n:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) continue;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(CachedUUIDsHandler.getCachedUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                Optional<String> uuid = UuidManager.getUuidFromName(groups.get(0)[0]);
+                if (uuid.isEmpty()) continue;
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(UserUtils.getOrGetSender(uuid.get())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@u:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) continue;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getOrGetUser(CachedUUIDsHandler.getCachedUUID(groups.get(0)[0]))), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                Optional<String> uuid = UuidManager.getUuidFromName(groups.get(0)[0]);
+                if (uuid.isEmpty()) continue;
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(UserUtils.getOrGetSender(uuid.get())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(as), s));
             }

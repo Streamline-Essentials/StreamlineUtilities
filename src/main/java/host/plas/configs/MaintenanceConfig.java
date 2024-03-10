@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class MaintenanceConfig extends SimpleConfiguration {
-
     public MaintenanceConfig() {
         super("maintenance-config.yml", StreamlineUtilities.getInstance().getDataFolder(), false);
     }

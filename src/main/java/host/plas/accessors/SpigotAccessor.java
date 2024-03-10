@@ -5,9 +5,9 @@ import com.Zrips.CMI.Containers.CMIUser;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import net.streamline.api.SLAPI;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.players.location.PlayerLocation;
 import net.streamline.api.interfaces.IStreamline;
-import net.streamline.api.savables.users.StreamlineLocation;
-import net.streamline.api.savables.users.StreamlinePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -26,14 +26,14 @@ public class SpigotAccessor {
         return Bukkit.getPlayer(UUID.fromString(uuid));
     }
 
-    public static void updateCustomName(StreamlinePlayer player, String name) {
+    public static void updateCustomName(StreamPlayer player, String name) {
         if (! ensureSafe()) return;
 
         updateCustomName(player, name, true);
     }
 
 
-    public static void updateCustomName(StreamlinePlayer player, String name, boolean tabListAlso) {
+    public static void updateCustomName(StreamPlayer player, String name, boolean tabListAlso) {
         if (! ensureSafe()) return;
 
         updateNickCMI(player, name, false);
@@ -47,7 +47,7 @@ public class SpigotAccessor {
         if (tabListAlso) updateTabList(player, name);
     }
 
-    public static void updateTabList(StreamlinePlayer player, String name) {
+    public static void updateTabList(StreamPlayer player, String name) {
         if (! ensureSafe()) return;
 
         Player p = getPlayer(player.getUuid());
@@ -61,11 +61,11 @@ public class SpigotAccessor {
         return Bukkit.getServer().getPluginManager().isPluginEnabled("CMI");
     }
 
-    public static void updateNickCMI(StreamlinePlayer player, String name) {
+    public static void updateNickCMI(StreamPlayer player, String name) {
         updateNickCMI(player, name, true);
     }
 
-    public static void updateNickCMI(StreamlinePlayer player, String name, boolean updateTab) {
+    public static void updateNickCMI(StreamPlayer player, String name, boolean updateTab) {
         if (! isCMI()) return;
 
         CMIUser user = CMI.getInstance().getPlayerManager().getUser(UUID.fromString(player.getUuid()));
@@ -90,7 +90,7 @@ public class SpigotAccessor {
         return Bukkit.getServer().getPluginManager().isPluginEnabled("Essentials");
     }
 
-    public static void updateNickEss(StreamlinePlayer player, String name) {
+    public static void updateNickEss(StreamPlayer player, String name) {
         if (! isEssX()) return;
 
         Essentials essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
@@ -105,15 +105,15 @@ public class SpigotAccessor {
         user.setDisplayNick();
     }
 
-    public static void teleport(StreamlinePlayer player, StreamlineLocation location) {
+    public static void teleport(StreamPlayer player, PlayerLocation location) {
         Player p = getPlayer(player.getUuid());
         if (p == null) return;
-        Location l = new Location(Bukkit.getWorld(location.getWorld()), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        Location l = new Location(Bukkit.getWorld(location.getWorldName()), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 
         p.teleport(l);
     }
 
-    public static void teleport(StreamlinePlayer player, StreamlinePlayer to) {
+    public static void teleport(StreamPlayer player, StreamPlayer to) {
         teleport(player, to.getLocation());
     }
 }

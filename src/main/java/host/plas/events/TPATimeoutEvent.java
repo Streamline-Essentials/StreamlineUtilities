@@ -5,8 +5,8 @@ import net.streamline.api.events.modules.ModuleEvent;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.TPARequest;
 
+@Getter
 public class TPATimeoutEvent extends ModuleEvent {
-    @Getter
     final TPARequest request;
 
     public TPATimeoutEvent(TPARequest tpaRequest) {

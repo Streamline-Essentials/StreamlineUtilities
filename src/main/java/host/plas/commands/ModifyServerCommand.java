@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.console.StreamSender;
 import host.plas.StreamlineUtilities;
 import host.plas.configs.obj.ConfiguredServer;
 import tv.quaint.utils.StringUtils;
@@ -12,30 +12,20 @@ import tv.quaint.utils.StringUtils;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class ModifyServerCommand extends ModuleCommand {
-    @Getter
     private final String messageResultAddedAlias;
-    @Getter
     private final String messageResultRemovedAlias;
-    @Getter
     private final String messageResultRemovedServer;
-    @Getter
     private final String messageResultSetPrettyName;
 
-    @Getter
     private final String messageResultNotAServer;
-    @Getter
     private final String messageResultAlreadyHasAlias;
-    @Getter
     private final String messageResultDoesNotHaveAlias;
 
-    @Getter
     private final String permissionAddAlias;
-    @Getter
     private final String permissionRemoveAlias;
-    @Getter
     private final String permissionRemoveServer;
-    @Getter
     private final String permissionSetPrettyName;
 
     public ModifyServerCommand() {
@@ -61,7 +51,7 @@ public class ModifyServerCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser sender, String[] strings) {
+    public void run(StreamSender sender, String[] strings) {
         if (strings.length < 2) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
@@ -168,7 +158,7 @@ public class ModifyServerCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (strings.length <= 1) {
             return new ConcurrentSkipListSet<>(List.of("add-alias", "remove-alias", "remove", "set-pretty-name"));
         }

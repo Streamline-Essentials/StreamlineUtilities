@@ -9,8 +9,8 @@ import tv.quaint.storage.resources.flat.simple.SimpleConfiguration;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class CustomPlaceholdersConfig extends SimpleConfiguration {
-    @Getter
     private ConcurrentSkipListMap<String, String> loadedPlaceholders = new ConcurrentSkipListMap<>();
 
     public CustomPlaceholdersConfig() {

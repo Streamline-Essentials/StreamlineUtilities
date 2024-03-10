@@ -2,8 +2,8 @@ package host.plas.executables.aliases;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineUser;
 import host.plas.StreamlineUtilities;
 import host.plas.executables.ExecutableHandler;
 
@@ -25,7 +25,7 @@ public class AliasExecution {
         ;
     }
 
-    public boolean execute(StreamlineUser sender) {
+    public boolean execute(StreamSender sender) {
         switch (getType()) {
             case COMMAND:
                 ModuleUtils.runAs(sender, execution);

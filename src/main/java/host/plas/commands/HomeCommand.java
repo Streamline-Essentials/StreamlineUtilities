@@ -4,8 +4,8 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlinePlayer;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.EssentialsManager;
@@ -16,21 +16,16 @@ import host.plas.essentials.users.UtilitiesUser;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Getter
 public class HomeCommand extends ModuleCommand {
-    @Getter
     private final String messageResult;
 
-    @Getter
     private final String messageResultOther;
 
-    @Getter
     private final String messageResultHomeNotExists;
-    @Getter
     private final String messageResultBlacklistedServer;
-    @Getter
     private final String messageResultBlacklistedWorld;
 
-    @Getter
     private final String permissionOther;
 
     public HomeCommand() {
@@ -54,13 +49,13 @@ public class HomeCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser sender, String[] strings) {
+    public void run(StreamSender sender, String[] strings) {
         String homeName = "home";
-        StreamlineUser targetUser = null;
+        StreamSender targetUser = null;
         UtilitiesUser target = null;
 
         if (strings.length <= 1) {
-            target = EssentialsManager.getOrGetUser(sender);
+            target = EssentialsManager.getOrGetUser(sender).join().orElse(null);
             targetUser = sender;
         }
 
@@ -70,13 +65,13 @@ public class HomeCommand extends ModuleCommand {
 
         if (strings.length == 2) {
             if (ModuleUtils.hasPermission(sender, permissionOther)) {
-                targetUser = UserUtils.getOrGetUserByName(strings[0]);
+                targetUser = UserUtils.getOrGetUserByName(strings[0]).orElse(null);
                 if (targetUser == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                target = EssentialsManager.getOrGetUser(targetUser);
+                target = EssentialsManager.getOrGetUser(targetUser).join().orElse(null);
             } else {
                 ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PERMISSIONS.get());
                 return;
@@ -93,12 +88,12 @@ public class HomeCommand extends ModuleCommand {
             return;
         }
 
-        if (! (sender instanceof StreamlinePlayer)) {
+        if (! (sender instanceof StreamPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
 
-        StreamlinePlayer player = (StreamlinePlayer) sender;
+        StreamPlayer player = (StreamPlayer) sender;
 
         StreamlineHome home = target.getHome(homeName);
 
@@ -148,14 +143,14 @@ public class HomeCommand extends ModuleCommand {
             return;
         }
 
-        if (! (targetUser instanceof StreamlinePlayer)) {
+        if (! (targetUser instanceof StreamPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
             return;
         }
 
-        StreamlinePlayer targetPlayer = (StreamlinePlayer) sender;
+        StreamPlayer targetPlayer = (StreamPlayer) sender;
 
-        home.teleport(targetPlayer, home.getServer());
+        home.teleport(targetPlayer);
 
         if (targetUser.equals(sender)) {
             ModuleUtils.sendMessage(sender, getWithOther(player, messageResult
@@ -164,15 +159,15 @@ public class HomeCommand extends ModuleCommand {
         } else {
             ModuleUtils.sendMessage(sender, getWithOther(player, messageResultOther
                     .replace("%this_input%", homeName)
-                    .replace("%this_other%", targetUser.getName()), targetUser)
+                    .replace("%this_other%", targetUser.getCurrentName()), targetUser)
             );
         }
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser streamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (strings.length == 2) {
-            if (ModuleUtils.hasPermission(streamlineUser, permissionOther)) {
+            if (ModuleUtils.hasPermission(StreamSender, permissionOther)) {
                 return ModuleUtils.getOnlinePlayerNames();
             }
         }

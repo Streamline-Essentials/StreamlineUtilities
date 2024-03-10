@@ -9,12 +9,11 @@ import net.streamline.thebase.lib.leonhard.storage.sections.FlatFileSection;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Setter
+@Getter
 public class ConfiguredServer implements Comparable<ConfiguredServer> {
-    @Getter @Setter
     String actualServer;
-    @Getter @Setter
     ConcurrentSkipListSet<String> aliases;
-    @Getter @Setter
     String prettyName;
 
     public ConfiguredServer(String actualServer, ConcurrentSkipListSet<String> aliases, String prettyName) {

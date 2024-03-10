@@ -3,9 +3,9 @@ package host.plas.commands;
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
+import net.streamline.api.data.console.StreamSender;
+import net.streamline.api.data.players.StreamPlayer;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlinePlayer;
-import net.streamline.api.savables.users.StreamlineUser;
 import net.streamline.api.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.EssentialsManager;
@@ -14,17 +14,14 @@ import host.plas.essentials.users.UtilitiesUser;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class DeleteHomeCommand extends ModuleCommand {
-    @Getter
     private final String messageResultRemove;
 
-    @Getter
     private final String messageResultRemoveOther;
 
-    @Getter
     private final String messageResultHomeNotExists;
 
-    @Getter
     private final String permissionRemoveOther;
 
     public DeleteHomeCommand() {
@@ -44,13 +41,13 @@ public class DeleteHomeCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser sender, String[] strings) {
+    public void run(StreamSender sender, String[] strings) {
         String homeName = "home";
-        StreamlineUser targetUser = null;
+        StreamSender targetUser = null;
         UtilitiesUser target = null;
 
         if (strings.length <= 1) {
-            target = EssentialsManager.getOrGetUser(sender);
+            target = EssentialsManager.getOrGetUser(sender).join().orElse(null);
             targetUser = sender;
         }
 
@@ -60,13 +57,13 @@ public class DeleteHomeCommand extends ModuleCommand {
 
         if (strings.length == 2) {
             if (ModuleUtils.hasPermission(sender, permissionRemoveOther)) {
-                targetUser = UserUtils.getOrGetUserByName(strings[0]);
+                targetUser = UserUtils.getOrGetUserByName(strings[0]).orElse(null);
                 if (targetUser == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                target = EssentialsManager.getOrGetUser(targetUser);
+                target = EssentialsManager.getOrGetUser(targetUser).join().orElse(null);
             } else {
                 ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PERMISSIONS.get());
                 return;
@@ -83,12 +80,12 @@ public class DeleteHomeCommand extends ModuleCommand {
             return;
         }
 
-        if (! (sender instanceof StreamlinePlayer)) {
+        if (! (sender instanceof StreamPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
 
-        StreamlinePlayer player = (StreamlinePlayer) sender;
+        StreamPlayer player = (StreamPlayer) sender;
 
         StreamlineHome home = target.getHome(homeName);
 
@@ -108,15 +105,15 @@ public class DeleteHomeCommand extends ModuleCommand {
         } else {
             ModuleUtils.sendMessage(sender, getWithOther(player, messageResultRemoveOther
                     .replace("%this_input%", homeName)
-                    .replace("%this_other%", targetUser.getName()), targetUser)
+                    .replace("%this_other%", targetUser.getCurrentName()), targetUser)
             );
         }
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (strings.length == 2) {
-            if (ModuleUtils.hasPermission(StreamlineUser, permissionRemoveOther)) {
+            if (ModuleUtils.hasPermission(StreamSender, permissionRemoveOther)) {
                 return ModuleUtils.getOnlinePlayerNames();
             }
         }

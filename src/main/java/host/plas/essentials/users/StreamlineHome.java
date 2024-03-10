@@ -2,49 +2,26 @@ package host.plas.essentials.users;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.savables.users.StreamlineLocation;
-import org.jetbrains.annotations.NotNull;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.players.location.PlayerLocation;
+import net.streamline.api.data.players.location.PlayerRotation;
+import net.streamline.api.data.players.location.PlayerWorld;
+import net.streamline.api.data.players.location.WorldPosition;
+import net.streamline.api.data.server.StreamServer;
+import net.streamline.api.modules.ModuleUtils;
 
-public class StreamlineHome extends StreamlineLocation implements Comparable<StreamlineHome> {
-    @Getter
-    final String name;
-    @Getter @Setter
-    String server;
+@Getter @Setter
+public class StreamlineHome extends PlayerLocation {
+    private String name;
+    private StreamServer server;
 
     public StreamlineHome(String name, String server, String world, double x, double y, double z, float yaw, float pitch) {
-        super(world, x, y, z, yaw, pitch);
+        super(null, new PlayerWorld(world), new WorldPosition(x, y, z), new PlayerRotation(yaw, pitch));
         this.name = name;
-        this.server = server;
+        this.server = new StreamServer(server);
     }
 
-    public StreamlineHome(String string) {
-        super(cutToLocation(string));
-        String noLocation = cutWithoutLocation(string);
-        if (noLocation.startsWith(",")) {
-            noLocation = noLocation.substring(1);
-        }
-        this.name = noLocation.substring(0, noLocation.indexOf(","));
-        this.server = noLocation.substring(noLocation.indexOf(",") + 1);
-    }
-
-    public static String cutToLocation(String string) {
-        string = string.substring(string.lastIndexOf(",")); // Cut to last comma
-        string = string.substring(0, string.lastIndexOf(",")); // Do again to cut to second last comma
-        return string;
-    }
-
-    public static String cutWithoutLocation(String string) {
-        String justLocation = cutToLocation(string);
-        return string.replace(justLocation, "");
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + "," + this.name + "," + this.server;
-    }
-
-    @Override
-    public int compareTo(@NotNull StreamlineHome o) {
-        return this.toString().compareTo(o.toString());
+    public void teleport(StreamPlayer player) {
+        ModuleUtils.teleport(player, this);
     }
 }

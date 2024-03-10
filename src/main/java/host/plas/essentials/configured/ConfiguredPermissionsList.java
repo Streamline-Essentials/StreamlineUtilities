@@ -2,22 +2,23 @@ package host.plas.essentials.configured;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.streamline.api.data.console.StreamSender;
+import net.streamline.api.data.players.StreamPlayer;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineUser;
 import net.streamline.thebase.lib.leonhard.storage.sections.FlatFileSection;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ConfiguredPermissionsList {public static final int DEFAULT_VALUE = 0;
+@Setter
+@Getter
+public class ConfiguredPermissionsList {
+    public static final int DEFAULT_VALUE = 0;
     public static final String BASE_PERMISSION = "--";
 
-    @Getter @Setter
     private int defaultValue;
-    @Getter @Setter
     private String basePermission;
-    @Getter @Setter
     private ConcurrentSkipListSet<ConfiguredIntegerPermission> permissions;
 
     public ConfiguredPermissionsList(ConcurrentSkipListSet<ConfiguredIntegerPermission> permissions, int defaultValue, String basePermission) {
@@ -99,11 +100,11 @@ public class ConfiguredPermissionsList {public static final int DEFAULT_VALUE = 
         return basePermission;
     }
 
-    public int getTopValue(StreamlineUser user) {
+    public int getTopValue(StreamSender user) {
         AtomicInteger top = new AtomicInteger(getDefaultValue());
 
         getPermissions().forEach(permission -> {
-            if (ModuleUtils.hasPermission(user, getBasePermissionCasually() + permission.getPermission())) {
+            if (user.hasPermission(getBasePermissionCasually() + permission.getPermission())) {
                 if (permission.getValue() > top.get()) {
                     top.set(permission.getValue());
                 }
@@ -113,11 +114,11 @@ public class ConfiguredPermissionsList {public static final int DEFAULT_VALUE = 
         return top.get();
     }
 
-    public String getTopPermission(StreamlineUser user) {
+    public String getTopPermission(StreamSender user) {
         return getBasePermissionCasually() + getPermission(getTopValue(user)).getPermission();
     }
 
-    public int getBottomValue(StreamlineUser user) {
+    public int getBottomValue(StreamSender user) {
         AtomicInteger bottom = new AtomicInteger(getDefaultValue());
 
         getPermissions().forEach(permission -> {
@@ -131,12 +132,12 @@ public class ConfiguredPermissionsList {public static final int DEFAULT_VALUE = 
         return bottom.get();
     }
 
-    public String getBottomPermission(StreamlineUser user) {
+    public String getBottomPermission(StreamSender user) {
         return getBasePermissionCasually() + getPermission(getBottomValue(user)).getPermission();
     }
 
-    public boolean hasPermission(StreamlineUser user, int value) {
-        return ModuleUtils.hasPermission(user, getBasePermissionCasually() + getPermission(value).getPermission());
+    public boolean hasPermission(StreamSender user, int value) {
+        return user.hasPermission(getBasePermissionCasually() + getPermission(value).getPermission());
     }
 
     public static ConcurrentSkipListSet<ConfiguredIntegerPermission> map(FlatFileSection section) {

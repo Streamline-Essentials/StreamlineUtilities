@@ -2,14 +2,14 @@ package host.plas.commands;
 
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
+import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineUser;
 import host.plas.StreamlineUtilities;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class BroadcastCommand extends ModuleCommand {
-    @Getter
     private final String messageResultAll;
 
     public BroadcastCommand() {
@@ -23,7 +23,7 @@ public class BroadcastCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser StreamlineUser, String[] strings) {
+    public void run(StreamSender StreamSender, String[] strings) {
         String message = ModuleUtils.argsToString(strings);
 
         boolean isCustom = false;
@@ -34,22 +34,22 @@ public class BroadcastCommand extends ModuleCommand {
 
         final String finalMessage = message;
         boolean finalIsCustom = isCustom;
-        ModuleUtils.getLoadedUsersSet().forEach(a -> {
+        ModuleUtils.getLoadedSendersSet().forEach(a -> {
             if (! finalIsCustom) {
                 ModuleUtils.sendMessage(a, messageResultAll
                         .replace("%this_message%", finalMessage)
-                        .replace("%this_sender%", StreamlineUser.getName())
+                        .replace("%this_sender%", StreamSender.getCurrentName())
                 );
             } else {
                 ModuleUtils.sendMessage(a, finalMessage
-                        .replace("%this_sender%", StreamlineUser.getName())
+                        .replace("%this_sender%", StreamSender.getCurrentName())
                 );
             }
         });
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         return new ConcurrentSkipListSet<>();
     }
 }

@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.console.StreamSender;
 import host.plas.StreamlineUtilities;
 import host.plas.configs.obj.PermissionGroup;
 
@@ -69,24 +69,24 @@ public class OnlineCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser streamlineUser, String[] strings) {
+    public void run(StreamSender StreamSender, String[] strings) {
         if (strings[0].equals("")) {
-            ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser,
+            ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender,
                     messageResultGlobalBase
                             .replace("%this_online_global%", getOnlineGlobal())
-                            .replace("%this_online_exact%", getOnlineExact(streamlineUser.getLatestServer()))
-                            .replace("%this_online_permission%", getOnlineByPermission(streamlineUser.getLatestServer()))
+                            .replace("%this_online_exact%", getOnlineExact(StreamSender.getServerName()))
+                            .replace("%this_online_permission%", getOnlineByPermission(StreamSender.getServerName()))
                     ,
-                    streamlineUser
+                    StreamSender
             ));
             return;
         }
         if (strings.length > 2) {
-            ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
+            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
             return;
         }
         if (strings.length <= 1) {
-            ModuleUtils.sendMessage(streamlineUser, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
 
@@ -95,55 +95,55 @@ public class OnlineCommand extends ModuleCommand {
             case "server":
                 String serverName = strings[1];
                 if (! ModuleUtils.equalsAnyServer(serverName)) {
-                    ModuleUtils.sendMessage(streamlineUser, messageErrorInvalidServer.replace("%this_identifier%", serverName));
+                    ModuleUtils.sendMessage(StreamSender, messageErrorInvalidServer.replace("%this_identifier%", serverName));
                     return;
                 }
 
-                ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser,
+                ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender,
                         messageResultExactBase
                                 .replace("%this_identifier%", serverName)
                                 .replace("%this_online_global%", getOnlineGlobal())
                                 .replace("%this_online_exact%", getOnlineExact(serverName))
                                 .replace("%this_online_permission%", getOnlineByPermission(serverName))
                         ,
-                        streamlineUser
+                        StreamSender
                 ));
                 break;
             case "group":
                 String group = strings[1];
                 if (! StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().containsKey(group)) {
-                    ModuleUtils.sendMessage(streamlineUser, messageErrorInvalidGroup.replace("%this_identifier%", group));
+                    ModuleUtils.sendMessage(StreamSender, messageErrorInvalidGroup.replace("%this_identifier%", group));
                     return;
                 }
 
-                ModuleUtils.sendMessage(streamlineUser, getWithOther(streamlineUser,
+                ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender,
                         messageResultPermissionedBase
                                 .replace("%this_identifier%", group)
                                 .replace("%this_online_global%", getOnlineGlobal())
                                 .replace("%this_online_exact%", getOnlineExact(group))
                                 .replace("%this_online_permission%", getOnlineByPermission(group))
                         ,
-                        streamlineUser
+                        StreamSender
                 ));
                 break;
         }
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (strings.length <= 1) return new ConcurrentSkipListSet<>(List.of("server", "group"));
         if (strings.length > 2) return new ConcurrentSkipListSet<>();
         if (strings[0].equals("server")) {
             ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
             ModuleUtils.getServerNames().forEach(a -> {
-                if (ModuleUtils.hasPermission(StreamlineUser, permissionServers + a)) r.add(a);
+                if (ModuleUtils.hasPermission(StreamSender, permissionServers + a)) r.add(a);
             });
             return r;
         }
         if (strings[0].equals("group")) {
             ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
             new ArrayList<>(StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().keySet()).forEach(a -> {
-                if (ModuleUtils.hasPermission(StreamlineUser, permissionServers + a)) r.add(a);
+                if (ModuleUtils.hasPermission(StreamSender, permissionServers + a)) r.add(a);
             });
             return r;
         }
@@ -162,7 +162,7 @@ public class OnlineCommand extends ModuleCommand {
     public String getOnlineExact(String serverName) {
         List<String> modified = new ArrayList<>();
         ModuleUtils.getUsersOn(serverName).forEach(a -> {
-            modified.add(messageResultExactModified.replace("%this_username%", a.getName()));
+            modified.add(messageResultExactModified.replace("%this_username%", a.getCurrentName()));
         });
 
         return ModuleUtils.getListAsFormattedString(modified);
@@ -174,10 +174,10 @@ public class OnlineCommand extends ModuleCommand {
         if (group == null) return "";
 
         List<String> modified = new ArrayList<>();
-        ModuleUtils.getLoadedUsersSet().forEach(a -> {
+        ModuleUtils.getLoadedSendersSet().forEach(a -> {
             if (! a.isOnline()) return;
             if (! ModuleUtils.hasPermission(a, group.getPermission())) return;
-            modified.add(messageResultPermissionedModified.replace("%this_username%", a.getName()));
+            modified.add(messageResultPermissionedModified.replace("%this_username%", a.getCurrentName()));
         });
 
         return ModuleUtils.getListAsFormattedString(modified);

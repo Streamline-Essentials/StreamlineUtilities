@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Setter
+@Getter
 public class AliasGetter implements Comparable<AliasGetter> {
-    @Getter @Setter
     private String identifier;
-    @Getter @Setter
     private Callable<ConcurrentSkipListSet<String>> getter;
 
     public AliasGetter(String identifier, Callable<ConcurrentSkipListSet<String>> getter) {

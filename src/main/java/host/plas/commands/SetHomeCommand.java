@@ -4,9 +4,9 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineLocation;
-import net.streamline.api.savables.users.StreamlinePlayer;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.players.location.PlayerLocation;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.EssentialsManager;
@@ -60,13 +60,13 @@ public class SetHomeCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser sender, String[] strings) {
+    public void run(StreamSender sender, String[] strings) {
         String homeName = "home";
-        StreamlineUser targetUser = null;
+        StreamSender targetUser = null;
         UtilitiesUser target = null;
 
         if (strings.length <= 1) {
-            target = EssentialsManager.getOrGetUser(sender);
+            target = EssentialsManager.getOrGetUser(sender).join().orElse(null);
             targetUser = sender;
         }
 
@@ -76,13 +76,13 @@ public class SetHomeCommand extends ModuleCommand {
 
         if (strings.length == 2) {
             if (ModuleUtils.hasPermission(sender, permissionSetHomeOther)) {
-                targetUser = UserUtils.getOrGetUserByName(strings[0]);
+                targetUser = UserUtils.getOrGetUserByName(strings[0]).orElse(null);
                 if (targetUser == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                target = EssentialsManager.getOrGetUser(targetUser);
+                target = EssentialsManager.getOrGetUser(targetUser).join().orElse(null);
             } else {
                 ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PERMISSIONS.get());
                 return;
@@ -99,7 +99,7 @@ public class SetHomeCommand extends ModuleCommand {
             return;
         }
 
-        if (! (sender instanceof StreamlinePlayer)) {
+        if (! (sender instanceof StreamPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
@@ -113,8 +113,8 @@ public class SetHomeCommand extends ModuleCommand {
             }
         }
 
-        StreamlinePlayer player = (StreamlinePlayer) sender;
-        StreamlineLocation location = player.getLocation();
+        StreamPlayer player = (StreamPlayer) sender;
+        PlayerLocation location = player.getLocation();
 
         ConfiguredBlacklist configuredBlacklist = StreamlineUtilities.getConfigs().getHomesBlacklist();
 
@@ -122,11 +122,11 @@ public class SetHomeCommand extends ModuleCommand {
             AtomicBoolean isServerBlacklisted = new AtomicBoolean(false);
             configuredBlacklist.getServers().forEach(server -> {
                 if (configuredBlacklist.isAsWhitelist()) {
-                    if (! server.equals(player.getLatestServer())) {
+                    if (! server.equals(player.getServerName())) {
                         isServerBlacklisted.set(true);
                     }
                 } else {
-                    if (server.equals(player.getLatestServer())) {
+                    if (server.equals(player.getServerName())) {
                         isServerBlacklisted.set(true);
                     }
                 }
@@ -155,7 +155,7 @@ public class SetHomeCommand extends ModuleCommand {
             }
         }
 
-        StreamlineHome streamlineHome = new StreamlineHome(homeName, player.getLatestServer(), location.getWorld(),
+        StreamlineHome streamlineHome = new StreamlineHome(homeName, player.getServerName(), location.getWorldName(),
                 location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 
         StreamlineHome home = target.getHome(homeName);
@@ -189,9 +189,9 @@ public class SetHomeCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         if (strings.length == 2) {
-            if (ModuleUtils.hasPermission(StreamlineUser, permissionSetHomeOther)) {
+            if (ModuleUtils.hasPermission(StreamSender, permissionSetHomeOther)) {
                 return ModuleUtils.getOnlinePlayerNames();
             }
         }

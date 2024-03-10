@@ -4,13 +4,13 @@ import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineUser;
+import net.streamline.api.data.console.StreamSender;
 import host.plas.StreamlineUtilities;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Getter
 public class SudoCommand extends ModuleCommand {
-    @Getter
     private final String messageResult;
 
     public SudoCommand() {
@@ -24,7 +24,7 @@ public class SudoCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamlineUser sender, String[] strings) {
+    public void run(StreamSender sender, String[] strings) {
         if (strings.length < 2) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
@@ -32,7 +32,7 @@ public class SudoCommand extends ModuleCommand {
 
         String username = strings[0];
         String command = ModuleUtils.argsToStringMinus(strings, 0);
-        StreamlineUser other = ModuleUtils.getOrGetUserByName(username);
+        StreamSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
         if (other == null) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
@@ -43,7 +43,7 @@ public class SudoCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamlineUser StreamlineUser, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
         return ModuleUtils.getOnlinePlayerNames();
     }
 }

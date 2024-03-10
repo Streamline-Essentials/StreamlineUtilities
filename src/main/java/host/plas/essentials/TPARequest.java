@@ -2,11 +2,11 @@ package host.plas.essentials;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.data.players.location.PlayerLocation;
 import net.streamline.api.messages.builders.TeleportMessageBuilder;
 import net.streamline.api.messages.proxied.ProxiedMessage;
 import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.savables.users.StreamlineLocation;
-import net.streamline.api.savables.users.StreamlinePlayer;
 import net.streamline.api.scheduler.ModuleDelayedRunnable;
 import org.jetbrains.annotations.NotNull;
 import host.plas.StreamlineUtilities;
@@ -14,6 +14,7 @@ import host.plas.events.TPATimeoutEvent;
 
 import java.util.Date;
 
+@Getter @Setter
 public class TPARequest implements Comparable<TPARequest> {
     public static class TimeoutTimer extends ModuleDelayedRunnable {
         @Getter
@@ -48,9 +49,9 @@ public class TPARequest implements Comparable<TPARequest> {
     }
 
     @Getter
-    private final String senderUuid;
+    private StreamPlayer sender;
     @Getter
-    private final String receiverUuid;
+    private StreamPlayer receiver;
     @Getter
     private final Date timeSent;
     @Getter
@@ -62,9 +63,9 @@ public class TPARequest implements Comparable<TPARequest> {
     @Getter @Setter
     private TimeoutTimer timeoutTimer;
 
-    public TPARequest(String senderUuid, String receiverUuid, TransportType transportType, ResolveType resolveType, String server) {
-        this.senderUuid = senderUuid;
-        this.receiverUuid = receiverUuid;
+    public TPARequest(StreamPlayer sender, StreamPlayer receiver, TransportType transportType, ResolveType resolveType, String server) {
+        this.sender = sender;
+        this.receiver = receiver;
         this.timeSent = new Date();
         this.transportType = transportType;
         this.resolveType = resolveType;
@@ -72,33 +73,25 @@ public class TPARequest implements Comparable<TPARequest> {
         this.timeoutTimer = new TimeoutTimer(this);
     }
 
-    public TPARequest(StreamlinePlayer sender, StreamlinePlayer receiver, TransportType transportType, ResolveType resolveType) {
-        this(sender.getUuid(), receiver.getUuid(), transportType, resolveType, receiver.getLatestServer());
+    public TPARequest(StreamPlayer sender, StreamPlayer receiver, TransportType transportType, ResolveType resolveType) {
+        this(sender, receiver, transportType, resolveType, receiver.getServerName());
     }
 
-    public TPARequest(StreamlinePlayer sender, StreamlinePlayer receiver, TransportType transportType) {
+    public TPARequest(StreamPlayer sender, StreamPlayer receiver, TransportType transportType) {
         this(sender, receiver, transportType, ResolveType.CURRENT_LOCATION);
     }
 
     public boolean isSender(String uuid) {
-        return senderUuid.equals(uuid);
+        return sender.getUuid().equals(uuid);
     }
 
     public boolean isReceiver(String uuid) {
-        return receiverUuid.equals(uuid);
-    }
-
-    public StreamlinePlayer getSender() {
-        return ModuleUtils.getOrGetPlayer(senderUuid);
-    }
-
-    public StreamlinePlayer getReceiver() {
-        return ModuleUtils.getOrGetPlayer(receiverUuid);
+        return receiver.getUuid().equals(uuid);
     }
 
     public void perform() {
-        StreamlinePlayer from;
-        StreamlinePlayer to;
+        StreamPlayer from;
+        StreamPlayer to;
 
         if (transportType == TransportType.SENDER_TO_RECEIVER) {
             from = getSender();
@@ -112,10 +105,10 @@ public class TPARequest implements Comparable<TPARequest> {
             return;
         }
 
-        StreamlineLocation location = to.getLocation();
-        StreamlineUtilities.getInstance().logDebug("Performing TPA from " + from.getLatestName() + " to " + to.getLatestName() + " at " + location.toString());
+        PlayerLocation location = to.getLocation();
+        StreamlineUtilities.getInstance().logDebug("Performing TPA from " + from.getCurrentName() + " to " + to.getCurrentName() + " at " + location.toString());
         if (resolveType == ResolveType.CURRENT_LOCATION) {
-            ModuleUtils.connect(from, to.getLatestServer());
+            ModuleUtils.connect(from, to.getServerName());
         } else {
             ModuleUtils.connect(from, getServer());
         }
@@ -124,13 +117,13 @@ public class TPARequest implements Comparable<TPARequest> {
         new EssentialsManager.TeleportRunner(message);
         ModuleUtils.sendMessage(to, ModuleUtils.replaceAllPlayerBungee(to,
                 StreamlineUtilities.getMessages().tpaPerformTo()
-                        .replace("%this_from%", from.getLatestName())
-                        .replace("%this_to%", to.getLatestName())
+                        .replace("%this_from%", from.getCurrentName())
+                        .replace("%this_to%", to.getCurrentName())
         ));
         ModuleUtils.sendMessage(from, ModuleUtils.replaceAllPlayerBungee(from,
                 StreamlineUtilities.getMessages().tpaPerformFrom()
-                        .replace("%this_from%", from.getLatestName())
-                        .replace("%this_to%", to.getLatestName())
+                        .replace("%this_from%", from.getCurrentName())
+                        .replace("%this_to%", to.getCurrentName())
         ));
 
         EssentialsManager.removeTPARequest(this);
@@ -141,8 +134,8 @@ public class TPARequest implements Comparable<TPARequest> {
     public void deny() {
         EssentialsManager.removeTPARequest(this);
 
-        StreamlinePlayer from;
-        StreamlinePlayer to;
+        StreamPlayer from;
+        StreamPlayer to;
 
         if (transportType == TransportType.SENDER_TO_RECEIVER) {
             from = getSender();
@@ -159,21 +152,21 @@ public class TPARequest implements Comparable<TPARequest> {
         // Maybe make this send a deny message?
 //        ModuleUtils.sendMessage(to, ModuleUtils.replaceAllPlayerBungee(to,
 //                StreamlineUtilities.getMessages().tpaPerformTo()
-//                        .replace("%this_from%", from.getLatestName())
-//                        .replace("%this_to%", to.getLatestName())
+//                        .replace("%this_from%", from.getCurrentName())
+//                        .replace("%this_to%", to.getCurrentName())
 //        ));
 //        ModuleUtils.sendMessage(from, ModuleUtils.replaceAllPlayerBungee(from,
 //                StreamlineUtilities.getMessages().tpaPerformFrom()
-//                        .replace("%this_from%", from.getLatestName())
-//                        .replace("%this_to%", to.getLatestName())
+//                        .replace("%this_from%", from.getCurrentName())
+//                        .replace("%this_to%", to.getCurrentName())
 //        ));
     }
 
     public void timeout() {
         EssentialsManager.removeTPARequest(this);
 
-        StreamlinePlayer from;
-        StreamlinePlayer to;
+        StreamPlayer from;
+        StreamPlayer to;
 
         if (transportType == TransportType.SENDER_TO_RECEIVER) {
             from = getSender();
@@ -189,17 +182,17 @@ public class TPARequest implements Comparable<TPARequest> {
 
         ModuleUtils.sendMessage(getReceiver(), ModuleUtils.replaceAllPlayerBungee(to,
                 StreamlineUtilities.getMessages().tpaTimeoutTo()
-                        .replace("%this_from%", from.getLatestName())
-                        .replace("%this_sender%", getSender().getLatestName())
-                        .replace("%this_to%", to.getLatestName())
-                        .replace("%this_receiver%", getReceiver().getLatestName())
+                        .replace("%this_from%", from.getCurrentName())
+                        .replace("%this_sender%", getSender().getCurrentName())
+                        .replace("%this_to%", to.getCurrentName())
+                        .replace("%this_receiver%", getReceiver().getCurrentName())
         ));
         ModuleUtils.sendMessage(getSender(), ModuleUtils.replaceAllPlayerBungee(from,
                 StreamlineUtilities.getMessages().tpaTimeoutFrom()
-                        .replace("%this_from%", from.getLatestName())
-                        .replace("%this_sender%", getSender().getLatestName())
-                        .replace("%this_to%", to.getLatestName())
-                        .replace("%this_receiver%", getReceiver().getLatestName())
+                        .replace("%this_from%", from.getCurrentName())
+                        .replace("%this_sender%", getSender().getCurrentName())
+                        .replace("%this_to%", to.getCurrentName())
+                        .replace("%this_receiver%", getReceiver().getCurrentName())
         ));
     }
 
