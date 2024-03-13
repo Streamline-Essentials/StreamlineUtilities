@@ -54,7 +54,7 @@ public class ConnectCommand extends ModuleCommand {
         }
 
         if (strings.length >= 2) {
-            target = UserUtils.getOrGetPlayerByName(strings[1]).orElse(null);
+            target = UserUtils.getOrCreatePlayerByName(strings[1]).orElse(null);
             if (target == null) {
                 ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                 return;

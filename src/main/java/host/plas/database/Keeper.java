@@ -41,7 +41,7 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
 
         @Override
         public void saveMysql(UtilitiesUser obj) {
-            String statement = "INSERT INTO `%table_prefix%utilities_users`" +
+            String statement = "INSERT INTO `%table_prefix%utilities_users` " +
                     "(`Uuid`, `Homes`, `LastServer`) " +
                     "VALUES " +
                     "( '%uuid%', '%homes%', '%lastServer%' ) " +
@@ -60,7 +60,7 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
 
         @Override
         public void saveSqlite(UtilitiesUser obj) {
-            String statement = "INSERT OR REPLACE INTO `%table_prefix%utilities_users`" +
+            String statement = "INSERT OR REPLACE INTO `%table_prefix%utilities_users` " +
                     "(`Uuid`, `Homes`, `LastServer`) " +
                     "VALUES " +
                     "( '%uuid%', '%homes%', '%lastServer%' );";

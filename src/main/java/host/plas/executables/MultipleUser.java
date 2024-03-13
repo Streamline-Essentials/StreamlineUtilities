@@ -28,8 +28,7 @@ public class MultipleUser {
     }
 
     public void add(String uuid) {
-        Optional<StreamSender> user = UserUtils.getOrGetSender(uuid);
-        user.ifPresent(this::add);
+        add(UserUtils.getOrCreateSender(uuid));
     }
 
     public void add(StreamSender user) {

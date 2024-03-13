@@ -7,8 +7,9 @@ import net.streamline.api.modules.ModuleUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Setter
+@Getter
 public class ExecutableUser<T> {
-    @Getter @Setter
     private T user;
 
     public ExecutableUser(T user) {

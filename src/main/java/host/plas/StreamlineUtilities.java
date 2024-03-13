@@ -1,6 +1,8 @@
 package host.plas;
 
 import host.plas.database.Keeper;
+import host.plas.database.MyLoader;
+import host.plas.essentials.users.UtilitiesUser;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamline.api.modules.ModuleUtils;
@@ -195,10 +197,7 @@ public class StreamlineUtilities extends SimpleModule {
 
     @Override
     public void onDisable() {
-        EssentialsManager.getLoadedUsers().forEach(user -> {
-            user.save();
-            user.unregister();
-        });
+        MyLoader.getInstance().getLoaded().forEach(UtilitiesUser::unregister); // saves as well (built in)
 
         ExecutableHandler.unloadAllAliases();
         ExecutableHandler.disableAllFunctions();

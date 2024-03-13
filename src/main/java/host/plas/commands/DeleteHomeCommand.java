@@ -1,5 +1,6 @@
 package host.plas.commands;
 
+import host.plas.database.MyLoader;
 import lombok.Getter;
 import net.streamline.api.command.ModuleCommand;
 import net.streamline.api.configs.given.MainMessagesHandler;
@@ -47,7 +48,7 @@ public class DeleteHomeCommand extends ModuleCommand {
         UtilitiesUser target = null;
 
         if (strings.length <= 1) {
-            target = EssentialsManager.getOrGetUser(sender).join().orElse(null);
+            target = MyLoader.getInstance().getOrCreate(sender.getUuid());
             targetUser = sender;
         }
 
@@ -57,13 +58,13 @@ public class DeleteHomeCommand extends ModuleCommand {
 
         if (strings.length == 2) {
             if (ModuleUtils.hasPermission(sender, permissionRemoveOther)) {
-                targetUser = UserUtils.getOrGetUserByName(strings[0]).orElse(null);
+                targetUser = UserUtils.getOrCreatePlayerByName(strings[0]).orElse(null);
                 if (targetUser == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                target = EssentialsManager.getOrGetUser(targetUser).join().orElse(null);
+                target = MyLoader.getInstance().getOrCreate(targetUser.getUuid());
             } else {
                 ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PERMISSIONS.get());
                 return;

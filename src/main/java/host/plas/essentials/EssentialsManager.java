@@ -96,44 +96,4 @@ public class EssentialsManager {
         }
         return null;
     }
-
-    @Getter @Setter
-    private static ConcurrentSkipListSet<UtilitiesUser> loadedUsers = new ConcurrentSkipListSet<>();
-
-    public static CompletableFuture<Optional<UtilitiesUser>> getOrGetUser(StreamSender StreamSender) {
-        return getOrGetUser(StreamSender.getUuid());
-    }
-
-    private static Optional<UtilitiesUser> getUser(String uuid) {
-        AtomicReference<UtilitiesUser> atomicReference = new AtomicReference<>();
-        loadedUsers.forEach((user) -> {
-            if (user.getUuid().equals(uuid)) {
-                atomicReference.set(user);
-            }
-        });
-        return atomicReference.get() == null ? Optional.empty() : Optional.of(atomicReference.get());
-    }
-
-    public static void registerUser(UtilitiesUser user) {
-        loadedUsers.add(user);
-    }
-
-    public static void unregisterUser(UtilitiesUser user) {
-        loadedUsers.remove(user);
-    }
-
-    public static void saveAllUsers() {
-        loadedUsers.forEach(UtilitiesUser::save);
-    }
-
-    public static CompletableFuture<Optional<UtilitiesUser>> getOrGetUser(String uuid) {
-        Optional<UtilitiesUser> user = getUser(uuid);
-        if (user.isPresent()) return CompletableFuture.completedFuture(user);
-
-        return StreamlineUtilities.getKeeper().load(uuid);
-    }
-
-    public static CompletableFuture<Boolean> userExists(String uuid) {
-        return StreamlineUtilities.getKeeper().exists(uuid);
-    }
 }

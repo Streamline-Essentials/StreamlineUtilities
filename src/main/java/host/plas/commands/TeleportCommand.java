@@ -45,7 +45,7 @@ public class TeleportCommand extends ModuleCommand {
         }
 
         String username = strings[0];
-        StreamPlayer other = UserUtils.getOrGetPlayerByName(username).orElse(null);
+        StreamPlayer other = UserUtils.getOrCreatePlayerByName(username).orElse(null);
         if (other == null) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;

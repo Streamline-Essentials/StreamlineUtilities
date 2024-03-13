@@ -4,51 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix module identifier.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/host/plas/database/DBKeeper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/host/plas/database/Keeper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/host/plas/database/ResourceGetter.java" afterDir="false" />
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Updated to new API.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/host/plas/database/MyLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/StreamlineUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/StreamlineUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/accessors/SpigotAccessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/accessors/SpigotAccessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/BroadcastCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/BroadcastCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/ConnectCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/ConnectCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/DeleteHomeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/DeleteHomeCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/FunctionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/FunctionCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/HomeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/HomeCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/MaintenanceCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/MaintenanceCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/ModifyServerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/ModifyServerCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/NickCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/NickCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/OnlineCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/OnlineCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/SetHomeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/SetHomeCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/SudoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/SudoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/SudoOpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/SudoOpCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/TPACommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/TPACommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/TPAHereCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/TPAHereCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/TeleportCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/TeleportCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/TextCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/TextCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/TitleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/TitleCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/WhitelistCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/WhitelistCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/configs/Configs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/configs/Configs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/configs/CustomPlaceholdersConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/configs/CustomPlaceholdersConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/configs/GroupedPermissionConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/configs/GroupedPermissionConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/configs/MaintenanceConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/configs/MaintenanceConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/configs/ServersConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/configs/ServersConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/configs/obj/ConfiguredServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/configs/obj/ConfiguredServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/configs/obj/PermissionGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/configs/obj/PermissionGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/database/Keeper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/database/Keeper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/database/ResourceGetter.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/EssentialsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/EssentialsManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/TPARequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/TPARequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/configured/ConfiguredIntegerPermission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/configured/ConfiguredIntegerPermission.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/configured/ConfiguredPermissionsList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/configured/ConfiguredPermissionsList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/users/StreamlineHome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/users/StreamlineHome.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/users/UtilitiesUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/users/UtilitiesUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/events/NicknameUpdateEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/events/NicknameUpdateEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/events/TPATimeoutEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/events/TPATimeoutEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/executables/ExecutableUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/executables/ExecutableUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/executables/MultipleUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/executables/MultipleUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/executables/aliases/AliasExecution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/executables/aliases/AliasExecution.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/executables/aliases/AliasGetter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/executables/aliases/AliasGetter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/executables/aliases/StreamAlias.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/executables/aliases/StreamAlias.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/executables/functions/StreamFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/executables/functions/StreamFunction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/listeners/MainListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/listeners/MainListener.java" afterDir="false" />
     </list>
@@ -74,6 +48,17 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="StreamlineUtilities" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="StreamlineUtilities" type="f1a62948:ProjectNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="StreamlineUtilities" type="f1a62948:ProjectNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="compileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -209,7 +194,8 @@
       <workItem from="1708573400185" duration="911000" />
       <workItem from="1708579311801" duration="2985000" />
       <workItem from="1708816747114" duration="8456000" />
-      <workItem from="1709962583287" duration="8422000" />
+      <workItem from="1709962583287" duration="13392000" />
+      <workItem from="1710156570094" duration="4937000" />
     </task>
     <task id="LOCAL-00001" summary="Init.">
       <created>1658438907327</created>
@@ -467,7 +453,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707964723420</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Updated to new API.">
+      <option name="closed" value="true" />
+      <created>1710052397822</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1710052397822</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -489,7 +483,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fix : Chat works now." />
     <MESSAGE value="Fix : Touch ups." />
     <MESSAGE value="Fix : More touch ups." />
     <MESSAGE value="Add : A whole bunch of stuff..." />
@@ -514,7 +507,8 @@
     <MESSAGE value="Update." />
     <MESSAGE value="Mass fixes." />
     <MESSAGE value="Fix module identifier." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix module identifier." />
+    <MESSAGE value="Updated to new API." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated to new API." />
   </component>
   <component name="com.vaadin.designer2.intellij.settings.SizePresetsSettingsComponent">
     <option name="sizePresets">

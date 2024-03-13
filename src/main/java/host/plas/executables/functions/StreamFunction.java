@@ -2,6 +2,7 @@ package host.plas.executables.functions;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.luckperms.api.model.user.User;
 import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.data.uuid.UuidManager;
 import net.streamline.api.modules.ModuleUtils;
@@ -21,12 +22,11 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Getter
 public class StreamFunction extends File {
-    @Getter @Setter
+    @Setter
     private boolean enabled;
-    @Getter
     private final boolean valid;
-    @Getter
     private final String identifier;
 
     public StreamFunction(File parent, @NotNull String child) {
@@ -99,13 +99,13 @@ public class StreamFunction extends File {
                 if (groups.size() <= 0) continue;
                 Optional<String> uuid = UuidManager.getUuidFromName(groups.get(0)[0]);
                 if (uuid.isEmpty()) continue;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(UserUtils.getOrGetSender(uuid.get())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(UserUtils.getOrCreateSender(uuid.get())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@u:")) {
                 List<String[]> groups = MatcherUtils.getGroups(MatcherUtils.matcherBuilder("[\\\"](.*?)[\\\"]", s), 1);
                 if (groups.size() <= 0) continue;
                 Optional<String> uuid = UuidManager.getUuidFromName(groups.get(0)[0]);
                 if (uuid.isEmpty()) continue;
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(UserUtils.getOrGetSender(uuid.get())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(UserUtils.getOrCreateSender(uuid.get())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(as), s));
             }

@@ -1,14 +1,17 @@
 package host.plas.essentials.users;
 
 import host.plas.StreamlineUtilities;
+import host.plas.database.MyLoader;
 import host.plas.essentials.EssentialsManager;
 import lombok.Getter;
 import lombok.Setter;
 import net.streamline.api.data.IUuidable;
 import net.streamline.api.data.players.StreamPlayer;
+import net.streamline.api.loading.Loadable;
 import net.streamline.api.messages.builders.TeleportMessageBuilder;
 import net.streamline.api.messages.proxied.ProxiedMessage;
 import net.streamline.api.modules.ModuleUtils;
+import net.streamline.api.utils.UserUtils;
 import net.streamline.thebase.lib.re2j.Matcher;
 import tv.quaint.utils.MatcherUtils;
 
@@ -19,14 +22,18 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Setter
 @Getter
-public class UtilitiesUser implements IUuidable {
-    private String uuid;
+public class UtilitiesUser implements Loadable {
+    private String identifier;
+
+    public String getUuid() {
+        return identifier;
+    }
 
     private ConcurrentSkipListSet<StreamlineHome> homes;
     private String lastServer;
 
     public UtilitiesUser(String uuid) {
-        this.uuid = uuid;
+        this.identifier = uuid;
 
         homes = new ConcurrentSkipListSet<>();
         lastServer = "";
@@ -45,7 +52,7 @@ public class UtilitiesUser implements IUuidable {
                     .append(home.getZ()).append("::")
                     .append(home.getYaw()).append("::")
                     .append(home.getPitch())
-                    .append(";;;");
+                    .append(":::");
         });
 
         return builder.toString();
@@ -54,7 +61,7 @@ public class UtilitiesUser implements IUuidable {
     public static ConcurrentSkipListSet<StreamlineHome> computableHomes(String homes) {
         ConcurrentSkipListSet<StreamlineHome> r = new ConcurrentSkipListSet<>();
 
-        Matcher matcher = MatcherUtils.matcherBuilder("!!!([^:]+)::([^:]+)::([^:]+)::([^:]+)::([^:]+)::([^:]+)::([^:]+)::([^:]+);;;", homes);
+        Matcher matcher = MatcherUtils.matcherBuilder("!!!([^:]+)::([^:]+)::([^:]+)::([^:]+)::([^:]+)::([^:]+)::([^:]+)::([^:]+):::", homes);
         List<String[]> groups = MatcherUtils.getGroups(matcher, 8);
         groups.forEach((group) -> {
             try {
@@ -121,7 +128,7 @@ public class UtilitiesUser implements IUuidable {
         StreamlineHome home = getHome(homeName);
         if (home == null) return;
 
-        StreamPlayer player = ModuleUtils.getOrGetPlayer(getUuid()).orElse(null);
+        StreamPlayer player = UserUtils.getOrCreatePlayer(getUuid());
         if (player == null) return;
 
         ModuleUtils.connect(player, home.getServer().getIdentifier());
@@ -131,7 +138,7 @@ public class UtilitiesUser implements IUuidable {
     }
 
     public void goToLastServer() {
-        StreamPlayer player = ModuleUtils.getOrGetPlayer(getUuid()).orElse(null);
+        StreamPlayer player = UserUtils.getOrCreatePlayer(getUuid());
         if (player == null) return;
 
         String lastServer = getLastServer();
@@ -146,10 +153,10 @@ public class UtilitiesUser implements IUuidable {
     }
 
     public void register() {
-        EssentialsManager.registerUser(this);
+        MyLoader.getInstance().load(this);
     }
 
     public void unregister() {
-        EssentialsManager.unregisterUser(this);
+        MyLoader.getInstance().unload(this);
     }
 }

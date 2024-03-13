@@ -78,7 +78,7 @@ public class MaintenanceCommand extends ModuleCommand {
 
                 AtomicInteger atomicInteger = new AtomicInteger(0);
                 names.forEach(s -> {
-                    StreamPlayer player = UserUtils.getOrGetPlayerByName(s).orElse(null);
+                    StreamPlayer player = UserUtils.getOrCreatePlayerByName(s).orElse(null);
                     if (player == null) {
                         ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                         return;
@@ -101,7 +101,7 @@ public class MaintenanceCommand extends ModuleCommand {
 
                 AtomicInteger atomicIntegerRemove = new AtomicInteger(0);
                 namesRemove.forEach(s -> {
-                    StreamPlayer player = UserUtils.getOrGetPlayerByName(s).orElse(null);
+                    StreamPlayer player = UserUtils.getOrCreatePlayerByName(s).orElse(null);
                     if (player == null) {
                         ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                         return;

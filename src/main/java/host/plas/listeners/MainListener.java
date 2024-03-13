@@ -1,5 +1,6 @@
 package host.plas.listeners;
 
+import host.plas.database.MyLoader;
 import net.streamline.api.SLAPI;
 import net.streamline.api.data.console.StreamSender;
 import net.streamline.api.data.players.StreamPlayer;
@@ -64,7 +65,7 @@ public class MainListener implements BaseEventListener {
             }
         }
 
-        UtilitiesUser user = EssentialsManager.getOrGetUser(event.getSender().getUuid()).join().orElse(null);
+        UtilitiesUser user = MyLoader.getInstance().getOrCreate(event.getSender().getUuid());
         if (user == null) return;
         if (SLAPI.isProxy()) {
             if (StreamlineUtilities.getConfigs().lastServerEnabled()) {
@@ -81,7 +82,7 @@ public class MainListener implements BaseEventListener {
 
     @BaseProcessor
     public void onLeave(LogoutEvent event) {
-        UtilitiesUser user = EssentialsManager.getOrGetUser(event.getSender().getUuid()).join().orElse(null);
+        UtilitiesUser user = MyLoader.getInstance().getOrCreate(event.getSender().getUuid());
         if (user == null) return;
         user.setLastServer(event.getSender().getServerName());
         user.save();
