@@ -55,7 +55,7 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
                 try {
                     stmt.setString(1, obj.getUuid());
                     stmt.setString(2, obj.computableHomes());
-                    stmt.setString(3, obj.getLastServer());
+                    stmt.setString(3, obj.getLastServerForDB());
 
                     stmt.setString(4, obj.computableHomes());
                     stmt.setString(5, obj.getLastServerForDB());
