@@ -1,12 +1,12 @@
 package host.plas.commands;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.data.players.location.PlayerLocation;
-import net.streamline.api.modules.ModuleUtils;
+import singularity.command.ModuleCommand;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.data.console.CosmicSender;
+import singularity.data.players.CosmicPlayer;
+import singularity.data.players.location.CosmicLocation;
+import singularity.modules.ModuleUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.EssentialsManager;
 import host.plas.essentials.TPARequest;
@@ -72,17 +72,17 @@ public class TPAHereCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender sender, String[] strings) {
+    public void run(CosmicSender sender, String[] strings) {
         if (strings.length < 1) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
 
-        if (! (sender instanceof StreamPlayer)) {
+        if (! (sender instanceof CosmicPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
-        StreamPlayer senderPlayer = (StreamPlayer) sender;
+        CosmicPlayer senderPlayer = (CosmicPlayer) sender;
 
         String action = strings[0];
 
@@ -93,17 +93,17 @@ public class TPAHereCommand extends ModuleCommand {
                     return;
                 }
                 String username = strings[1];
-                StreamSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
+                CosmicSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
                 if (other == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                if (! (other instanceof StreamPlayer)) {
+                if (! (other instanceof CosmicPlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
-                StreamPlayer otherPlayer = (StreamPlayer) other;
+                CosmicPlayer otherPlayer = (CosmicPlayer) other;
 
                 if (otherPlayer.getLocation() == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
@@ -115,8 +115,8 @@ public class TPAHereCommand extends ModuleCommand {
                     return;
                 }
 
-                PlayerLocation senderLocation = senderPlayer.getLocation();
-                PlayerLocation otherLocation = otherPlayer.getLocation();
+                CosmicLocation senderLocation = senderPlayer.getLocation();
+                CosmicLocation otherLocation = otherPlayer.getLocation();
 
                 ConfiguredBlacklist configuredBlacklist = StreamlineUtilities.getConfigs().getTPABlacklist();
 
@@ -175,17 +175,17 @@ public class TPAHereCommand extends ModuleCommand {
                     usernameAccept = request.getSender().getCurrentName();
                 }
 
-                StreamSender otherAccept = ModuleUtils.getOrGetUserByName(usernameAccept).orElse(null);
+                CosmicSender otherAccept = ModuleUtils.getOrGetUserByName(usernameAccept).orElse(null);
                 if (otherAccept == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                if (! (otherAccept instanceof StreamPlayer)) {
+                if (! (otherAccept instanceof CosmicPlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
-                StreamPlayer otherPlayerAccept = (StreamPlayer) otherAccept;
+                CosmicPlayer otherPlayerAccept = (CosmicPlayer) otherAccept;
 
                 TPARequest request = EssentialsManager.getTPARequest(otherPlayerAccept.getUuid(), senderPlayer.getUuid(), TPARequest.TransportType.RECEIVER_TO_SENDER);
                 if (request == null) {
@@ -211,17 +211,17 @@ public class TPAHereCommand extends ModuleCommand {
                     usernameDeny = requestDeny.getSender().getCurrentName();
                 }
 
-                StreamSender otherDeny = ModuleUtils.getOrGetUserByName(usernameDeny).orElse(null);
+                CosmicSender otherDeny = ModuleUtils.getOrGetUserByName(usernameDeny).orElse(null);
                 if (otherDeny == null) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
                     return;
                 }
 
-                if (! (otherDeny instanceof StreamPlayer)) {
+                if (! (otherDeny instanceof CosmicPlayer)) {
                     ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                     return;
                 }
-                StreamPlayer otherPlayerDeny = (StreamPlayer) otherDeny;
+                CosmicPlayer otherPlayerDeny = (CosmicPlayer) otherDeny;
 
                 TPARequest requestDeny = EssentialsManager.getTPARequest(otherPlayerDeny.getUuid(), senderPlayer.getUuid(), TPARequest.TransportType.RECEIVER_TO_SENDER);
                 if (requestDeny == null) {
@@ -240,7 +240,7 @@ public class TPAHereCommand extends ModuleCommand {
         }
     }
 
-    public String getWithOther(StreamSender from, StreamSender to, String message) {
+    public String getWithOther(CosmicSender from, CosmicSender to, String message) {
         message = message
                 .replace("%this_from%", from.getCurrentName())
                 .replace("%this_to%", to.getCurrentName());
@@ -248,7 +248,7 @@ public class TPAHereCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         if (strings.length <= 1) return new ConcurrentSkipListSet<>(Arrays.asList("request", "accept", "deny"));
         if (strings.length == 2) return ModuleUtils.getOnlinePlayerNames();
 

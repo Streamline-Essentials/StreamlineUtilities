@@ -1,11 +1,11 @@
 package host.plas.commands;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.modules.ModuleUtils;
-//import net.streamline.api.savables.users.OperatorUser;
-import net.streamline.api.data.console.StreamSender;
+import singularity.command.ModuleCommand;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.modules.ModuleUtils;
+//import singularity.savables.users.OperatorUser;
+import singularity.data.console.CosmicSender;
 import host.plas.StreamlineUtilities;
 
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -25,7 +25,7 @@ public class SudoOpCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender sender, String[] strings) {
+    public void run(CosmicSender sender, String[] strings) {
         if (strings.length < 2) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
@@ -33,7 +33,7 @@ public class SudoOpCommand extends ModuleCommand {
 
         String username = strings[0];
         String command = ModuleUtils.argsToStringMinus(strings, 0);
-        StreamSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
+        CosmicSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
         if (other == null) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
@@ -46,7 +46,7 @@ public class SudoOpCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         return ModuleUtils.getOnlinePlayerNames();
     }
 }

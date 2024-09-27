@@ -2,7 +2,7 @@ package host.plas.essentials.configured;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.thebase.lib.leonhard.storage.sections.FlatFileSection;
+import tv.quaint.thebase.lib.leonhard.storage.sections.FlatFileSection;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListSet;

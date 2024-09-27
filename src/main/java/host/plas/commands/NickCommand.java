@@ -2,15 +2,15 @@
 //
 //import lombok.Getter;
 //import net.streamline.api.SLAPI;
-//import net.streamline.api.command.ModuleCommand;
-//import net.streamline.api.configs.given.MainMessagesHandler;
-//import net.streamline.api.interfaces.IStreamline;
-//import net.streamline.api.messages.builders.SavablePlayerMessageBuilder;
-//import net.streamline.api.messages.proxied.ProxiedMessage;
-//import net.streamline.api.modules.ModuleUtils;
-//import net.streamline.api.data.players.StreamPlayer;
-//import net.streamline.api.data.console.StreamSender;
-//import net.streamline.api.utils.UserUtils;
+//import singularity.command.ModuleCommand;
+//import singularity.configs.given.MainMessagesHandler;
+//import singularity.interfaces.IStreamline;
+//import singularity.messages.builders.SavablePlayerMessageBuilder;
+//import singularity.messages.proxied.ProxiedMessage;
+//import singularity.modules.ModuleUtils;
+//import singularity.data.players.CosmicPlayer;
+//import singularity.data.console.CosmicSender;
+//import singularity.utils.UserUtils;
 //import host.plas.StreamlineUtilities;
 //import host.plas.accessors.SpigotAccessor;
 //import host.plas.events.NicknameUpdateEvent;
@@ -43,13 +43,13 @@
 //    }
 //
 //    @Override
-//    public void run(StreamSender StreamSender, String[] strings) {
+//    public void run(CosmicSender CosmicSender, String[] strings) {
 //        String message = ModuleUtils.argsToString(strings);
 //
-//        StreamSender user = StreamSender;
+//        CosmicSender user = CosmicSender;
 //
 //        if (message.startsWith("-p:")) {
-//            if (ModuleUtils.hasPermission(StreamSender, getPermissionSetOthers())) {
+//            if (ModuleUtils.hasPermission(CosmicSender, getPermissionSetOthers())) {
 //                String name = strings[0].substring("-p:".length());
 //                user = ModuleUtils.getOrGetUserByName(name).orElse(null);
 //                message = message.substring(message.indexOf(' ') + 1);
@@ -57,7 +57,7 @@
 //        }
 //
 //        if (user == null) {
-//            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
+//            ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
 //            return;
 //        }
 //
@@ -73,7 +73,7 @@
 ////                        new NicknameUpdateEvent(user, UserUtils.getFormattedDefaultNickname(user), current);
 ////                ModuleUtils.fireEvent(updateEvent);
 ////                if (updateEvent.isCancelled()) {
-////                    ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, getMessageResultCancelled(), user)
+////                    ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender, getMessageResultCancelled(), user)
 ////                            .replace("%this_new%", message)
 ////                            .replace("%this_previous%", current)
 ////                    );
@@ -81,8 +81,8 @@
 //                }
 //
 //                user.setDisplayName(updateEvent.getChangeTo());
-//                if (user instanceof StreamPlayer) {
-//                    StreamPlayer player = (StreamPlayer) user;
+//                if (user instanceof CosmicPlayer) {
+//                    CosmicPlayer player = (CosmicPlayer) user;
 //                    SpigotAccessor.updateCustomName(player, updateEvent.getChangeTo());
 //                    if (SLAPI.getInstance().getPlatform().getServerType().equals(IStreamline.ServerType.PROXY)) {
 //                        ProxiedMessage proxiedMessage = SavablePlayerMessageBuilder.build(player, true);
@@ -91,7 +91,7 @@
 //                    }
 //                }
 //
-//                ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, getMessageResultCleared(), user)
+//                ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender, getMessageResultCleared(), user)
 //                        .replace("%this_new%", ModuleUtils.replaceAllPlayerBungee(user, "%streamline_user_formatted%"))
 //                        .replace("%this_previous%", current)
 //                );
@@ -99,7 +99,7 @@
 //            }
 //        }
 //
-//        if (message.startsWith("!") && ModuleUtils.hasPermission(StreamSender, getPermissionSetNonFormatted())) {
+//        if (message.startsWith("!") && ModuleUtils.hasPermission(CosmicSender, getPermissionSetNonFormatted())) {
 //            message = message.substring("!".length());
 //        } else {
 //            message = StreamlineUtilities.getConfigs().getNicknamesFormat().replace("%this_input%", message);
@@ -109,7 +109,7 @@
 //        NicknameUpdateEvent updateEvent = new NicknameUpdateEvent(user, message, current);
 //        ModuleUtils.fireEvent(updateEvent);
 //        if (updateEvent.isCancelled()) {
-//            ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, getMessageResultCancelled(), user)
+//            ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender, getMessageResultCancelled(), user)
 //                    .replace("%this_new%", message)
 //                    .replace("%this_previous%", current)
 //            );
@@ -117,8 +117,8 @@
 //        }
 //
 //        user.setDisplayName(updateEvent.getChangeTo());
-//        if (user instanceof StreamPlayer) {
-//            StreamPlayer player = (StreamPlayer) user;
+//        if (user instanceof CosmicPlayer) {
+//            CosmicPlayer player = (CosmicPlayer) user;
 //            SpigotAccessor.updateCustomName(player, updateEvent.getChangeTo());
 //            if (SLAPI.getInstance().getPlatform().getServerType().equals(IStreamline.ServerType.PROXY)) {
 //                ProxiedMessage proxiedMessage = SavablePlayerMessageBuilder.build(player, true);
@@ -127,14 +127,14 @@
 //            }
 //        }
 //
-//        ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, getMessageResultChanged(), user)
+//        ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender, getMessageResultChanged(), user)
 //                .replace("%this_new%", message)
 //                .replace("%this_previous%", current)
 //        );
 //    }
 //
 //    @Override
-//    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+//    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
 //        if (strings.length == 1) {
 //            if (strings[0].startsWith("-p:")) {
 //                ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();

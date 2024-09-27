@@ -2,7 +2,7 @@ package host.plas.database;
 
 import host.plas.essentials.users.UtilitiesUser;
 import net.streamline.api.SLAPI;
-import net.streamline.api.database.modules.DBKeeper;
+import singularity.database.modules.DBKeeper;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -18,11 +18,11 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
                     "`Uuid` VARCHAR(36) NOT NULL PRIMARY KEY, " +
                     "`Homes` TEXT NOT NULL, " +
                     "`LastServer` VARCHAR(36) NOT NULL" +
-                    ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+                    ") ENGINE=InnoDB DEFAULT CHARSET=utf8;;";
 
             statement = statement.replace("%table_prefix%", SLAPI.getMainDatabase().getConnectorSet().getTablePrefix());
 
-            getDatabase().execute(statement);
+            getDatabase().execute(statement, stmt -> {});
         }
 
         @Override
@@ -32,11 +32,11 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
                     "`Homes` TEXT NOT NULL, " +
                     "`LastServer` TEXT NOT NULL, " +
                     "PRIMARY KEY (`uuid`)" +
-                    ");";
+                    ");;";
 
             statement = statement.replace("%table_prefix%", SLAPI.getMainDatabase().getConnectorSet().getTablePrefix());
 
-            getDatabase().execute(statement);
+            getDatabase().execute(statement, stmt -> {});
         }
 
         @Override
@@ -44,18 +44,25 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
             String statement = "INSERT INTO `%table_prefix%utilities_users` " +
                     "(`Uuid`, `Homes`, `LastServer`) " +
                     "VALUES " +
-                    "( '%uuid%', '%homes%', '%lastServer%' ) " +
+                    "( ?, ?, ? ) " +
                     "ON DUPLICATE KEY UPDATE " +
-                    "`Homes` = '%homes%', " +
-                    "`LastServer` = '%lastServer%';";
+                    "`Homes` = ?, " +
+                    "`LastServer` = ?;";
 
             statement = statement.replace("%table_prefix%", SLAPI.getMainDatabase().getConnectorSet().getTablePrefix());
 
-            statement = statement.replace("%uuid%", obj.getUuid());
-            statement = statement.replace("%homes%", obj.computableHomes());
-            statement = statement.replace("%lastServer%", obj.getLastServer());
+            getDatabase().execute(statement, stmt -> {
+                try {
+                    stmt.setString(1, obj.getUuid());
+                    stmt.setString(2, obj.computableHomes());
+                    stmt.setString(3, obj.getLastServer());
 
-            getDatabase().execute(statement);
+                    stmt.setString(4, obj.computableHomes());
+                    stmt.setString(5, obj.getLastServerForDB());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
         @Override
@@ -63,26 +70,35 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
             String statement = "INSERT OR REPLACE INTO `%table_prefix%utilities_users` " +
                     "(`Uuid`, `Homes`, `LastServer`) " +
                     "VALUES " +
-                    "( '%uuid%', '%homes%', '%lastServer%' );";
+                    "( ?, ?, ? );";
 
             statement = statement.replace("%table_prefix%", SLAPI.getMainDatabase().getConnectorSet().getTablePrefix());
 
-            statement = statement.replace("%uuid%", obj.getUuid());
-            statement = statement.replace("%homes%", obj.computableHomes());
-            statement = statement.replace("%lastServer%", obj.getLastServer());
-
-            getDatabase().execute(statement);
+            getDatabase().execute(statement, stmt -> {
+                try {
+                    stmt.setString(1, obj.getUuid());
+                    stmt.setString(2, obj.computableHomes());
+                    stmt.setString(3, obj.getLastServerForDB());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
         @Override
         public Optional<UtilitiesUser> loadMysql(String identifier) {
-            String statement = "SELECT * FROM `%table_prefix%utilities_users` WHERE `uuid` = '%uuid%';";
+            String statement = "SELECT * FROM `%table_prefix%utilities_users` WHERE `uuid` = ?;";
 
             statement = statement.replace("%table_prefix%", SLAPI.getMainDatabase().getConnectorSet().getTablePrefix());
-            statement = statement.replace("%uuid%", identifier);
 
             AtomicReference<Optional<UtilitiesUser>> user = new AtomicReference<>(Optional.empty());
-            getDatabase().executeQuery(statement, (result) -> {
+            getDatabase().executeQuery(statement, stmt -> {
+                try {
+                    stmt.setString(1, identifier);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, result -> {
                 try {
                     if (result.next()) {
                         String uuid = result.getString("Uuid");
@@ -91,7 +107,7 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
 
                         UtilitiesUser u = new UtilitiesUser(uuid);
                         u.setHomes(UtilitiesUser.computableHomes(homes));
-                        u.setLastServer(lastServer);
+                        u.setLastServerFromDB(lastServer);
 
                         user.set(Optional.of(u));
                     }
@@ -107,13 +123,19 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
 
         @Override
         public Optional<UtilitiesUser> loadSqlite(String identifier) {
-            String statement = "SELECT * FROM `%table_prefix%utilities_users` WHERE `uuid` = '%uuid%';";
+            String statement = "SELECT * FROM `%table_prefix%utilities_users` WHERE `uuid` = ?;";
 
             statement = statement.replace("%table_prefix%", SLAPI.getMainDatabase().getConnectorSet().getTablePrefix());
             statement = statement.replace("%uuid%", identifier);
 
             AtomicReference<Optional<UtilitiesUser>> user = new AtomicReference<>(Optional.empty());
-            getDatabase().executeQuery(statement, (result) -> {
+            getDatabase().executeQuery(statement, stmt -> {
+                try {
+                    stmt.setString(1, identifier);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, (result) -> {
                 try {
                     if (result.next()) {
                         String uuid = result.getString("Uuid");
@@ -122,7 +144,7 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
 
                         UtilitiesUser u = new UtilitiesUser(uuid);
                         u.setHomes(UtilitiesUser.computableHomes(homes));
-                        u.setLastServer(lastServer);
+                        u.setLastServerFromDB(lastServer);
 
                         user.set(Optional.of(u));
                     }
@@ -138,13 +160,18 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
 
         @Override
         public boolean existsMysql(String identifier) {
-            String statement = "SELECT * FROM `%table_prefix%utilities_users` WHERE `uuid` = '%uuid%';";
+            String statement = "SELECT * FROM `%table_prefix%utilities_users` WHERE `uuid` = ?;";
 
             statement = statement.replace("%table_prefix%", SLAPI.getMainDatabase().getConnectorSet().getTablePrefix());
-            statement = statement.replace("%uuid%", identifier);
 
             AtomicReference<Boolean> exists = new AtomicReference<>(false);
-            getDatabase().executeQuery(statement, (result) -> {
+            getDatabase().executeQuery(statement, stmt -> {
+                try {
+                    stmt.setString(1, identifier);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, (result) -> {
                 try {
                     exists.set(result.next());
                     result.close();
@@ -158,13 +185,19 @@ public class Keeper extends DBKeeper<UtilitiesUser> {
 
         @Override
         public boolean existsSqlite(String identifier) {
-            String statement = "SELECT * FROM `%table_prefix%utilities_users` WHERE `uuid` = '%uuid%';";
+            String statement = "SELECT * FROM `%table_prefix%utilities_users` WHERE `uuid` = ?;";
 
             statement = statement.replace("%table_prefix%", SLAPI.getMainDatabase().getConnectorSet().getTablePrefix());
             statement = statement.replace("%uuid%", identifier);
 
             AtomicReference<Boolean> exists = new AtomicReference<>(false);
-            getDatabase().executeQuery(statement, (result) -> {
+            getDatabase().executeQuery(statement, stmt -> {
+                try {
+                    stmt.setString(1, identifier);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, (result) -> {
                 try {
                     exists.set(result.next());
                     result.close();

@@ -5,24 +5,26 @@ import host.plas.database.MyLoader;
 import host.plas.essentials.EssentialsManager;
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.data.IUuidable;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.loading.Loadable;
-import net.streamline.api.messages.builders.TeleportMessageBuilder;
-import net.streamline.api.messages.proxied.ProxiedMessage;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.utils.UserUtils;
-import net.streamline.thebase.lib.re2j.Matcher;
+import singularity.data.IUuidable;
+import singularity.data.players.CosmicPlayer;
+import singularity.loading.Loadable;
+import singularity.messages.builders.TeleportMessageBuilder;
+import singularity.messages.proxied.ProxiedMessage;
+import singularity.modules.ModuleUtils;
+import singularity.utils.UserUtils;
+import tv.quaint.thebase.lib.re2j.Matcher;
 import tv.quaint.utils.MatcherUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Setter
 @Getter
-public class UtilitiesUser implements Loadable {
+public class UtilitiesUser implements Loadable<UtilitiesUser> {
     private String identifier;
 
     public String getUuid() {
@@ -84,6 +86,20 @@ public class UtilitiesUser implements Loadable {
         StreamlineUtilities.getKeeper().save(this);
     }
 
+    @Override
+    public UtilitiesUser augment(CompletableFuture<Optional<UtilitiesUser>> completableFuture) {
+        CompletableFuture.runAsync(() -> {
+            Optional<UtilitiesUser> optional = completableFuture.join();
+            if (optional.isEmpty()) return;
+            UtilitiesUser user = optional.get();
+
+            this.homes = user.homes;
+            this.lastServer = user.lastServer;
+        });
+
+        return this;
+    }
+
     public void addHome(StreamlineHome home) {
         homes.add(home);
     }
@@ -128,7 +144,7 @@ public class UtilitiesUser implements Loadable {
         StreamlineHome home = getHome(homeName);
         if (home == null) return;
 
-        StreamPlayer player = UserUtils.getOrCreatePlayer(getUuid());
+        CosmicPlayer player = UserUtils.getOrCreatePlayer(getUuid());
         if (player == null) return;
 
         ModuleUtils.connect(player, home.getServer().getIdentifier());
@@ -138,7 +154,7 @@ public class UtilitiesUser implements Loadable {
     }
 
     public void goToLastServer() {
-        StreamPlayer player = UserUtils.getOrCreatePlayer(getUuid());
+        CosmicPlayer player = UserUtils.getOrCreatePlayer(getUuid());
         if (player == null) return;
 
         String lastServer = getLastServer();
@@ -158,5 +174,17 @@ public class UtilitiesUser implements Loadable {
 
     public void unregister() {
         MyLoader.getInstance().unload(this);
+    }
+
+    public String getLastServerForDB() {
+        return lastServer == null ? "" : lastServer;
+    }
+
+    public void setLastServerFromDB(String lastServer) {
+        if (lastServer.isEmpty()) {
+            lastServer = null;
+            return;
+        }
+        this.lastServer = lastServer;
     }
 }

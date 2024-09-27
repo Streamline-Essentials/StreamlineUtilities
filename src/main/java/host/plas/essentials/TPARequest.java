@@ -2,12 +2,12 @@ package host.plas.essentials;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.data.players.location.PlayerLocation;
-import net.streamline.api.messages.builders.TeleportMessageBuilder;
-import net.streamline.api.messages.proxied.ProxiedMessage;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.scheduler.ModuleDelayedRunnable;
+import singularity.data.players.CosmicPlayer;
+import singularity.data.players.location.CosmicLocation;
+import singularity.messages.builders.TeleportMessageBuilder;
+import singularity.messages.proxied.ProxiedMessage;
+import singularity.modules.ModuleUtils;
+import singularity.scheduler.ModuleDelayedRunnable;
 import org.jetbrains.annotations.NotNull;
 import host.plas.StreamlineUtilities;
 import host.plas.events.TPATimeoutEvent;
@@ -49,9 +49,9 @@ public class TPARequest implements Comparable<TPARequest> {
     }
 
     @Getter
-    private StreamPlayer sender;
+    private CosmicPlayer sender;
     @Getter
-    private StreamPlayer receiver;
+    private CosmicPlayer receiver;
     @Getter
     private final Date timeSent;
     @Getter
@@ -63,7 +63,7 @@ public class TPARequest implements Comparable<TPARequest> {
     @Getter @Setter
     private TimeoutTimer timeoutTimer;
 
-    public TPARequest(StreamPlayer sender, StreamPlayer receiver, TransportType transportType, ResolveType resolveType, String server) {
+    public TPARequest(CosmicPlayer sender, CosmicPlayer receiver, TransportType transportType, ResolveType resolveType, String server) {
         this.sender = sender;
         this.receiver = receiver;
         this.timeSent = new Date();
@@ -73,11 +73,11 @@ public class TPARequest implements Comparable<TPARequest> {
         this.timeoutTimer = new TimeoutTimer(this);
     }
 
-    public TPARequest(StreamPlayer sender, StreamPlayer receiver, TransportType transportType, ResolveType resolveType) {
+    public TPARequest(CosmicPlayer sender, CosmicPlayer receiver, TransportType transportType, ResolveType resolveType) {
         this(sender, receiver, transportType, resolveType, receiver.getServerName());
     }
 
-    public TPARequest(StreamPlayer sender, StreamPlayer receiver, TransportType transportType) {
+    public TPARequest(CosmicPlayer sender, CosmicPlayer receiver, TransportType transportType) {
         this(sender, receiver, transportType, ResolveType.CURRENT_LOCATION);
     }
 
@@ -90,8 +90,8 @@ public class TPARequest implements Comparable<TPARequest> {
     }
 
     public void perform() {
-        StreamPlayer from;
-        StreamPlayer to;
+        CosmicPlayer from;
+        CosmicPlayer to;
 
         if (transportType == TransportType.SENDER_TO_RECEIVER) {
             from = getSender();
@@ -105,7 +105,7 @@ public class TPARequest implements Comparable<TPARequest> {
             return;
         }
 
-        PlayerLocation location = to.getLocation();
+        CosmicLocation location = to.getLocation();
         StreamlineUtilities.getInstance().logDebug("Performing TPA from " + from.getCurrentName() + " to " + to.getCurrentName() + " at " + location.toString());
         if (resolveType == ResolveType.CURRENT_LOCATION) {
             ModuleUtils.connect(from, to.getServerName());
@@ -134,8 +134,8 @@ public class TPARequest implements Comparable<TPARequest> {
     public void deny() {
         EssentialsManager.removeTPARequest(this);
 
-        StreamPlayer from;
-        StreamPlayer to;
+        CosmicPlayer from;
+        CosmicPlayer to;
 
         if (transportType == TransportType.SENDER_TO_RECEIVER) {
             from = getSender();
@@ -165,8 +165,8 @@ public class TPARequest implements Comparable<TPARequest> {
     public void timeout() {
         EssentialsManager.removeTPARequest(this);
 
-        StreamPlayer from;
-        StreamPlayer to;
+        CosmicPlayer from;
+        CosmicPlayer to;
 
         if (transportType == TransportType.SENDER_TO_RECEIVER) {
             from = getSender();

@@ -2,9 +2,9 @@ package host.plas.executables;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.utils.UserUtils;
+import singularity.data.console.CosmicSender;
+import singularity.modules.ModuleUtils;
+import singularity.utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +13,17 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class MultipleUser {
     @Getter @Setter
-    private ConcurrentSkipListSet<StreamSender> users;
+    private ConcurrentSkipListSet<CosmicSender> users;
 
     public MultipleUser() {
         this.users = new ConcurrentSkipListSet<>();
     }
 
-    public MultipleUser(StreamSender... users) {
+    public MultipleUser(CosmicSender... users) {
         this.users = new ConcurrentSkipListSet<>(List.of(users));
     }
 
-    public MultipleUser(ConcurrentSkipListSet<StreamSender> users) {
+    public MultipleUser(ConcurrentSkipListSet<CosmicSender> users) {
         this.users = users;
     }
 
@@ -31,7 +31,7 @@ public class MultipleUser {
         add(UserUtils.getOrCreateSender(uuid));
     }
 
-    public void add(StreamSender user) {
+    public void add(CosmicSender user) {
         users.add(user);
     }
 
@@ -41,7 +41,7 @@ public class MultipleUser {
         });
     }
 
-    public void remove(StreamSender user) {
+    public void remove(CosmicSender user) {
         users.remove(user);
     }
 }

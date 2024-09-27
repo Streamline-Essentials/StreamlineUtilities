@@ -2,8 +2,9 @@ package host.plas.executables;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.modules.ModuleUtils;
+import singularity.data.console.CosmicSender;
+import singularity.data.players.CosmicPlayer;
+import singularity.modules.ModuleUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,9 +21,33 @@ public class ExecutableUser<T> {
     private static final int FAIL = -1;
 
     public int runCommand(String command) {
-        if (user instanceof StreamSender) {
-            StreamSender StreamSender = (StreamSender) user;
-            return ModuleUtils.runAs(StreamSender, command) ? SUCCESS : FAIL;
+        return runCommand(command, user);
+    }
+
+    public static <T> int runCommand(String command, T user) {
+        if (user instanceof CosmicSender) {
+            CosmicSender sender = (CosmicSender) user;
+            if (sender.isConsole()) {
+                try {
+                    ModuleUtils.getConsole().runCommand(command);
+                    return SUCCESS;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return FAIL;
+                }
+            }
+
+            if (sender instanceof CosmicPlayer) {
+                CosmicSender player = (CosmicPlayer) user;
+
+                try {
+                    player.runCommand(command);
+                    return SUCCESS;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return FAIL;
+                }
+            }
         }
 //        if (user instanceof OperatorUser) {
 //            OperatorUser operatorUser = (OperatorUser) user;
@@ -32,7 +57,9 @@ public class ExecutableUser<T> {
             MultipleUser multipleUser = (MultipleUser) user;
             AtomicInteger c = new AtomicInteger();
             multipleUser.getUsers().forEach(a -> {
-                if (ModuleUtils.runAs(a, command)) c.getAndIncrement();
+                if (runCommand(command, a) == SUCCESS) {
+                    c.getAndIncrement();
+                }
             });
             return c.get();
         }

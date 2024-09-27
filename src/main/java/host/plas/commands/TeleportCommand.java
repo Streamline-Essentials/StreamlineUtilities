@@ -1,14 +1,14 @@
 package host.plas.commands;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.messages.builders.TeleportMessageBuilder;
-import net.streamline.api.messages.proxied.ProxiedMessage;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.utils.UserUtils;
+import singularity.command.ModuleCommand;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.messages.builders.TeleportMessageBuilder;
+import singularity.messages.proxied.ProxiedMessage;
+import singularity.modules.ModuleUtils;
+import singularity.data.players.CosmicPlayer;
+import singularity.data.console.CosmicSender;
+import singularity.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.EssentialsManager;
 
@@ -29,12 +29,12 @@ public class TeleportCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender sender, String[] strings) {
-        if (! (sender instanceof StreamPlayer)) {
+    public void run(CosmicSender sender, String[] strings) {
+        if (! (sender instanceof CosmicPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
-        StreamPlayer player = (StreamPlayer) sender;
+        CosmicPlayer player = (CosmicPlayer) sender;
 
         if (strings[0].equals("")) {
             ModuleUtils.sendMessage(player, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
@@ -45,7 +45,7 @@ public class TeleportCommand extends ModuleCommand {
         }
 
         String username = strings[0];
-        StreamPlayer other = UserUtils.getOrCreatePlayerByName(username).orElse(null);
+        CosmicPlayer other = UserUtils.getOrCreatePlayerByName(username).orElse(null);
         if (other == null) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
@@ -60,7 +60,7 @@ public class TeleportCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         return ModuleUtils.getOnlinePlayerNames();
     }
 }

@@ -5,9 +5,10 @@ import com.Zrips.CMI.Containers.CMIUser;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import net.streamline.api.SLAPI;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.data.players.location.PlayerLocation;
-import net.streamline.api.interfaces.IStreamline;
+import singularity.data.players.CosmicPlayer;
+import singularity.data.players.location.CosmicLocation;
+import singularity.interfaces.ISingularityExtension;
+import singularity.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 public class SpigotAccessor {
     public static boolean ensureSafe() {
-        return SLAPI.getInstance().getPlatform().getServerType().equals(IStreamline.ServerType.BACKEND);
+        return SLAPI.getInstance().getPlatform().getServerType().equals(ISingularityExtension.ServerType.BACKEND);
     }
 
     public static Player getPlayer(String uuid) {
@@ -26,14 +27,14 @@ public class SpigotAccessor {
         return Bukkit.getPlayer(UUID.fromString(uuid));
     }
 
-    public static void updateCustomName(StreamPlayer player, String name) {
+    public static void updateCustomName(CosmicPlayer player, String name) {
         if (! ensureSafe()) return;
 
         updateCustomName(player, name, true);
     }
 
 
-    public static void updateCustomName(StreamPlayer player, String name, boolean tabListAlso) {
+    public static void updateCustomName(CosmicPlayer player, String name, boolean tabListAlso) {
         if (! ensureSafe()) return;
 
         updateNickCMI(player, name, false);
@@ -47,7 +48,7 @@ public class SpigotAccessor {
         if (tabListAlso) updateTabList(player, name);
     }
 
-    public static void updateTabList(StreamPlayer player, String name) {
+    public static void updateTabList(CosmicPlayer player, String name) {
         if (! ensureSafe()) return;
 
         Player p = getPlayer(player.getUuid());
@@ -61,28 +62,38 @@ public class SpigotAccessor {
         return Bukkit.getServer().getPluginManager().isPluginEnabled("CMI");
     }
 
-    public static void updateNickCMI(StreamPlayer player, String name) {
+    public static void updateNickCMI(CosmicPlayer player, String name) {
         updateNickCMI(player, name, true);
     }
 
-    public static void updateNickCMI(StreamPlayer player, String name, boolean updateTab) {
+    public static void updateNickCMI(CosmicPlayer player, String name, boolean updateTab) {
         if (! isCMI()) return;
 
-        CMIUser user = CMI.getInstance().getPlayerManager().getUser(UUID.fromString(player.getUuid()));
-        if (user == null) {
-            StreamlineUtilities.getInstance().logWarning("Could not get CMIUser for player '" + player.getUuid() + "'. Skipping...");
-            return;
-        }
+        try {
+            CMIUser user = CMI.getInstance().getPlayerManager().getUser(UUID.fromString(player.getUuid()));
+            if (user == null) {
+                StreamlineUtilities.getInstance().logWarning("Could not get CMIUser for player '" + player.getUuid() + "'. Skipping...");
+                return;
+            }
 
-        user.setNickName(name, true);
-        user.setDisplayName(name);
-        if (updateTab) updateTabCMI();
+            user.setNickName(name, true);
+            user.setDisplayName(name);
+            if (updateTab) updateTabCMI();
+        } catch (Exception e) {
+            StreamlineUtilities.getInstance().logWarning("Could not get CMIUser for player '" + player.getUuid() + "' due to error. Skipping...");
+            MessageUtils.logDebug("Error:", e);
+        }
     }
 
     public static void updateTabCMI() {
         if (! isCMI()) return;
 
-        CMI.getInstance().getTabListManager().updateTabList();
+        try {
+            CMI.getInstance().getTabListManager().updateTabList();
+        } catch (Exception e) {
+            StreamlineUtilities.getInstance().logWarning("Could not update CMI TabList due to error. Skipping...");
+            MessageUtils.logDebug("Error:", e);
+        }
     }
 
     public static boolean isEssX() {
@@ -90,22 +101,27 @@ public class SpigotAccessor {
         return Bukkit.getServer().getPluginManager().isPluginEnabled("Essentials");
     }
 
-    public static void updateNickEss(StreamPlayer player, String name) {
+    public static void updateNickEss(CosmicPlayer player, String name) {
         if (! isEssX()) return;
 
-        Essentials essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
+        try {
+            Essentials essentials = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
 
-        User user = essentials.getUser(UUID.fromString(player.getUuid()));
-        if (user == null) {
-            StreamlineUtilities.getInstance().logWarning("Could not get Essentials User for player '" + player.getUuid() + "'. Skipping...");
-            return;
+            User user = essentials.getUser(UUID.fromString(player.getUuid()));
+            if (user == null) {
+                StreamlineUtilities.getInstance().logWarning("Could not get Essentials User for player '" + player.getUuid() + "'. Skipping...");
+                return;
+            }
+
+            user.setNickname(name);
+            user.setDisplayNick();
+        } catch (Exception e) {
+            StreamlineUtilities.getInstance().logWarning("Could not get Essentials User for player '" + player.getUuid() + "' due to error. Skipping...");
+            MessageUtils.logDebug("Error:", e);
         }
-
-        user.setNickname(name);
-        user.setDisplayNick();
     }
 
-    public static void teleport(StreamPlayer player, PlayerLocation location) {
+    public static void teleport(CosmicPlayer player, CosmicLocation location) {
         Player p = getPlayer(player.getUuid());
         if (p == null) return;
         Location l = new Location(Bukkit.getWorld(location.getWorldName()), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
@@ -113,7 +129,7 @@ public class SpigotAccessor {
         p.teleport(l);
     }
 
-    public static void teleport(StreamPlayer player, StreamPlayer to) {
+    public static void teleport(CosmicPlayer player, CosmicPlayer to) {
         teleport(player, to.getLocation());
     }
 }

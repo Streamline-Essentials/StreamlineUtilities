@@ -2,12 +2,12 @@ package host.plas.commands;
 
 import host.plas.database.MyLoader;
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.utils.UserUtils;
+import singularity.command.ModuleCommand;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.modules.ModuleUtils;
+import singularity.data.players.CosmicPlayer;
+import singularity.data.console.CosmicSender;
+import singularity.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.EssentialsManager;
 import host.plas.essentials.configured.ConfiguredBlacklist;
@@ -50,9 +50,9 @@ public class HomeCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender sender, String[] strings) {
+    public void run(CosmicSender sender, String[] strings) {
         String homeName = "home";
-        StreamSender targetUser = null;
+        CosmicSender targetUser = null;
         UtilitiesUser target = null;
 
         if (strings.length <= 1) {
@@ -89,12 +89,12 @@ public class HomeCommand extends ModuleCommand {
             return;
         }
 
-        if (! (sender instanceof StreamPlayer)) {
+        if (! (sender instanceof CosmicPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         }
 
-        StreamPlayer player = (StreamPlayer) sender;
+        CosmicPlayer player = (CosmicPlayer) sender;
 
         StreamlineHome home = target.getHome(homeName);
 
@@ -144,12 +144,12 @@ public class HomeCommand extends ModuleCommand {
             return;
         }
 
-        if (! (targetUser instanceof StreamPlayer)) {
+        if (! (targetUser instanceof CosmicPlayer)) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
             return;
         }
 
-        StreamPlayer targetPlayer = (StreamPlayer) sender;
+        CosmicPlayer targetPlayer = (CosmicPlayer) sender;
 
         home.teleport(targetPlayer);
 
@@ -166,9 +166,9 @@ public class HomeCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         if (strings.length == 2) {
-            if (ModuleUtils.hasPermission(StreamSender, permissionOther)) {
+            if (ModuleUtils.hasPermission(CosmicSender, permissionOther)) {
                 return ModuleUtils.getOnlinePlayerNames();
             }
         }

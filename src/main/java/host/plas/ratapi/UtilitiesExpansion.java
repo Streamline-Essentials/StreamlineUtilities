@@ -1,9 +1,9 @@
 package host.plas.ratapi;
 
-import net.streamline.api.configs.given.GivenConfigs;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.placeholders.expansions.RATExpansion;
-import net.streamline.api.placeholders.replaceables.IdentifiedReplaceable;
+import singularity.configs.given.GivenConfigs;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.placeholders.expansions.RATExpansion;
+import singularity.placeholders.replaceables.IdentifiedReplaceable;
 import host.plas.StreamlineUtilities;
 import host.plas.configs.obj.PermissionGroup;
 import tv.quaint.utils.MatcherUtils;

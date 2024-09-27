@@ -2,14 +2,14 @@ package host.plas.listeners;
 
 import host.plas.database.MyLoader;
 import net.streamline.api.SLAPI;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.events.server.LoginCompletedEvent;
-import net.streamline.api.events.server.LoginReceivedEvent;
-import net.streamline.api.events.server.LogoutEvent;
-import net.streamline.api.events.server.StreamlineChatEvent;
-import net.streamline.api.messages.events.ProxiedMessageEvent;
-import net.streamline.api.modules.ModuleUtils;
+import singularity.data.console.CosmicSender;
+import singularity.data.players.CosmicPlayer;
+import singularity.events.server.LoginCompletedEvent;
+import singularity.events.server.LoginReceivedEvent;
+import singularity.events.server.LogoutEvent;
+import singularity.events.server.CosmicChatEvent;
+import singularity.messages.events.ProxiedMessageEvent;
+import singularity.modules.ModuleUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.accessors.SpigotAccessor;
 import host.plas.essentials.EssentialsManager;
@@ -20,7 +20,7 @@ import tv.quaint.events.processing.BaseProcessor;
 
 public class MainListener implements BaseEventListener {
     @BaseProcessor
-    public void onChat(StreamlineChatEvent chatEvent) {
+    public void onChat(CosmicChatEvent chatEvent) {
         if (StreamlineUtilities.getConfigs().chatModifyEnabled()) {
             if (! ModuleUtils.hasPermission(chatEvent.getSender(), StreamlineUtilities.getConfigs().chatModifyPermission())) return;
 
@@ -33,7 +33,7 @@ public class MainListener implements BaseEventListener {
     public void onPreJoin(LoginReceivedEvent event) {
         if (event.isCancelled()) return;
 
-        StreamSender player = event.getSender();
+        CosmicSender player = event.getSender();
         if (player == null) return;
 
         if (StreamlineUtilities.getMaintenanceConfig().isModeEnabled()) {
@@ -52,10 +52,10 @@ public class MainListener implements BaseEventListener {
     public void onFullyJoin(LoginCompletedEvent event) {
         if (event.isCancelled()) return;
 
-        StreamSender player = event.getSender();
+        CosmicSender player = event.getSender();
         if (player == null) return;
-        if (! (player instanceof StreamPlayer)) return;
-        StreamPlayer streamPlayer = (StreamPlayer) player;
+        if (! (player instanceof CosmicPlayer)) return;
+        CosmicPlayer streamPlayer = (CosmicPlayer) player;
 
         if (StreamlineUtilities.getMaintenanceConfig().isModeEnabled()) {
             if (! StreamlineUtilities.getMaintenanceConfig().containsAllowed(player.getUuid())) {

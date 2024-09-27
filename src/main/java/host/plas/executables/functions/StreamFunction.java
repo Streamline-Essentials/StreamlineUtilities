@@ -3,11 +3,11 @@ package host.plas.executables.functions;
 import lombok.Getter;
 import lombok.Setter;
 import net.luckperms.api.model.user.User;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.data.uuid.UuidManager;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.objects.SingleSet;
-import net.streamline.api.utils.UserUtils;
+import singularity.data.console.CosmicSender;
+import singularity.data.uuid.UuidManager;
+import singularity.modules.ModuleUtils;
+import singularity.objects.SingleSet;
+import singularity.utils.UserUtils;
 import org.jetbrains.annotations.NotNull;
 import host.plas.StreamlineUtilities;
 import host.plas.executables.ExecutableHandler;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
@@ -39,9 +40,13 @@ public class StreamFunction extends File {
         return runAs(UserUtils.getConsole());
     }
 
-    public int runAs(StreamSender user) {
+    public int runAs(CosmicSender user) {
+        return runAs(user, new ConcurrentSkipListMap<>());
+    }
+
+    public int runAs(CosmicSender user, ConcurrentSkipListMap<String, String> assignables) {
         AtomicInteger count = new AtomicInteger();
-        TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> map = getCommandsWithAs(user);
+        ConcurrentSkipListMap<Integer, SingleSet<ExecutableUser<?>, String>> map = getCommandsWithAs(user, assignables);
         for (int i : map.keySet()) {
             SingleSet<ExecutableUser<?>, String> set = map.get(i);
             if (set == null) continue;
@@ -52,11 +57,11 @@ public class StreamFunction extends File {
         return count.get();
     }
 
-    public TreeMap<Integer, String> lines() {
+    public ConcurrentSkipListMap<Integer, String> lines() {
         try {
             Scanner reader = new Scanner(this);
 
-            TreeMap<Integer, String> lines = new TreeMap<>();
+            ConcurrentSkipListMap<Integer, String> lines = new ConcurrentSkipListMap<>();
             while (reader.hasNext()) {
                 String s = reader.nextLine();
                 lines.put(lines.size() + 1, s);
@@ -64,12 +69,12 @@ public class StreamFunction extends File {
             return lines;
         } catch (Exception e) {
             e.printStackTrace();
-            return new TreeMap<>();
+            return new ConcurrentSkipListMap<>();
         }
     }
 
-    public TreeMap<Integer, String> uncommentedLines() {
-        TreeMap<Integer, String> r = new TreeMap<>();
+    public ConcurrentSkipListMap<Integer, String> uncommentedLines() {
+        ConcurrentSkipListMap<Integer, String> r = new ConcurrentSkipListMap<>();
 
         lines().forEach((integer, s) -> {
             String toAdd = s;
@@ -83,15 +88,18 @@ public class StreamFunction extends File {
         return r;
     }
 
-    public TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> getCommandsWithAs(StreamSender as) {
-        TreeMap<Integer, SingleSet<ExecutableUser<?>, String>> r = new TreeMap<>();
+    public ConcurrentSkipListMap<Integer, SingleSet<ExecutableUser<?>, String>> getCommandsWithAs(CosmicSender as, ConcurrentSkipListMap<String, String> assignables) {
+        ConcurrentSkipListMap<Integer, SingleSet<ExecutableUser<?>, String>> r = new ConcurrentSkipListMap<>();
 
         for (int integer : uncommentedLines().keySet()) {
             String s = uncommentedLines().get(integer);
+            s = replaceAssignables(s, assignables);
+            if (s.isEmpty() || s.isBlank()) continue;
+
             if (s.startsWith("@o")) {
 //                r.put(integer, new SingleSet<>(new ExecutableUser<>(new OperatorUser(as)), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@c")) {
-                r.put(integer, new SingleSet<>(new ExecutableUser<>(ModuleUtils.getConsole()), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
+                r.put(integer, new SingleSet<>(new ExecutableUser<>(UserUtils.getConsole()), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@a")) {
                 r.put(integer, new SingleSet<>(new ExecutableUser<>(new MultipleUser(ModuleUtils.getLoadedSendersSet())), ModuleUtils.replaceAllPlayerBungee(as, s.split(" ", 2)[1])));
             } else if (s.startsWith("@n:")) {
@@ -112,6 +120,20 @@ public class StreamFunction extends File {
         }
 
         return r;
+    }
+
+    public static String replaceAssignables(String string, ConcurrentSkipListMap<String, String> assignables) {
+        for (String s : assignables.keySet()) {
+            string = string.replace(getReplaceableAssignable(s), assignables.get(s));
+        }
+        return string;
+    }
+
+    public static String getReplaceableAssignable(String before) {
+        String after = before;
+        after = "@!!" + after + "!!";
+
+        return after;
     }
 
     public boolean isLoaded() {

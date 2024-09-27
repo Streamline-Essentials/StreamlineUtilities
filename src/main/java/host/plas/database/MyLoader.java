@@ -2,10 +2,8 @@ package host.plas.database;
 
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.users.UtilitiesUser;
-import lombok.Getter;
-import lombok.Setter;
-import net.streamline.api.database.modules.DBKeeper;
-import net.streamline.api.loading.Loader;
+import singularity.database.modules.DBKeeper;
+import singularity.loading.Loader;
 
 public class MyLoader extends Loader<UtilitiesUser> {
     private static MyLoader instance;
@@ -39,10 +37,5 @@ public class MyLoader extends Loader<UtilitiesUser> {
     @Override
     public void fireCreateEvents(UtilitiesUser user) {
 
-    }
-
-    @Override
-    public UtilitiesUser augment(UtilitiesUser user) {
-        return user;
     }
 }

@@ -1,7 +1,7 @@
 package host.plas.configs;
 
 import lombok.Getter;
-import net.streamline.api.modules.ModuleUtils;
+import singularity.modules.ModuleUtils;
 import host.plas.StreamlineUtilities;
 import host.plas.configs.obj.ConfiguredServer;
 import tv.quaint.storage.resources.flat.simple.SimpleConfiguration;

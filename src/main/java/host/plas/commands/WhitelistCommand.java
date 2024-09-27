@@ -1,15 +1,15 @@
 package host.plas.commands;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.configs.given.GivenConfigs;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.configs.given.whitelist.WhitelistEntry;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.utils.MessageUtils;
-import net.streamline.api.utils.UserUtils;
+import singularity.command.ModuleCommand;
+import singularity.configs.given.GivenConfigs;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.configs.given.whitelist.WhitelistEntry;
+import singularity.data.console.CosmicSender;
+import singularity.data.players.CosmicPlayer;
+import singularity.modules.ModuleUtils;
+import singularity.utils.MessageUtils;
+import singularity.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 
 import java.util.Arrays;
@@ -42,33 +42,33 @@ public class WhitelistCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender StreamSender, String[] strings) {
+    public void run(CosmicSender CosmicSender, String[] strings) {
         if (strings.length < 1) {
             strings = new String[] { String.valueOf(! StreamlineUtilities.getMaintenanceConfig().isModeEnabled()) };
         }
 
         if (strings.length == 1) {
             if (strings[0].equals("add") || strings[0].equals("remove")) {
-                ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+                ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
                 return;
             }
             try {
                 String previous = ModuleUtils.replacePlaceholders("%utils_whitelist_mode%");
                 boolean bool = Boolean.parseBoolean(strings[0]);
                 GivenConfigs.getWhitelistConfig().setEnabled(bool);
-                ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, getMessageResultAll(), StreamSender)
+                ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender, getMessageResultAll(), CosmicSender)
                         .replace("%this_previous%", previous)
                 );
 
                 if (bool) {
                     ModuleUtils.getLoadedPlayers().forEach((s, player) -> {
                         if (GivenConfigs.getWhitelistConfig().getEntry(player.getUuid()) != null) return;
-                        ModuleUtils.kick(player, ModuleUtils.replaceAllPlayerBungee(StreamSender, "%utils_whitelist_message%"));
+                        ModuleUtils.kick(player, ModuleUtils.replaceAllPlayerBungee(CosmicSender, "%utils_whitelist_message%"));
                     });
                 }
                 return;
             } catch (Exception e) {
-                ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TYPE_DEFAULT.get());
+                ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TYPE_DEFAULT.get());
                 return;
             }
         }
@@ -79,17 +79,17 @@ public class WhitelistCommand extends ModuleCommand {
 
                 AtomicInteger atomicInteger = new AtomicInteger(0);
                 names.forEach(s -> {
-                    StreamPlayer player = UserUtils.getOrCreatePlayerByName(s).orElse(null);
+                    CosmicPlayer player = UserUtils.getOrCreatePlayerByName(s).orElse(null);
                     if (player == null) {
-                        ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
+                        ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                         return;
                     }
 
-                    GivenConfigs.getWhitelistConfig().addEntry(new WhitelistEntry(player.getUuid(), new Date(), StreamSender.getUuid()));
+                    GivenConfigs.getWhitelistConfig().addEntry(new WhitelistEntry(player.getUuid(), new Date(), CosmicSender.getUuid()));
                     atomicInteger.getAndAdd(1);
 
-                    ModuleUtils.sendMessage(StreamSender,
-                            getWithOther(StreamSender, getMessageResultAdd(), player)
+                    ModuleUtils.sendMessage(CosmicSender,
+                            getWithOther(CosmicSender, getMessageResultAdd(), player)
                                     .replace("%this_index%", String.valueOf(atomicInteger.get())
                                     )
                     );
@@ -102,9 +102,9 @@ public class WhitelistCommand extends ModuleCommand {
 
                 AtomicInteger atomicIntegerRemove = new AtomicInteger(0);
                 namesRemove.forEach(s -> {
-                    StreamPlayer player = UserUtils.getOrCreatePlayerByName(s).orElse(null);
+                    CosmicPlayer player = UserUtils.getOrCreatePlayerByName(s).orElse(null);
                     if (player == null) {
-                        ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
+                        ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
                         return;
                     }
 
@@ -116,8 +116,8 @@ public class WhitelistCommand extends ModuleCommand {
 
                     atomicIntegerRemove.getAndAdd(1);
 
-                    ModuleUtils.sendMessage(StreamSender,
-                            getWithOther(StreamSender, getMessageResultRemove(), player)
+                    ModuleUtils.sendMessage(CosmicSender,
+                            getWithOther(CosmicSender, getMessageResultRemove(), player)
                                     .replace("%this_index%", String.valueOf(atomicIntegerRemove.get())
                                     )
                     );
@@ -126,13 +126,13 @@ public class WhitelistCommand extends ModuleCommand {
                 StreamlineUtilities.getInstance().logInfo("Removed " + atomicIntegerRemove.get() + " users from the &cMaintenance Mode &awhitelist&f!");
                 break;
             default:
-                ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+                ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
                 return;
         }
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         if (strings.length == 1) return new ConcurrentSkipListSet<>(List.of("true", "false", "add", "remove"));
         if (strings.length >= 2) {
             if (strings[0].equals("add") || strings[0].equals("remove")) return ModuleUtils.getOnlinePlayerNames();

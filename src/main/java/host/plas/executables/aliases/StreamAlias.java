@@ -2,11 +2,14 @@ package host.plas.executables.aliases;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.command.ModuleCommand;
+import singularity.command.ModuleCommand;
 import host.plas.StreamlineUtilities;
-import net.streamline.api.data.console.StreamSender;
+import singularity.command.CosmicCommand;
+import singularity.command.context.CommandContext;
+import singularity.data.console.CosmicSender;
 
 import java.io.File;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 @Setter
@@ -23,16 +26,29 @@ public class StreamAlias extends ModuleCommand {
                 "change-this-too");
         AliasExecution.Type aeType = AliasExecution.Type.valueOf(getCommandResource().getOrSetDefault("execution.type", AliasExecution.Type.FUNCTION.toString()));
         String aeExecutes = getCommandResource().getOrSetDefault("execution.executes", "change-this");
-        this.execution = new AliasExecution(aeType, aeExecutes);
+        ConcurrentSkipListMap<String, String> assignables = grabAssignables();
+
+        this.execution = new AliasExecution(aeType, aeExecutes, assignables);
+    }
+
+    public ConcurrentSkipListMap<String, String> grabAssignables() {
+        ConcurrentSkipListMap<String, String> assignables = new ConcurrentSkipListMap<>();
+
+        getCommandResource().singleLayerKeySet("assignables").forEach(key -> {
+            String value = getCommandResource().getOrSetDefault("assignables." + key, "change-this");
+            assignables.put(key, value);
+        });
+
+        return assignables;
     }
 
     @Override
-    public void run(StreamSender StreamSender, String[] strings) {
-        execution.execute(StreamSender);
+    public void run(CommandContext<CosmicCommand> context) {
+        execution.execute(context);
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender streamSender, String[] strings) {
         if (AliasCompletions.getCompletions(this).containsKey(strings.length)) {
             return AliasCompletions.getCompletions(this).get(strings.length);
         }

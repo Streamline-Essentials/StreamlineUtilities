@@ -2,10 +2,10 @@ package host.plas.essentials.configured;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.thebase.lib.leonhard.storage.sections.FlatFileSection;
+import singularity.data.console.CosmicSender;
+import singularity.data.players.CosmicPlayer;
+import singularity.modules.ModuleUtils;
+import tv.quaint.thebase.lib.leonhard.storage.sections.FlatFileSection;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -100,7 +100,7 @@ public class ConfiguredPermissionsList {
         return basePermission;
     }
 
-    public int getTopValue(StreamSender user) {
+    public int getTopValue(CosmicSender user) {
         AtomicInteger top = new AtomicInteger(getDefaultValue());
 
         getPermissions().forEach(permission -> {
@@ -114,11 +114,11 @@ public class ConfiguredPermissionsList {
         return top.get();
     }
 
-    public String getTopPermission(StreamSender user) {
+    public String getTopPermission(CosmicSender user) {
         return getBasePermissionCasually() + getPermission(getTopValue(user)).getPermission();
     }
 
-    public int getBottomValue(StreamSender user) {
+    public int getBottomValue(CosmicSender user) {
         AtomicInteger bottom = new AtomicInteger(getDefaultValue());
 
         getPermissions().forEach(permission -> {
@@ -132,11 +132,11 @@ public class ConfiguredPermissionsList {
         return bottom.get();
     }
 
-    public String getBottomPermission(StreamSender user) {
+    public String getBottomPermission(CosmicSender user) {
         return getBasePermissionCasually() + getPermission(getBottomValue(user)).getPermission();
     }
 
-    public boolean hasPermission(StreamSender user, int value) {
+    public boolean hasPermission(CosmicSender user, int value) {
         return user.hasPermission(getBasePermissionCasually() + getPermission(value).getPermission());
     }
 

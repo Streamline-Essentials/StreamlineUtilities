@@ -1,10 +1,10 @@
 package host.plas.commands;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.data.console.StreamSender;
+import singularity.command.ModuleCommand;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.modules.ModuleUtils;
+import singularity.data.console.CosmicSender;
 import host.plas.StreamlineUtilities;
 import host.plas.configs.obj.PermissionGroup;
 
@@ -69,24 +69,24 @@ public class OnlineCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender StreamSender, String[] strings) {
+    public void run(CosmicSender CosmicSender, String[] strings) {
         if (strings[0].equals("")) {
-            ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender,
+            ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender,
                     messageResultGlobalBase
                             .replace("%this_online_global%", getOnlineGlobal())
-                            .replace("%this_online_exact%", getOnlineExact(StreamSender.getServerName()))
-                            .replace("%this_online_permission%", getOnlineByPermission(StreamSender.getServerName()))
+                            .replace("%this_online_exact%", getOnlineExact(CosmicSender.getServerName()))
+                            .replace("%this_online_permission%", getOnlineByPermission(CosmicSender.getServerName()))
                     ,
-                    StreamSender
+                    CosmicSender
             ));
             return;
         }
         if (strings.length > 2) {
-            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
+            ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_MANY.get());
             return;
         }
         if (strings.length <= 1) {
-            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+            ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
 
@@ -95,55 +95,55 @@ public class OnlineCommand extends ModuleCommand {
             case "server":
                 String serverName = strings[1];
                 if (! ModuleUtils.equalsAnyServer(serverName)) {
-                    ModuleUtils.sendMessage(StreamSender, messageErrorInvalidServer.replace("%this_identifier%", serverName));
+                    ModuleUtils.sendMessage(CosmicSender, messageErrorInvalidServer.replace("%this_identifier%", serverName));
                     return;
                 }
 
-                ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender,
+                ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender,
                         messageResultExactBase
                                 .replace("%this_identifier%", serverName)
                                 .replace("%this_online_global%", getOnlineGlobal())
                                 .replace("%this_online_exact%", getOnlineExact(serverName))
                                 .replace("%this_online_permission%", getOnlineByPermission(serverName))
                         ,
-                        StreamSender
+                        CosmicSender
                 ));
                 break;
             case "group":
                 String group = strings[1];
                 if (! StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().containsKey(group)) {
-                    ModuleUtils.sendMessage(StreamSender, messageErrorInvalidGroup.replace("%this_identifier%", group));
+                    ModuleUtils.sendMessage(CosmicSender, messageErrorInvalidGroup.replace("%this_identifier%", group));
                     return;
                 }
 
-                ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender,
+                ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender,
                         messageResultPermissionedBase
                                 .replace("%this_identifier%", group)
                                 .replace("%this_online_global%", getOnlineGlobal())
                                 .replace("%this_online_exact%", getOnlineExact(group))
                                 .replace("%this_online_permission%", getOnlineByPermission(group))
                         ,
-                        StreamSender
+                        CosmicSender
                 ));
                 break;
         }
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         if (strings.length <= 1) return new ConcurrentSkipListSet<>(List.of("server", "group"));
         if (strings.length > 2) return new ConcurrentSkipListSet<>();
         if (strings[0].equals("server")) {
             ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
             ModuleUtils.getServerNames().forEach(a -> {
-                if (ModuleUtils.hasPermission(StreamSender, permissionServers + a)) r.add(a);
+                if (ModuleUtils.hasPermission(CosmicSender, permissionServers + a)) r.add(a);
             });
             return r;
         }
         if (strings[0].equals("group")) {
             ConcurrentSkipListSet<String> r = new ConcurrentSkipListSet<>();
             new ArrayList<>(StreamlineUtilities.getGroupedPermissionConfig().getPermissionGroups().keySet()).forEach(a -> {
-                if (ModuleUtils.hasPermission(StreamSender, permissionServers + a)) r.add(a);
+                if (ModuleUtils.hasPermission(CosmicSender, permissionServers + a)) r.add(a);
             });
             return r;
         }

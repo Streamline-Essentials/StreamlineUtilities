@@ -1,8 +1,8 @@
 package host.plas.configs;
 
 import lombok.Getter;
-import net.streamline.api.placeholders.RATRegistry;
-import net.streamline.api.placeholders.replaceables.GenericReplaceable;
+import singularity.placeholders.RATRegistry;
+import singularity.placeholders.replaceables.GenericReplaceable;
 import host.plas.StreamlineUtilities;
 import tv.quaint.storage.resources.flat.simple.SimpleConfiguration;
 

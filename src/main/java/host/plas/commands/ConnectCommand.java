@@ -1,12 +1,12 @@
 package host.plas.commands;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.utils.UserUtils;
+import singularity.command.ModuleCommand;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.data.console.CosmicSender;
+import singularity.data.players.CosmicPlayer;
+import singularity.modules.ModuleUtils;
+import singularity.utils.UserUtils;
 import host.plas.StreamlineUtilities;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class ConnectCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender sender, String[] strings) {
+    public void run(CosmicSender sender, String[] strings) {
         if (strings.length < 1) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
@@ -45,12 +45,12 @@ public class ConnectCommand extends ModuleCommand {
         String serverName = strings[0];
         boolean silent = false;
 
-        StreamPlayer target = null;
-        if (! (sender instanceof StreamPlayer) && strings.length == 1) {
+        CosmicPlayer target = null;
+        if (! (sender instanceof CosmicPlayer) && strings.length == 1) {
             ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_SELF.get());
             return;
         } else {
-            if (sender instanceof StreamPlayer) target = (StreamPlayer) sender;
+            if (sender instanceof CosmicPlayer) target = (CosmicPlayer) sender;
         }
 
         if (strings.length >= 2) {
@@ -88,7 +88,7 @@ public class ConnectCommand extends ModuleCommand {
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         if (strings.length <= 1) {
             return StreamlineUtilities.getServersConfig().getPossibleNames();
         }

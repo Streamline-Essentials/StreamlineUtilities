@@ -4,10 +4,10 @@ import host.plas.StreamlineUtilities;
 import host.plas.essentials.users.UtilitiesUser;
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.messages.proxied.ProxiedMessage;
-import net.streamline.api.scheduler.ModuleDelayedRunnable;
+import singularity.data.console.CosmicSender;
+import singularity.data.players.CosmicPlayer;
+import singularity.messages.proxied.ProxiedMessage;
+import singularity.scheduler.ModuleDelayedRunnable;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -55,31 +55,31 @@ public class EssentialsManager {
         return atomicReference.get();
     }
 
-    public static void requestTPA(StreamPlayer sender, StreamPlayer receiver) {
+    public static void requestTPA(CosmicPlayer sender, CosmicPlayer receiver) {
         TPARequest request = new TPARequest(sender, receiver, TPARequest.TransportType.SENDER_TO_RECEIVER);
         addTPARequest(request);
     }
 
-    public static void requestTPAHere(StreamPlayer sender, StreamPlayer receiver) {
+    public static void requestTPAHere(CosmicPlayer sender, CosmicPlayer receiver) {
         TPARequest request = new TPARequest(sender, receiver, TPARequest.TransportType.RECEIVER_TO_SENDER);
         addTPARequest(request);
     }
 
-    public static void acceptTPA(StreamPlayer senderPlayer, StreamPlayer otherPlayer, TPARequest.TransportType transportType) {
+    public static void acceptTPA(CosmicPlayer senderPlayer, CosmicPlayer otherPlayer, TPARequest.TransportType transportType) {
         TPARequest request = getTPARequest(senderPlayer.getUuid(), otherPlayer.getUuid(), transportType);
         if (request != null) {
             request.perform();
         }
     }
 
-    public static void denyTPA(StreamPlayer senderPlayer, StreamPlayer otherPlayer, TPARequest.TransportType transportType) {
+    public static void denyTPA(CosmicPlayer senderPlayer, CosmicPlayer otherPlayer, TPARequest.TransportType transportType) {
         TPARequest request = getTPARequest(senderPlayer.getUuid(), otherPlayer.getUuid(), transportType);
         if (request != null) {
             request.deny();
         }
     }
 
-    public static ConcurrentSkipListSet<TPARequest> getPendingTPARequests(StreamPlayer asPlayerSentTo, TPARequest.TransportType transportType) {
+    public static ConcurrentSkipListSet<TPARequest> getPendingTPARequests(CosmicPlayer asPlayerSentTo, TPARequest.TransportType transportType) {
         ConcurrentSkipListSet<TPARequest> requests = new ConcurrentSkipListSet<>();
         pendingTPARequests.forEach((request) -> {
             if (request.getReceiver().getUuid().equals(asPlayerSentTo.getUuid()) && request.getTransportType() == transportType) {
@@ -89,7 +89,7 @@ public class EssentialsManager {
         return requests;
     }
 
-    public static TPARequest getLatestPendingTPARequest(StreamPlayer asPlayerSentTo, TPARequest.TransportType transportType) {
+    public static TPARequest getLatestPendingTPARequest(CosmicPlayer asPlayerSentTo, TPARequest.TransportType transportType) {
         ConcurrentSkipListSet<TPARequest> requests = getPendingTPARequests(asPlayerSentTo, transportType);
         if (requests.size() > 0) {
             return requests.last();

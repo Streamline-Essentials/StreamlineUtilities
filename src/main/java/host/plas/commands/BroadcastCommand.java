@@ -1,9 +1,9 @@
 package host.plas.commands;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.modules.ModuleUtils;
+import singularity.command.ModuleCommand;
+import singularity.data.console.CosmicSender;
+import singularity.modules.ModuleUtils;
 import host.plas.StreamlineUtilities;
 
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -23,7 +23,7 @@ public class BroadcastCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender StreamSender, String[] strings) {
+    public void run(CosmicSender CosmicSender, String[] strings) {
         String message = ModuleUtils.argsToString(strings);
 
         boolean isCustom = false;
@@ -38,18 +38,18 @@ public class BroadcastCommand extends ModuleCommand {
             if (! finalIsCustom) {
                 ModuleUtils.sendMessage(a, messageResultAll
                         .replace("%this_message%", finalMessage)
-                        .replace("%this_sender%", StreamSender.getCurrentName())
+                        .replace("%this_sender%", CosmicSender.getCurrentName())
                 );
             } else {
                 ModuleUtils.sendMessage(a, finalMessage
-                        .replace("%this_sender%", StreamSender.getCurrentName())
+                        .replace("%this_sender%", CosmicSender.getCurrentName())
                 );
             }
         });
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         return new ConcurrentSkipListSet<>();
     }
 }

@@ -1,13 +1,13 @@
 package host.plas.commands;
 
 import lombok.Getter;
-import net.streamline.api.command.ModuleCommand;
-import net.streamline.api.configs.given.MainMessagesHandler;
-import net.streamline.api.modules.ModuleUtils;
-import net.streamline.api.objects.StreamlineTitle;
-import net.streamline.api.data.players.StreamPlayer;
-import net.streamline.api.data.console.StreamSender;
-import net.streamline.api.utils.MessageUtils;
+import singularity.command.ModuleCommand;
+import singularity.configs.given.MainMessagesHandler;
+import singularity.modules.ModuleUtils;
+import singularity.objects.CosmicTitle;
+import singularity.data.players.CosmicPlayer;
+import singularity.data.console.CosmicSender;
+import singularity.utils.MessageUtils;
 import host.plas.StreamlineUtilities;
 
 import java.util.List;
@@ -43,9 +43,9 @@ public class TitleCommand extends ModuleCommand {
     }
 
     @Override
-    public void run(StreamSender StreamSender, String[] strings) {
+    public void run(CosmicSender CosmicSender, String[] strings) {
         if (strings.length < 5) {
-            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
+            ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.ARGUMENTS_TOO_FEW.get());
             return;
         }
         String username = strings[0];
@@ -81,31 +81,31 @@ public class TitleCommand extends ModuleCommand {
             sub = parts[1];
         }
 
-        StreamlineTitle streamlineTitle = new StreamlineTitle(title, sub);
+        CosmicTitle streamlineTitle = new CosmicTitle(title, sub);
         streamlineTitle.setFadeIn(fadeIn);
         streamlineTitle.setStay(stay);
         streamlineTitle.setFadeOut(fadeOut);
 
-        StreamSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
+        CosmicSender other = ModuleUtils.getOrGetUserByName(username).orElse(null);
         if (other == null) {
-            ModuleUtils.sendMessage(StreamSender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
+            ModuleUtils.sendMessage(CosmicSender, MainMessagesHandler.MESSAGES.INVALID.USER_OTHER.get());
             return;
         }
-        if (! (other instanceof StreamPlayer)) {
-            ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, messageErrorNotPlayer, other));
+        if (! (other instanceof CosmicPlayer)) {
+            ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender, messageErrorNotPlayer, other));
             return;
         }
-        StreamPlayer player = (StreamPlayer) other;
+        CosmicPlayer player = (CosmicPlayer) other;
 
         ModuleUtils.sendTitle(player, streamlineTitle);
-        if (sendResultSenderMessage) ModuleUtils.sendMessage(StreamSender, getWithOther(StreamSender, messageResultSender
+        if (sendResultSenderMessage) ModuleUtils.sendMessage(CosmicSender, getWithOther(CosmicSender, messageResultSender
                         .replace("%this_title%", title)
                         .replace("%this_subtitle%", sub)
                 , other));
     }
 
     @Override
-    public ConcurrentSkipListSet<String> doTabComplete(StreamSender StreamSender, String[] strings) {
+    public ConcurrentSkipListSet<String> doTabComplete(CosmicSender CosmicSender, String[] strings) {
         ConcurrentSkipListSet<String> online = ModuleUtils.getOnlinePlayerNames();
 
         if (strings.length <= 1) return online;

@@ -1,7 +1,7 @@
 package host.plas.events;
 
 import lombok.Getter;
-import net.streamline.api.events.modules.ModuleEvent;
+import singularity.events.modules.ModuleEvent;
 import host.plas.StreamlineUtilities;
 import host.plas.essentials.TPARequest;
 
