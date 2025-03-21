@@ -85,7 +85,29 @@ public class ConfiguredPermissionsList {
             }
         });
 
-        return permission.get();
+        if (permission.get() == null) {
+            AtomicReference<ConfiguredIntegerPermission> checking = new AtomicReference<>(null);
+            this.permissions.forEach(p -> {
+                if (p.getValue() <= value) {
+                    if (checking.get() == null) {
+                        checking.set(p);
+                    } else {
+                        if (p.getValue() > checking.get().getValue()) {
+                            checking.set(p);
+                        }
+                    }
+                }
+            });
+
+            permission.set(checking.get());
+        }
+
+        ConfiguredIntegerPermission p = permission.get();
+        if (p == null) {
+            p = new ConfiguredIntegerPermission(DEFAULT_VALUE, "streamline.utils.default");
+        }
+
+        return p;
     }
 
     public String getBasePermissionCasually() {
@@ -141,11 +163,14 @@ public class ConfiguredPermissionsList {
     }
 
     public static ConcurrentSkipListSet<ConfiguredIntegerPermission> map(FlatFileSection section) {
-        FlatFileSection s = section.getSection("permissions");
         ConcurrentSkipListSet<ConfiguredIntegerPermission> permissions = new ConcurrentSkipListSet<>();
 
-        s.singleLayerKeySet().forEach(key -> {
-            permissions.add(new ConfiguredIntegerPermission(Integer.parseInt(key), s.getString(key)));
+        section.singleLayerKeySet().forEach(key -> {
+            try {
+                permissions.add(new ConfiguredIntegerPermission(Integer.parseInt(key), section.getString(key)));
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
         });
 
         return permissions;

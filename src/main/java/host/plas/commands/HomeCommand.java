@@ -14,6 +14,7 @@ import host.plas.essentials.configured.ConfiguredBlacklist;
 import host.plas.essentials.users.StreamlineHome;
 import host.plas.essentials.users.UtilitiesUser;
 
+import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -94,9 +95,23 @@ public class HomeCommand extends ModuleCommand {
             return;
         }
 
+        if (! target.hasHome(homeName)) {
+            ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultHomeNotExists
+                    .replace("%this_input%", homeName), targetUser)
+            );
+            return;
+        }
+
         CosmicPlayer player = (CosmicPlayer) sender;
 
-        StreamlineHome home = target.getHome(homeName);
+        Optional<StreamlineHome> optional = target.getHome(homeName);
+        if (optional.isEmpty()) {
+            ModuleUtils.sendMessage(sender, getWithOther(player, messageResultHomeNotExists
+                    .replace("%this_input%", homeName), targetUser)
+            );
+            return;
+        }
+        StreamlineHome home = optional.get();
 
         ConfiguredBlacklist configuredBlacklist = StreamlineUtilities.getConfigs().getHomesBlacklist();
 
@@ -104,11 +119,11 @@ public class HomeCommand extends ModuleCommand {
             AtomicBoolean isServerBlacklisted = new AtomicBoolean(false);
             configuredBlacklist.getServers().forEach(server -> {
                 if (configuredBlacklist.isAsWhitelist()) {
-                    if (!server.equals(home.getServer())) {
+                    if (! server.equals(home.getServer().getIdentifier())) {
                         isServerBlacklisted.set(true);
                     }
                 } else {
-                    if (server.equals(home.getServer())) {
+                    if (server.equals(home.getServer().getIdentifier())) {
                         isServerBlacklisted.set(true);
                     }
                 }
@@ -135,18 +150,6 @@ public class HomeCommand extends ModuleCommand {
                 ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultBlacklistedWorld, targetUser));
                 return;
             }
-        }
-
-        if (home == null) {
-            ModuleUtils.sendMessage(sender, getWithOther(player, messageResultHomeNotExists
-                    .replace("%this_input%", homeName), targetUser)
-            );
-            return;
-        }
-
-        if (! (targetUser instanceof CosmicPlayer)) {
-            ModuleUtils.sendMessage(sender, MainMessagesHandler.MESSAGES.INVALID.PLAYER_OTHER.get());
-            return;
         }
 
         CosmicPlayer targetPlayer = (CosmicPlayer) sender;

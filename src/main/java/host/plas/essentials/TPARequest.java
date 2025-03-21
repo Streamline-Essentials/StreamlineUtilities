@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import singularity.data.players.CosmicPlayer;
 import singularity.data.players.location.CosmicLocation;
-import singularity.messages.builders.TeleportMessageBuilder;
+import singularity.data.teleportation.TPTicket;
 import singularity.messages.proxied.ProxiedMessage;
 import singularity.modules.ModuleUtils;
 import singularity.scheduler.ModuleDelayedRunnable;
@@ -113,8 +113,7 @@ public class TPARequest implements Comparable<TPARequest> {
             ModuleUtils.connect(from, getServer());
         }
 
-        ProxiedMessage message = TeleportMessageBuilder.build(to, location, from);
-        new EssentialsManager.TeleportRunner(message);
+        TPTicket ticket = new TPTicket(from.getIdentifier(), location);
         ModuleUtils.sendMessage(to, ModuleUtils.replaceAllPlayerBungee(to,
                 StreamlineUtilities.getMessages().tpaPerformTo()
                         .replace("%this_from%", from.getCurrentName())

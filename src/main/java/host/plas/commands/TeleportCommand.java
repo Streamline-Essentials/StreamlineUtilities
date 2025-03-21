@@ -3,14 +3,11 @@ package host.plas.commands;
 import lombok.Getter;
 import singularity.command.ModuleCommand;
 import singularity.configs.given.MainMessagesHandler;
-import singularity.messages.builders.TeleportMessageBuilder;
-import singularity.messages.proxied.ProxiedMessage;
 import singularity.modules.ModuleUtils;
 import singularity.data.players.CosmicPlayer;
 import singularity.data.console.CosmicSender;
 import singularity.utils.UserUtils;
 import host.plas.StreamlineUtilities;
-import host.plas.essentials.EssentialsManager;
 
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -51,10 +48,9 @@ public class TeleportCommand extends ModuleCommand {
             return;
         }
 
-        ModuleUtils.connect(sender, other.getServerName());
+//        ModuleUtils.connect(sender, other.getServerName());
 
-        ProxiedMessage message = TeleportMessageBuilder.build(player, other.getLocation(), player);
-        new EssentialsManager.TeleportRunner(message);
+        ModuleUtils.teleport(player, other);
 
         ModuleUtils.sendMessage(sender, getWithOther(sender, messageResult, other));
     }

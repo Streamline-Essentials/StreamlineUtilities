@@ -16,6 +16,7 @@ import host.plas.essentials.configured.ConfiguredPermissionsList;
 import host.plas.essentials.users.StreamlineHome;
 import host.plas.essentials.users.UtilitiesUser;
 
+import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -107,8 +108,10 @@ public class SetHomeCommand extends ModuleCommand {
 
         ConfiguredPermissionsList configuredPermissionsList = StreamlineUtilities.getConfigs().getHomesPermissions();
 
+        Optional<StreamlineHome> optional = target.getHome(homeName);
+
         if (configuredPermissionsList != null) {
-            if (! configuredPermissionsList.hasPermission(targetUser, target.getHomesCount() + 1)) {
+            if (! configuredPermissionsList.hasPermission(targetUser, target.getHomesCount() + (optional.isEmpty() ? 1 : 0))) {
                 ModuleUtils.sendMessage(sender, getWithOther(sender, messageResultTooManyHomes, targetUser));
                 return;
             }
@@ -159,9 +162,7 @@ public class SetHomeCommand extends ModuleCommand {
         StreamlineHome streamlineHome = new StreamlineHome(homeName, player.getServerName(), location.getWorldName(),
                 location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 
-        StreamlineHome home = target.getHome(homeName);
-
-        if (home != null) {
+        if (optional.isPresent()) {
             target.removeHome(homeName);
             target.addHome(streamlineHome);
 
@@ -186,6 +187,8 @@ public class SetHomeCommand extends ModuleCommand {
                         .replace("%this_input%", homeName), targetUser)
                 );
             }
+
+            target.save();
         }
     }
 

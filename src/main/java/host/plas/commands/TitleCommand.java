@@ -36,7 +36,7 @@ public class TitleCommand extends ModuleCommand {
 
         messageErrorNotPlayer = getCommandResource().getOrSetDefault("messages.error.not-player", "&cThat user is not a player!");
 
-        subtitleSplitter = getCommandResource().getOrSetDefault("title.splitter", "\\n");
+        subtitleSplitter = getCommandResource().getOrSetDefault("title.splitter", "\\\\n");
         subtitleDefaultFadeIn = getCommandResource().getOrSetDefault("title.default.fade-in", 100L);
         subtitleDefaultStay = getCommandResource().getOrSetDefault("title.default.stay", 100L);
         subtitleDefaultFadeOut = getCommandResource().getOrSetDefault("title.default.fade-out", 100L);
@@ -73,7 +73,6 @@ public class TitleCommand extends ModuleCommand {
             title = "";
             sub = "";
         } else if (parts.length == 1) {
-            MessageUtils.logInfo("");
             title = parts[0];
             sub = "";
         } else {

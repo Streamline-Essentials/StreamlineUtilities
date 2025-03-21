@@ -5,11 +5,9 @@ import host.plas.database.MyLoader;
 import host.plas.essentials.EssentialsManager;
 import lombok.Getter;
 import lombok.Setter;
-import singularity.data.IUuidable;
 import singularity.data.players.CosmicPlayer;
+import singularity.data.teleportation.TPTicket;
 import singularity.loading.Loadable;
-import singularity.messages.builders.TeleportMessageBuilder;
-import singularity.messages.proxied.ProxiedMessage;
 import singularity.modules.ModuleUtils;
 import singularity.utils.UserUtils;
 import tv.quaint.thebase.lib.re2j.Matcher;
@@ -20,7 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Setter
 @Getter
@@ -39,6 +37,8 @@ public class UtilitiesUser implements Loadable<UtilitiesUser> {
 
         homes = new ConcurrentSkipListSet<>();
         lastServer = "";
+
+        register();
     }
 
     public String computableHomes() {
@@ -46,8 +46,8 @@ public class UtilitiesUser implements Loadable<UtilitiesUser> {
 
         homes.forEach((home) -> {
             builder.append("!!!")
-                    .append(home.getServer()).append("::")
                     .append(home.getName()).append("::")
+                    .append(home.getServer()).append("::")
                     .append(home.getWorld()).append("::")
                     .append(home.getX()).append("::")
                     .append(home.getY()).append("::")
@@ -82,6 +82,42 @@ public class UtilitiesUser implements Loadable<UtilitiesUser> {
         return r;
     }
 
+    public Optional<StreamlineHome> getHome(String name) {
+        return homes.stream().filter((home) -> home.getName().equals(name)).findFirst();
+    }
+
+    public boolean hasHome(String name) {
+        return getHome(name).isPresent();
+    }
+
+    public ConcurrentSkipListSet<String> getHomesOnServer(String server) {
+        ConcurrentSkipListSet<String> homesOnServer = new ConcurrentSkipListSet<>();
+
+        homes.forEach((home) -> {
+            if (home.getServer().getIdentifier().equals(server)) {
+                homesOnServer.add(home.getName());
+            }
+        });
+
+        return homesOnServer;
+    }
+
+    public boolean hasAnyHomeOnServer(String server) {
+        return ! getHomesOnServer(server).isEmpty();
+    }
+
+    public boolean hasHomeOnServer(String name, String server) {
+        AtomicBoolean hasHome = new AtomicBoolean(false);
+
+        getHomesOnServer(server).forEach((home) -> {
+            if (home.equals(name)) {
+                hasHome.set(true);
+            }
+        });
+
+        return hasHome.get();
+    }
+
     public void save() {
         StreamlineUtilities.getKeeper().save(this);
     }
@@ -105,52 +141,25 @@ public class UtilitiesUser implements Loadable<UtilitiesUser> {
     }
 
     public void removeHome(StreamlineHome home) {
-        homes.remove(home);
+        removeHome(home.getName());
     }
 
     public void removeHome(String name) {
-        homes.forEach((home) -> {
-            if (home.getName().equals(name)) {
-                homes.remove(home);
-            }
-        });
-    }
-
-    public StreamlineHome getHome(String name) {
-        AtomicReference<StreamlineHome> atomicReference = new AtomicReference<>();
-
-        homes.forEach((home) -> {
-            if (home.getName().equals(name)) {
-                atomicReference.set(home);
-            }
-        });
-
-        return atomicReference.get();
-    }
-
-    public ConcurrentSkipListSet<StreamlineHome> getHomesOnServer(String server) {
-        ConcurrentSkipListSet<StreamlineHome> homesOnServer = new ConcurrentSkipListSet<>();
-
-        homes.forEach((home) -> {
-            if (home.getServer().equals(server)) {
-                homesOnServer.add(home);
-            }
-        });
-
-        return homesOnServer;
+        homes.removeIf((home) -> home.getName().equals(name));
     }
 
     public void teleportTo(String homeName) {
-        StreamlineHome home = getHome(homeName);
-        if (home == null) return;
+        Optional<StreamlineHome> optional = getHome(homeName);
+        if (optional.isEmpty()) return;
+        StreamlineHome home = optional.get();
 
         CosmicPlayer player = UserUtils.getOrCreatePlayer(getUuid());
         if (player == null) return;
 
         ModuleUtils.connect(player, home.getServer().getIdentifier());
 
-        ProxiedMessage message = TeleportMessageBuilder.build(player, home, player);
-        new EssentialsManager.TeleportRunner(StreamlineUtilities.getConfigs().homesDelayTicks(), message);
+        TPTicket ticket = new TPTicket(player.getIdentifier(), home);
+        ticket.post();
     }
 
     public void goToLastServer() {

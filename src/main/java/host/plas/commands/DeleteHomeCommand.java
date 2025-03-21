@@ -13,6 +13,7 @@ import host.plas.essentials.EssentialsManager;
 import host.plas.essentials.users.StreamlineHome;
 import host.plas.essentials.users.UtilitiesUser;
 
+import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 @Getter
@@ -88,9 +89,8 @@ public class DeleteHomeCommand extends ModuleCommand {
 
         CosmicPlayer player = (CosmicPlayer) sender;
 
-        StreamlineHome home = target.getHome(homeName);
-
-        if (home == null) {
+        Optional<StreamlineHome> optional = target.getHome(homeName);
+        if (optional.isEmpty()) {
             ModuleUtils.sendMessage(sender, getWithOther(player, messageResultHomeNotExists
                     .replace("%this_input%", homeName), targetUser)
             );

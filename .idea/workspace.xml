@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Updated API." />
+    <list default="true" id="26badbb3-81d7-4567-8542-72a3194c68a5" name="Changes" comment="Fix slight database error.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/DeleteHomeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/DeleteHomeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/HomeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/HomeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/SetHomeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/SetHomeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/TeleportCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/TeleportCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/commands/TitleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/commands/TitleCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/configured/ConfiguredPermissionsList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/configured/ConfiguredPermissionsList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/users/StreamlineHome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/users/StreamlineHome.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/host/plas/essentials/users/UtilitiesUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/host/plas/essentials/users/UtilitiesUser.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,6 +41,11 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="StreamlineUtilities" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="StreamlineUtilities" type="f1a62948:ProjectNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
             <select />
@@ -79,14 +98,16 @@
   &quot;keyToString&quot;: {
     &quot;Gradle.Load Gradle Dependencies.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.StreamlineUtilities [clean build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Upgrade Gradle wrapper.executor&quot;: &quot;Run&quot;,
     &quot;Maven.streamlineutilities [clean,package].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/OneDrive/Development/Java/Streamline/Modules/StreamlineUtilities&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/OneDrive/Development/Java/Mods&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -463,7 +484,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727441876939</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Fix slight database error.">
+      <option name="closed" value="true" />
+      <created>1727444976202</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1727444976202</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -485,7 +514,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add : A whole bunch of stuff..." />
     <MESSAGE value="Add : Added some stuff." />
     <MESSAGE value="Add : ???." />
     <MESSAGE value="Version : Bump." />
@@ -510,7 +538,8 @@
     <MESSAGE value="Updated to new API." />
     <MESSAGE value="Version 1.16" />
     <MESSAGE value="Updated API." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated API." />
+    <MESSAGE value="Fix slight database error." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix slight database error." />
   </component>
   <component name="com.vaadin.designer2.intellij.settings.SizePresetsSettingsComponent">
     <option name="sizePresets">

@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'io.freefair.lombok' version '8.10.2'
 }
 
 group properties['group']
@@ -33,24 +34,20 @@ dependencies {
     // Platform.
     compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
 
-    // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
-
     // LuckPerms
     compileOnly 'net.luckperms:api:5.4'
 
     // StreamlineCore
-    compileOnly 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-API:main-SNAPSHOT'
-    annotationProcessor 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-API:main-SNAPSHOT'
+    compileOnly 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-API:master-SNAPSHOT'
+    annotationProcessor 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-API:master-SNAPSHOT'
 
     if (properties['include-bapi']) {
-        compileOnly 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-BAPI:main-SNAPSHOT'
-        annotationProcessor 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-BAPI:main-SNAPSHOT'
+        compileOnly 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-BAPI:master-SNAPSHOT'
+        annotationProcessor 'com.github.Streamline-Essentials.StreamlineCore:StreamlineCore-BAPI:master-SNAPSHOT'
     }
 
     // Files
-    implementation(shadow(files(FILES)))
+    compileOnly(files(FILES))
 }
 
 java {
@@ -78,6 +75,6 @@ artifacts {
 }
 
 wrapper {
-    gradleVersion = '8.6'
+    gradleVersion = '8.8'
     distributionType = Wrapper.DistributionType.BIN
 }

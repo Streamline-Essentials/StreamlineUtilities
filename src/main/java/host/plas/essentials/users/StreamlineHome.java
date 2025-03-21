@@ -13,12 +13,10 @@ import singularity.modules.ModuleUtils;
 @Getter @Setter
 public class StreamlineHome extends CosmicLocation {
     private String name;
-    private CosmicServer server;
 
     public StreamlineHome(String name, String server, String world, double x, double y, double z, float yaw, float pitch) {
-        super(null, new PlayerWorld(world), new WorldPosition(x, y, z), new PlayerRotation(yaw, pitch));
+        super(new CosmicServer(server), new PlayerWorld(world), new WorldPosition(x, y, z), new PlayerRotation(yaw, pitch));
         this.name = name;
-        this.server = new CosmicServer(server);
     }
 
     public void teleport(CosmicPlayer player) {
